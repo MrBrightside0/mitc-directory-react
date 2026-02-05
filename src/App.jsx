@@ -7,30 +7,30 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import logo from './assets/logo.svg';
-import heroImage from './assets/monterrey-hero.jpg';
+import heroImage from './assets/monterrey-hero.webp';
 
 // --- HELPER PARA LOGOS DE GOOGLE ---
 const getLogoUrl = (domain) => `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
 
-// --- DATASET FINAL ---
+// --- DATASET ---
 const MOCK_DATA = [
   // SOFTWARE & DATA
   { 
     id: 1, name: 'Softtek', industry: 'Software', tags: ['AI', 'Cloud', 'Global'], location: 'Monterrey, NL', verified: true, employees: '15k+', revenue: '$1B+', tier: 'Titan', color: 'from-blue-600 to-blue-900', 
     domain: 'softtek.com', 
-    banner: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070', 
+    banner: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=600&auto=format&fit=crop', 
     desc: 'Líder global en soluciones digitales. Ayudamos a las empresas a cerrar la brecha digital.' 
   },
   { 
     id: 2, name: 'DataRegio', industry: 'Data Science', tags: ['Big Data', 'Retail'], location: 'San Pedro, NL', verified: true, employees: '80', revenue: '$8M', tier: 'Specialist', color: 'from-emerald-600 to-emerald-900', 
     domain: 'databricks.com', 
-    banner: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070', 
+    banner: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=600&auto=format&fit=crop', 
     desc: 'Consultoría boutique transformando datos complejos en estrategias de retail accionables.' 
   },
   { 
     id: 13, name: 'Neurona Lab', industry: 'Software', tags: ['Machine Learning', 'Python'], location: 'Monterrey, NL', verified: false, employees: '15', revenue: '$800k', tier: 'Startup', color: 'from-indigo-600 to-indigo-900', 
     domain: 'openai.com', 
-    banner: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=2070', 
+    banner: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=600&auto=format&fit=crop', 
     desc: 'Laboratorio de IA enfocado en optimización de procesos industriales.' 
   },
   
@@ -38,13 +38,13 @@ const MOCK_DATA = [
   { 
     id: 3, name: 'FinCore', industry: 'Fintech', tags: ['Blockchain', 'Banking'], location: 'San Pedro, NL', verified: true, employees: '200', revenue: '$25M', tier: 'Scaleup', color: 'from-slate-700 to-slate-900', 
     domain: 'stripe.com', 
-    banner: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1470', 
+    banner: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=600&auto=format&fit=crop', 
     desc: 'Infraestructura bancaria de nueva generación y seguridad financiera.' 
   },
   { 
     id: 16, name: 'RegioLend', industry: 'Fintech', tags: ['Lending', 'SaaS'], location: 'Monterrey, NL', verified: true, employees: '45', revenue: '$5M', tier: 'Startup', color: 'from-sky-600 to-sky-900', 
     domain: 'kavak.com', 
-    banner: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=2070', 
+    banner: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=600&auto=format&fit=crop', 
     desc: 'Plataforma de micro-créditos automatizados para PyMEs del norte.' 
   },
 
@@ -52,13 +52,13 @@ const MOCK_DATA = [
   { 
     id: 8, name: 'ManuFact', industry: 'Manufactura 4.0', tags: ['Robotics', 'Auto'], location: 'Santa Catarina', verified: true, employees: '1000+', revenue: '$200M', tier: 'Titan', color: 'from-red-600 to-red-900', 
     domain: 'tesla.com', 
-    banner: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=2070', 
+    banner: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=600&auto=format&fit=crop', 
     desc: 'Automatización industrial y robótica avanzada para líneas de ensamblaje.' 
   },
   { 
     id: 15, name: 'AutoSoft', industry: 'Automotriz', tags: ['Embedded', 'EV'], location: 'Saltillo/Mty', verified: true, employees: '300', revenue: '$50M', tier: 'Enterprise', color: 'from-zinc-600 to-zinc-900', 
     domain: 'kia.com', 
-    banner: 'https://images.unsplash.com/photo-1617788138017-80ad40651399?q=80&w=2070', 
+    banner: 'https://images.unsplash.com/photo-1617788138017-80ad40651399?q=80&w=600&auto=format&fit=crop', 
     desc: 'Software embebido para vehículos eléctricos y sistemas autónomos.' 
   },
 
@@ -66,27 +66,27 @@ const MOCK_DATA = [
   { 
     id: 5, name: 'HealthAI', industry: 'Healthtech', tags: ['Imaging', 'AI'], location: 'Monterrey, NL', verified: true, employees: '120', revenue: '$12M', tier: 'Scaleup', color: 'from-cyan-600 to-cyan-900', 
     domain: 'pfizer.com', 
-    banner: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=2070', 
+    banner: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=600&auto=format&fit=crop', 
     desc: 'Diagnóstico asistido por IA para radiología y optimización hospitalaria.' 
   },
   { 
     id: 14, name: 'BioNorte', industry: 'Biotech', tags: ['Genomics', 'Lab'], location: 'Apodaca, NL', verified: false, employees: '25', revenue: '$2M', tier: 'Startup', color: 'from-teal-600 to-teal-900', 
     domain: 'modernatx.com', 
-    banner: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?q=80&w=2070', 
+    banner: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?q=80&w=600&auto=format&fit=crop', 
     desc: 'Investigación genómica aplicada a la agricultura resistente a sequías.' 
   },
 
   // AGRO & CLEAN
   { 
     id: 4, name: 'AgroTech', industry: 'Agrotech', tags: ['IoT', 'Drones'], location: 'Sinaloa/Mty', verified: false, employees: '45', revenue: '$3M', tier: 'Startup', color: 'from-lime-600 to-lime-900', 
-    domain: 'johndeere.com', 
-    banner: 'https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?q=80&w=2070', 
+    domain: 'samsung.com', 
+    banner: 'https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?q=80&w=600&auto=format&fit=crop', 
     desc: 'Agricultura de precisión mediante drones autónomos y sensores IoT.' 
   },
   { 
     id: 10, name: 'GreenGrid', industry: 'Cleantech', tags: ['Solar', 'Energy'], location: 'Apodaca, NL', verified: true, employees: '150', revenue: '$40M', tier: 'Enterprise', color: 'from-green-600 to-green-900', 
     domain: 'vestas.com', 
-    banner: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=2072', 
+    banner: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=600&auto=format&fit=crop', 
     desc: 'Monitoreo inteligente de redes eléctricas y soluciones de energía renovable.' 
   },
 
@@ -94,43 +94,43 @@ const MOCK_DATA = [
   { 
     id: 6, name: 'CyberShield', industry: 'Ciberseguridad', tags: ['SecOps', 'Compliance'], location: 'Remoto', verified: true, employees: '30', revenue: '$2M', tier: 'Boutique', color: 'from-rose-600 to-rose-900', 
     domain: 'crowdstrike.com', 
-    banner: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070', 
+    banner: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=600&auto=format&fit=crop', 
     desc: 'Centro de operaciones de seguridad (SOC) y pentesting para startups.' 
   },
   { 
     id: 7, name: 'LogisticsOne', industry: 'Logística', tags: ['Fleet', 'SaaS'], location: 'Apodaca, NL', verified: true, employees: '500', revenue: '$80M', tier: 'Enterprise', color: 'from-orange-600 to-orange-900', 
     domain: 'fedex.com', 
-    banner: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=2070', 
+    banner: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=600&auto=format&fit=crop', 
     desc: 'Plataforma SaaS para gestión de flotillas y optimización de última milla.' 
   },
   { 
     id: 9, name: 'BuildOps', industry: 'Proptech', tags: ['VR', 'BIM'], location: 'Monterrey, NL', verified: false, employees: '60', revenue: '$5M', tier: 'Specialist', color: 'from-yellow-600 to-yellow-900', 
     domain: 'cemex.com', 
-    banner: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=2031', 
+    banner: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=600&auto=format&fit=crop', 
     desc: 'Gemelos digitales para construcción y gestión de activos inmobiliarios.' 
   },
   { 
     id: 11, name: 'LegalFlow', industry: 'Legaltech', tags: ['NLP', 'Contracts'], location: 'San Pedro, NL', verified: false, employees: '25', revenue: '$1.5M', tier: 'Startup', color: 'from-purple-600 to-purple-900', 
     domain: 'docusign.com', 
-    banner: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=2012', 
+    banner: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=600&auto=format&fit=crop', 
     desc: 'Automatización de contratos y análisis legal mediante NLP.' 
   },
   { 
     id: 12, name: 'EduStack', industry: 'Edtech', tags: ['LMS', 'Mobile'], location: 'Remoto', verified: true, employees: '200', revenue: '$15M', tier: 'Scaleup', color: 'from-indigo-600 to-indigo-900', 
     domain: 'coursera.org', 
-    banner: 'https://images.unsplash.com/photo-1501504905252-473c47e087f8?q=80&w=1974', 
+    banner: 'https://images.unsplash.com/photo-1501504905252-473c47e087f8?q=80&w=600&auto=format&fit=crop', 
     desc: 'Plataformas de aprendizaje adaptativo para corporativos.' 
   },
   { 
     id: 17, name: 'NanoMat', industry: 'Nanotech', tags: ['Materials', 'R&D'], location: 'PIIT, Apodaca', verified: true, employees: '10', revenue: '$500k', tier: 'Startup', color: 'from-fuchsia-600 to-fuchsia-900', 
     domain: '3m.com', 
-    banner: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=2070', 
+    banner: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=600&auto=format&fit=crop', 
     desc: 'Desarrollo de nanomateriales avanzados para la industria aeroespacial.' 
   },
   { 
     id: 18, name: 'UrbanSense', industry: 'IoT', tags: ['Smart City', 'GovTech'], location: 'San Pedro, NL', verified: true, employees: '40', revenue: '$4M', tier: 'Scaleup', color: 'from-violet-600 to-violet-900', 
-    domain: 'cisco.com', 
-    banner: 'https://images.unsplash.com/photo-1573804633927-bfcbcd909acd?q=80&w=2027', 
+    domain: 'amazon.com', 
+    banner: 'https://images.unsplash.com/photo-1573804633927-bfcbcd909acd?q=80&w=600&auto=format&fit=crop', 
     desc: 'Sensores urbanos y plataformas de gestión para ciudades inteligentes.' 
   },
 ];
@@ -349,7 +349,7 @@ const App = () => {
                 {/* BANNER TARJETA */}
                 <div className="h-32 w-full relative overflow-hidden bg-surface flex-shrink-0">
                    <div className="absolute inset-0 bg-ink/10 group-hover:bg-transparent transition-colors z-10"></div>
-                   <img src={item.banner} alt={item.name} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" />
+                   <img loading="lazy" src={item.banner} alt={item.name} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" />
                    {item.verified && (
                       <div className="absolute top-2 right-2 z-20 bg-white/90 backdrop-blur text-emerald-700 p-1.5 rounded-full shadow-sm" title="Verificado">
                         <ShieldCheck className="h-3.5 w-3.5" />
@@ -506,7 +506,7 @@ const App = () => {
                      alert('URL copiada al portapapeles');
                   }
                 }}
-                className="absolute top-4 right-16 z-50 p-2 bg-white/30 hover:bg-white/50 text-white rounded-full transition-colors backdrop-blur-md shadow-lg"
+                className="absolute top-4 right-16 z-50 p-2 bg-black/30 hover:bg-white/50 text-white rounded-full transition-colors backdrop-blur-md shadow-lg"
                 title="Compartir"
               >
                 <Share2 className="h-6 w-6 drop-shadow-md" />
@@ -515,12 +515,12 @@ const App = () => {
               {/* BOTON DE CERRAR FLOTANTE */}
               <button 
                 onClick={() => setSelectedCompany(null)} 
-                className="absolute top-4 right-4 z-50 p-2 bg-white/30 hover:bg-white/50 text-white rounded-full transition-colors backdrop-blur-md shadow-lg"
+                className="absolute top-4 right-4 z-50 p-2 bg-black/30 hover:bg-white/50 text-white rounded-full transition-colors backdrop-blur-md shadow-lg"
               >
                 <X className="h-6 w-6 drop-shadow-md" />
               </button>
 
-              {/* CONTENEDOR UNIFICADO CON SCROLL: BANNER + CONTENIDO */}
+              
               <div className="flex-1 overflow-y-auto bg-white relative pb-44"> 
                 
                 {/* HEADER / BANNER */}
