@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
   Search, ArrowRight, X, MapPin, Globe, ShieldCheck, 
   Zap, Filter, ChevronDown, Check, 
-  Linkedin, Twitter, Instagram, Mail, Briefcase, Users, Activity,
-  Share2, Bot, Send, MessageSquare 
+  Linkedin, Twitter, Instagram, Mail, Briefcase, Activity,
+  Share2, Bot, Send, MessageSquare, Layers, Package 
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import logo from './assets/logo.svg';
@@ -12,126 +12,162 @@ import heroImage from './assets/monterrey-hero.webp';
 // --- HELPER PARA LOGOS DE GOOGLE ---
 const getLogoUrl = (domain) => `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
 
-// --- DATASET FINAL ---
+// --- DATASET ---
 const MOCK_DATA = [
   // SOFTWARE & DATA
   { 
-    id: 1, name: 'Softtek', industry: 'Software', tags: ['AI', 'Cloud', 'Global'], location: 'Monterrey, NL', verified: true, employees: '15k+', revenue: '$1B+', tier: 'Titan', color: 'from-blue-600 to-blue-900', 
+    id: 1, name: 'Softtek', industry: 'Software', tags: ['AI', 'Cloud', 'Global'], location: 'Monterrey, NL', verified: true, tier: 'Titan', color: 'from-blue-600 to-blue-900', 
     domain: 'softtek.com', 
     banner: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=600&auto=format&fit=crop', 
-    desc: 'Líder global en soluciones digitales. Ayudamos a las empresas a cerrar la brecha digital.' 
+    desc: 'Líder global en soluciones digitales. Ayudamos a las empresas a cerrar la brecha digital.',
+    services: ['Desarrollo de Apps', 'Cloud Migration', 'Ciberseguridad'],
+    products: 'FRIDA Intelligent Automation'
   },
   { 
-    id: 2, name: 'DataRegio', industry: 'Data Science', tags: ['Big Data', 'Retail'], location: 'San Pedro, NL', verified: true, employees: '80', revenue: '$8M', tier: 'Specialist', color: 'from-emerald-600 to-emerald-900', 
+    id: 2, name: 'DataRegio', industry: 'Data Science', tags: ['Big Data', 'Retail'], location: 'San Pedro, NL', verified: true, tier: 'Specialist', color: 'from-emerald-600 to-emerald-900', 
     domain: 'databricks.com', 
     banner: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=600&auto=format&fit=crop', 
-    desc: 'Consultoría boutique transformando datos complejos en estrategias de retail accionables.' 
+    desc: 'Consultoría boutique transformando datos complejos en estrategias de retail accionables.',
+    services: ['Business Intelligence', 'Data Engineering', 'Predictive Models'],
+    products: 'RetailDash Analytics Suite'
   },
   { 
-    id: 13, name: 'Neurona Lab', industry: 'Software', tags: ['Machine Learning', 'Python'], location: 'Monterrey, NL', verified: false, employees: '15', revenue: '$800k', tier: 'Startup', color: 'from-indigo-600 to-indigo-900', 
+    id: 13, name: 'Neurona Lab', industry: 'Software', tags: ['Machine Learning', 'Python'], location: 'Monterrey, NL', verified: false, tier: 'Startup', color: 'from-indigo-600 to-indigo-900', 
     domain: 'openai.com', 
     banner: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=600&auto=format&fit=crop', 
-    desc: 'Laboratorio de IA enfocado en optimización de procesos industriales.' 
+    desc: 'Laboratorio de IA enfocado en optimización de procesos industriales.',
+    services: ['Visión Computacional', 'Optimización de Procesos', 'Consultoría AI'],
+    products: 'VisionAI Control'
   },
   
   // FINTECH
   { 
-    id: 3, name: 'FinCore', industry: 'Fintech', tags: ['Blockchain', 'Banking'], location: 'San Pedro, NL', verified: true, employees: '200', revenue: '$25M', tier: 'Scaleup', color: 'from-slate-700 to-slate-900', 
+    id: 3, name: 'FinCore', industry: 'Fintech', tags: ['Blockchain', 'Banking'], location: 'San Pedro, NL', verified: true, tier: 'Scaleup', color: 'from-slate-700 to-slate-900', 
     domain: 'stripe.com', 
     banner: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=600&auto=format&fit=crop', 
-    desc: 'Infraestructura bancaria de nueva generación y seguridad financiera.' 
+    desc: 'Infraestructura bancaria de nueva generación y seguridad financiera.',
+    services: ['Pasarelas de Pago', 'Seguridad Bancaria', 'API Integration'],
+    products: 'CoreBank API'
   },
   { 
-    id: 16, name: 'RegioLend', industry: 'Fintech', tags: ['Lending', 'SaaS'], location: 'Monterrey, NL', verified: true, employees: '45', revenue: '$5M', tier: 'Startup', color: 'from-sky-600 to-sky-900', 
+    id: 16, name: 'RegioLend', industry: 'Fintech', tags: ['Lending', 'SaaS'], location: 'Monterrey, NL', verified: true, tier: 'Startup', color: 'from-sky-600 to-sky-900', 
     domain: 'kavak.com', 
     banner: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=600&auto=format&fit=crop', 
-    desc: 'Plataforma de micro-créditos automatizados para PyMEs del norte.' 
+    desc: 'Plataforma de micro-créditos automatizados para PyMEs del norte.',
+    services: ['Micro-créditos', 'Scoring Crediticio', 'SaaS Financiero'],
+    products: 'PrestamoFast Engine'
   },
 
   // MANUFACTURA & AUTO
   { 
-    id: 8, name: 'ManuFact', industry: 'Manufactura 4.0', tags: ['Robotics', 'Auto'], location: 'Santa Catarina', verified: true, employees: '1000+', revenue: '$200M', tier: 'Titan', color: 'from-red-600 to-red-900', 
+    id: 8, name: 'ManuFact', industry: 'Manufactura 4.0', tags: ['Robotics', 'Auto'], location: 'Santa Catarina', verified: true, tier: 'Titan', color: 'from-red-600 to-red-900', 
     domain: 'tesla.com', 
     banner: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=600&auto=format&fit=crop', 
-    desc: 'Automatización industrial y robótica avanzada para líneas de ensamblaje.' 
+    desc: 'Automatización industrial y robótica avanzada para líneas de ensamblaje.',
+    services: ['Integración Robótica', 'PLC Programming', 'Diseño Industrial'],
+    products: 'AssemblyLine Pro'
   },
   { 
-    id: 15, name: 'AutoSoft', industry: 'Automotriz', tags: ['Embedded', 'EV'], location: 'Saltillo/Mty', verified: true, employees: '300', revenue: '$50M', tier: 'Enterprise', color: 'from-zinc-600 to-zinc-900', 
+    id: 15, name: 'AutoSoft', industry: 'Automotriz', tags: ['Embedded', 'EV'], location: 'Saltillo/Mty', verified: true, tier: 'Enterprise', color: 'from-zinc-600 to-zinc-900', 
     domain: 'kia.com', 
     banner: 'https://images.unsplash.com/photo-1617788138017-80ad40651399?q=80&w=600&auto=format&fit=crop', 
-    desc: 'Software embebido para vehículos eléctricos y sistemas autónomos.' 
+    desc: 'Software embebido para vehículos eléctricos y sistemas autónomos.',
+    services: ['Sistemas Embebidos', 'Testing Automotriz', 'Telemática'],
+    products: 'E-Drive OS'
   },
 
   // HEALTH & BIO
   { 
-    id: 5, name: 'HealthAI', industry: 'Healthtech', tags: ['Imaging', 'AI'], location: 'Monterrey, NL', verified: true, employees: '120', revenue: '$12M', tier: 'Scaleup', color: 'from-cyan-600 to-cyan-900', 
+    id: 5, name: 'HealthAI', industry: 'Healthtech', tags: ['Imaging', 'AI'], location: 'Monterrey, NL', verified: true, tier: 'Scaleup', color: 'from-cyan-600 to-cyan-900', 
     domain: 'pfizer.com', 
     banner: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=600&auto=format&fit=crop', 
-    desc: 'Diagnóstico asistido por IA para radiología y optimización hospitalaria.' 
+    desc: 'Diagnóstico asistido por IA para radiología y optimización hospitalaria.',
+    services: ['Análisis de Imágenes', 'Gestión Hospitalaria', 'Telemedicina'],
+    products: 'RadioScan AI'
   },
   { 
-    id: 14, name: 'BioNorte', industry: 'Biotech', tags: ['Genomics', 'Lab'], location: 'Apodaca, NL', verified: false, employees: '25', revenue: '$2M', tier: 'Startup', color: 'from-teal-600 to-teal-900', 
+    id: 14, name: 'BioNorte', industry: 'Biotech', tags: ['Genomics', 'Lab'], location: 'Apodaca, NL', verified: false, tier: 'Startup', color: 'from-teal-600 to-teal-900', 
     domain: 'modernatx.com', 
     banner: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?q=80&w=600&auto=format&fit=crop', 
-    desc: 'Investigación genómica aplicada a la agricultura resistente a sequías.' 
+    desc: 'Investigación genómica aplicada a la agricultura resistente a sequías.',
+    services: ['Secuenciación ADN', 'Cultivos In-Vitro', 'Consultoría Agrícola'],
+    products: 'DroughtResist Seeds'
   },
 
   // AGRO & CLEAN
   { 
-    id: 4, name: 'AgroTech', industry: 'Agrotech', tags: ['IoT', 'Drones'], location: 'Sinaloa/Mty', verified: false, employees: '45', revenue: '$3M', tier: 'Startup', color: 'from-lime-600 to-lime-900', 
-    domain: 'apple.com', 
+    id: 4, name: 'AgroTech', industry: 'Agrotech', tags: ['IoT', 'Drones'], location: 'Sinaloa/Mty', verified: false, tier: 'Startup', color: 'from-lime-600 to-lime-900', 
+    domain: 'amazon.com', 
     banner: 'https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?q=80&w=600&auto=format&fit=crop', 
-    desc: 'Agricultura de precisión mediante drones autónomos y sensores IoT.' 
+    desc: 'Agricultura de precisión mediante drones autónomos y sensores IoT.',
+    services: ['Mapeo con Drones', 'Instalación IoT', 'Análisis de Suelos'],
+    products: 'FarmView Dashboard'
   },
   { 
-    id: 10, name: 'GreenGrid', industry: 'Cleantech', tags: ['Solar', 'Energy'], location: 'Apodaca, NL', verified: true, employees: '150', revenue: '$40M', tier: 'Enterprise', color: 'from-green-600 to-green-900', 
+    id: 10, name: 'GreenGrid', industry: 'Cleantech', tags: ['Solar', 'Energy'], location: 'Apodaca, NL', verified: true, tier: 'Enterprise', color: 'from-green-600 to-green-900', 
     domain: 'vestas.com', 
     banner: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=600&auto=format&fit=crop', 
-    desc: 'Monitoreo inteligente de redes eléctricas y soluciones de energía renovable.' 
+    desc: 'Monitoreo inteligente de redes eléctricas y soluciones de energía renovable.',
+    services: ['Auditoría Energética', 'Instalación Solar', 'Mantenimiento'],
+    products: 'SmartGrid Controller'
   },
 
   // OTROS
   { 
-    id: 6, name: 'CyberShield', industry: 'Ciberseguridad', tags: ['SecOps', 'Compliance'], location: 'Remoto', verified: true, employees: '30', revenue: '$2M', tier: 'Boutique', color: 'from-rose-600 to-rose-900', 
+    id: 6, name: 'CyberShield', industry: 'Ciberseguridad', tags: ['SecOps', 'Compliance'], location: 'Remoto', verified: true, tier: 'Boutique', color: 'from-rose-600 to-rose-900', 
     domain: 'crowdstrike.com', 
     banner: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=600&auto=format&fit=crop', 
-    desc: 'Centro de operaciones de seguridad (SOC) y pentesting para startups.' 
+    desc: 'Centro de operaciones de seguridad (SOC) y pentesting para startups.',
+    services: ['Pentesting', 'Monitoreo SOC 24/7', 'Consultoría ISO'],
+    products: 'ShieldWall Firewall'
   },
   { 
-    id: 7, name: 'LogisticsOne', industry: 'Logística', tags: ['Fleet', 'SaaS'], location: 'Apodaca, NL', verified: true, employees: '500', revenue: '$80M', tier: 'Enterprise', color: 'from-orange-600 to-orange-900', 
+    id: 7, name: 'LogisticsOne', industry: 'Logística', tags: ['Fleet', 'SaaS'], location: 'Apodaca, NL', verified: true, tier: 'Enterprise', color: 'from-orange-600 to-orange-900', 
     domain: 'samsung.com', 
     banner: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=600&auto=format&fit=crop', 
-    desc: 'Plataforma SaaS para gestión de flotillas y optimización de última milla.' 
+    desc: 'Plataforma SaaS para gestión de flotillas y optimización de última milla.',
+    services: ['Rastreo Satelital', 'Optimización de Rutas', 'Gestión de Flota'],
+    products: 'FleetTrack 360'
   },
   { 
-    id: 9, name: 'BuildOps', industry: 'Proptech', tags: ['VR', 'BIM'], location: 'Monterrey, NL', verified: false, employees: '60', revenue: '$5M', tier: 'Specialist', color: 'from-yellow-600 to-yellow-900', 
+    id: 9, name: 'BuildOps', industry: 'Proptech', tags: ['VR', 'BIM'], location: 'Monterrey, NL', verified: false, tier: 'Specialist', color: 'from-yellow-600 to-yellow-900', 
     domain: 'cemex.com', 
     banner: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=600&auto=format&fit=crop', 
-    desc: 'Gemelos digitales para construcción y gestión de activos inmobiliarios.' 
+    desc: 'Gemelos digitales para construcción y gestión de activos inmobiliarios.',
+    services: ['Modelado BIM', 'Recorridos VR', 'Supervisión de Obra'],
+    products: 'DigitalTwin Builder'
   },
   { 
-    id: 11, name: 'LegalFlow', industry: 'Legaltech', tags: ['NLP', 'Contracts'], location: 'San Pedro, NL', verified: false, employees: '25', revenue: '$1.5M', tier: 'Startup', color: 'from-purple-600 to-purple-900', 
+    id: 11, name: 'LegalFlow', industry: 'Legaltech', tags: ['NLP', 'Contracts'], location: 'San Pedro, NL', verified: false, tier: 'Startup', color: 'from-purple-600 to-purple-900', 
     domain: 'docusign.com', 
     banner: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=600&auto=format&fit=crop', 
-    desc: 'Automatización de contratos y análisis legal mediante NLP.' 
+    desc: 'Automatización de contratos y análisis legal mediante NLP.',
+    services: ['Automatización Legal', 'Gestión de Contratos', 'Firma Digital'],
+    products: 'ContractAI'
   },
   { 
-    id: 12, name: 'EduStack', industry: 'Edtech', tags: ['LMS', 'Mobile'], location: 'Remoto', verified: true, employees: '200', revenue: '$15M', tier: 'Scaleup', color: 'from-indigo-600 to-indigo-900', 
+    id: 12, name: 'EduStack', industry: 'Edtech', tags: ['LMS', 'Mobile'], location: 'Remoto', verified: true, tier: 'Scaleup', color: 'from-indigo-600 to-indigo-900', 
     domain: 'coursera.org', 
     banner: 'https://images.unsplash.com/photo-1501504905252-473c47e087f8?q=80&w=600&auto=format&fit=crop', 
-    desc: 'Plataformas de aprendizaje adaptativo para corporativos.' 
+    desc: 'Plataformas de aprendizaje adaptativo para corporativos.',
+    services: ['Desarrollo de Cursos', 'Plataformas LMS', 'Gamificación'],
+    products: 'LearnCorp Suite'
   },
   { 
-    id: 17, name: 'NanoMat', industry: 'Nanotech', tags: ['Materials', 'R&D'], location: 'PIIT, Apodaca', verified: true, employees: '10', revenue: '$500k', tier: 'Startup', color: 'from-fuchsia-600 to-fuchsia-900', 
+    id: 17, name: 'NanoMat', industry: 'Nanotech', tags: ['Materials', 'R&D'], location: 'PIIT, Apodaca', verified: true, tier: 'Startup', color: 'from-fuchsia-600 to-fuchsia-900', 
     domain: '3m.com', 
     banner: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=600&auto=format&fit=crop', 
-    desc: 'Desarrollo de nanomateriales avanzados para la industria aeroespacial.' 
+    desc: 'Desarrollo de nanomateriales avanzados para la industria aeroespacial.',
+    services: ['Investigación R&D', 'Pruebas de Materiales', 'Prototipado'],
+    products: 'AeroGraphene'
   },
   { 
-    id: 18, name: 'UrbanSense', industry: 'IoT', tags: ['Smart City', 'GovTech'], location: 'San Pedro, NL', verified: true, employees: '40', revenue: '$4M', tier: 'Scaleup', color: 'from-violet-600 to-violet-900', 
-    domain: 'amazon.com', 
+    id: 18, name: 'UrbanSense', industry: 'IoT', tags: ['Smart City', 'GovTech'], location: 'San Pedro, NL', verified: true, tier: 'Scaleup', color: 'from-violet-600 to-violet-900', 
+    domain: 'nvidia.com', 
     banner: 'https://images.unsplash.com/photo-1573804633927-bfcbcd909acd?q=80&w=600&auto=format&fit=crop', 
-    desc: 'Sensores urbanos y plataformas de gestión para ciudades inteligentes.' 
+    desc: 'Sensores urbanos y plataformas de gestión para ciudades inteligentes.',
+    services: ['Infraestructura Smart', 'Análisis de Tráfico', 'Seguridad Urbana'],
+    products: 'CitySense Hub'
   },
 ];
 
@@ -174,7 +210,6 @@ const App = () => {
 
   // --- EFECTO: MOSTRAR BURBUJA DE IA (SIEMPRE AL ENTRAR) ---
   useEffect(() => {
-    
     const timer = setTimeout(() => {
       setShowAiBubble(true);
     }, 1500); 
@@ -234,7 +269,6 @@ const App = () => {
       {!selectedCompany && (
         <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-3">
           
-          {/* Burbuja de Texto (Notificación) */}
           <AnimatePresence>
             {showAiBubble && !isChatOpen && (
               <motion.div 
@@ -261,7 +295,6 @@ const App = () => {
             )}
           </AnimatePresence>
 
-          {/* Botón Flotante */}
           <motion.button 
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -271,7 +304,6 @@ const App = () => {
             {isChatOpen ? <X className="h-6 w-6 text-white" /> : <Bot className="h-7 w-7 text-white" />}
           </motion.button>
 
-          {/* VENTANA DE CHAT */}
           <AnimatePresence>
             {isChatOpen && (
               <motion.div
@@ -280,7 +312,6 @@ const App = () => {
                 exit={{ opacity: 0, y: 20, scale: 0.95 }}
                 className="absolute bottom-20 right-0 w-[90vw] md:w-96 h-[500px] max-h-[70vh] bg-white rounded-2xl shadow-2xl border border-border flex flex-col overflow-hidden origin-bottom-right z-40"
               >
-                {/* Header Chat */}
                 <div className="bg-gradient-to-r from-slate-900 to-slate-800 p-4 flex items-center gap-3 shadow-sm">
                   <div className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-sm border border-white/20">
                     <Bot className="h-6 w-6 text-white" />
@@ -294,7 +325,6 @@ const App = () => {
                   </div>
                 </div>
 
-                {/* Area de Mensajes */}
                 <div className="flex-1 bg-slate-50 p-4 overflow-y-auto custom-scrollbar">
                   <div className="flex flex-col gap-4">
                     {messages.map((msg) => (
@@ -308,7 +338,6 @@ const App = () => {
                         </div>
                       </div>
                     ))}
-                    {/* Indicador de escribiendo */}
                     {isTyping && (
                       <div className="flex justify-start">
                         <div className="bg-white border border-border rounded-2xl rounded-bl-none px-4 py-3 shadow-sm flex gap-1 items-center">
@@ -322,7 +351,6 @@ const App = () => {
                   </div>
                 </div>
 
-                {/* Input Area */}
                 <form onSubmit={handleSendMessage} className="p-3 bg-white border-t border-border flex gap-2">
                   <input 
                     type="text" 
@@ -737,18 +765,34 @@ const App = () => {
                     )}
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4 mb-10">
-                      <div className="p-5 rounded-2xl bg-surface/50 border border-border flex flex-col gap-1">
-                        <div className="flex items-center gap-2 text-subtle text-xs font-bold uppercase tracking-wider">
-                            <Briefcase className="h-3 w-3" /> Ingresos
+                  {/* --- NUEVA SECCIÓN: SERVICIOS Y CORE BUSINESS --- */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
+                      <div className="p-5 rounded-2xl bg-surface/50 border border-border flex flex-col gap-3">
+                        <div className="flex items-center gap-2 text-subtle text-xs font-bold uppercase tracking-wider mb-1">
+                            <Layers className="h-3 w-3" /> Servicios Principales
                         </div>
-                        <p className="text-2xl font-display font-bold text-ink">{selectedCompany.revenue}</p>
+                        <ul className="space-y-2">
+                          {selectedCompany.services && selectedCompany.services.map((svc, idx) => (
+                            <li key={idx} className="text-sm font-medium text-ink flex items-start gap-2">
+                              <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 mt-1.5 shrink-0"></span>
+                              {svc}
+                            </li>
+                          ))}
+                        </ul>
                       </div>
-                      <div className="p-5 rounded-2xl bg-surface/50 border border-border flex flex-col gap-1">
-                        <div className="flex items-center gap-2 text-subtle text-xs font-bold uppercase tracking-wider">
-                            <Users className="h-3 w-3" /> Equipo
+                      <div className="p-5 rounded-2xl bg-surface/50 border border-border flex flex-col gap-4">
+                        <div>
+                          <div className="flex items-center gap-2 text-subtle text-xs font-bold uppercase tracking-wider mb-2">
+                              <Package className="h-3 w-3" /> Core Business / Productos
+                          </div>
+                          <p className="text-sm font-bold text-ink">{selectedCompany.products}</p>
                         </div>
-                        <p className="text-2xl font-display font-bold text-ink">{selectedCompany.employees}</p>
+                        <div>
+                          <div className="flex items-center gap-2 text-subtle text-xs font-bold uppercase tracking-wider mb-2">
+                              <Briefcase className="h-3 w-3" /> Enfoque de Industria
+                          </div>
+                          <p className="text-sm font-medium text-ink">{selectedCompany.industry}</p>
+                        </div>
                       </div>
                   </div>
 
@@ -757,7 +801,7 @@ const App = () => {
                     <p className="text-subtle leading-relaxed text-base">
                       {selectedCompany.desc}
                       <br/><br/>
-                      {selectedCompany.name} impulsa la transformación digital con soluciones escalables y un equipo de {selectedCompany.employees} especialistas certificados. Su enfoque en resultados medibles los ha posicionado como referentes en el ecosistema.
+                      {selectedCompany.name} impulsa la transformación digital con soluciones escalables. Su enfoque en resultados medibles los ha posicionado como referentes en el ecosistema.
                     </p>
                   </div>
 
@@ -795,7 +839,7 @@ const App = () => {
                 </div>
               </div>
 
-              {/* === Footer Flotante === */}
+              {/* === Footer Flotante con FADE suave === */}
               <div className="absolute bottom-0 w-full z-20">
                 <div className="h-12 w-full bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none"></div>
 
