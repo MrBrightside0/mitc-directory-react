@@ -12,7 +12,7 @@ import heroImage from './assets/monterrey-hero.webp';
 // --- HELPER PARA LOGOS DE GOOGLE ---
 const getLogoUrl = (domain) => `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
 
-// --- DATASET ---
+// --- DATASET ACTUALIZADO (6-9 Servicios por empresa) ---
 const MOCK_DATA = [
   // SOFTWARE & DATA
   { 
@@ -20,7 +20,16 @@ const MOCK_DATA = [
     domain: 'softtek.com', 
     banner: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=600&auto=format&fit=crop', 
     desc: 'Líder global en soluciones digitales. Ayudamos a las empresas a cerrar la brecha digital.',
-    services: ['Desarrollo de Apps', 'Cloud Migration', 'Ciberseguridad'],
+    services: [
+        'Desarrollo de Aplicaciones Móviles', 
+        'Cloud Migration & DevOps', 
+        'Ciberseguridad Empresarial',
+        'Staffing de TI Especializado',
+        'Modernización de Sistemas Legacy',
+        'Implementación SAP/Oracle',
+        'QA & Testing Automatizado',
+        'Diseño UX/UI Corporativo'
+    ],
     products: 'FRIDA Intelligent Automation'
   },
   { 
@@ -28,7 +37,15 @@ const MOCK_DATA = [
     domain: 'databricks.com', 
     banner: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=600&auto=format&fit=crop', 
     desc: 'Consultoría boutique transformando datos complejos en estrategias de retail accionables.',
-    services: ['Business Intelligence', 'Data Engineering', 'Predictive Models'],
+    services: [
+        'Business Intelligence (BI)', 
+        'Ingeniería de Datos (ETL)', 
+        'Modelos Predictivos de Venta',
+        'Segmentación de Clientes con IA',
+        'Data Warehousing',
+        'Gobernanza de Datos',
+        'Visualización en Tableau/PowerBI'
+    ],
     products: 'RetailDash Analytics Suite'
   },
   { 
@@ -36,7 +53,15 @@ const MOCK_DATA = [
     domain: 'openai.com', 
     banner: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=600&auto=format&fit=crop', 
     desc: 'Laboratorio de IA enfocado en optimización de procesos industriales.',
-    services: ['Visión Computacional', 'Optimización de Procesos', 'Consultoría AI'],
+    services: [
+        'Visión Computacional', 
+        'Optimización de Procesos', 
+        'Consultoría en IA Generativa',
+        'Desarrollo de Chatbots (NLP)',
+        'Mantenimiento Predictivo',
+        'Análisis de Sentimiento',
+        'Deep Learning para Industria'
+    ],
     products: 'VisionAI Control'
   },
   
@@ -46,7 +71,15 @@ const MOCK_DATA = [
     domain: 'stripe.com', 
     banner: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=600&auto=format&fit=crop', 
     desc: 'Infraestructura bancaria de nueva generación y seguridad financiera.',
-    services: ['Pasarelas de Pago', 'Seguridad Bancaria', 'API Integration'],
+    services: [
+        'Pasarelas de Pago Custom', 
+        'Seguridad Bancaria (PCI DSS)', 
+        'Integración de APIs Financieras',
+        'Desarrollo Blockchain',
+        'Smart Contracts',
+        'Prevención de Fraude con IA',
+        'Billeteras Digitales (Wallets)'
+    ],
     products: 'CoreBank API'
   },
   { 
@@ -54,7 +87,15 @@ const MOCK_DATA = [
     domain: 'kavak.com', 
     banner: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=600&auto=format&fit=crop', 
     desc: 'Plataforma de micro-créditos automatizados para PyMEs del norte.',
-    services: ['Micro-créditos', 'Scoring Crediticio', 'SaaS Financiero'],
+    services: [
+        'Micro-créditos Automatizados', 
+        'Scoring Crediticio Algorítmico', 
+        'SaaS Financiero White-Label',
+        'Gestión de Cobranza Digital',
+        'Verificación de Identidad (KYC)',
+        'Análisis de Riesgo',
+        'Factoraje Financiero'
+    ],
     products: 'PrestamoFast Engine'
   },
 
@@ -64,7 +105,15 @@ const MOCK_DATA = [
     domain: 'tesla.com', 
     banner: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=600&auto=format&fit=crop', 
     desc: 'Automatización industrial y robótica avanzada para líneas de ensamblaje.',
-    services: ['Integración Robótica', 'PLC Programming', 'Diseño Industrial'],
+    services: [
+        'Integración de Celdas Robóticas', 
+        'Programación de PLCs', 
+        'Diseño Industrial CAD/CAM',
+        'Gemelos Digitales de Planta',
+        'Sistemas SCADA',
+        'IoT Industrial (IIoT)',
+        'Consultoría Lean Manufacturing'
+    ],
     products: 'AssemblyLine Pro'
   },
   { 
@@ -72,7 +121,15 @@ const MOCK_DATA = [
     domain: 'kia.com', 
     banner: 'https://images.unsplash.com/photo-1617788138017-80ad40651399?q=80&w=600&auto=format&fit=crop', 
     desc: 'Software embebido para vehículos eléctricos y sistemas autónomos.',
-    services: ['Sistemas Embebidos', 'Testing Automotriz', 'Telemática'],
+    services: [
+        'Desarrollo de Sistemas Embebidos', 
+        'Testing Automotriz (HIL/SIL)', 
+        'Telemática y V2X',
+        'Infotainment Systems',
+        'Gestión de Baterías (BMS)',
+        'Seguridad Funcional (ISO 26262)',
+        'ADAS Algorithms'
+    ],
     products: 'E-Drive OS'
   },
 
@@ -82,7 +139,15 @@ const MOCK_DATA = [
     domain: 'pfizer.com', 
     banner: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=600&auto=format&fit=crop', 
     desc: 'Diagnóstico asistido por IA para radiología y optimización hospitalaria.',
-    services: ['Análisis de Imágenes', 'Gestión Hospitalaria', 'Telemedicina'],
+    services: [
+        'Análisis de Imágenes Médicas (DICOM)', 
+        'Gestión Hospitalaria (HIS)', 
+        'Plataformas de Telemedicina',
+        'Expediente Clínico Electrónico',
+        'Interoperabilidad HL7/FHIR',
+        'Triaje Automatizado con IA',
+        'Monitoreo Remoto de Pacientes'
+    ],
     products: 'RadioScan AI'
   },
   { 
@@ -90,17 +155,33 @@ const MOCK_DATA = [
     domain: 'modernatx.com', 
     banner: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?q=80&w=600&auto=format&fit=crop', 
     desc: 'Investigación genómica aplicada a la agricultura resistente a sequías.',
-    services: ['Secuenciación ADN', 'Cultivos In-Vitro', 'Consultoría Agrícola'],
+    services: [
+        'Secuenciación de ADN', 
+        'Cultivos de Tejidos In-Vitro', 
+        'Consultoría Agrícola Avanzada',
+        'Bioinformática',
+        'Análisis de Microbioma de Suelo',
+        'Edición Genética (CRISPR)',
+        'Pruebas de Toxicidad'
+    ],
     products: 'DroughtResist Seeds'
   },
 
   // AGRO & CLEAN
   { 
     id: 4, name: 'AgroTech', industry: 'Agrotech', tags: ['IoT', 'Drones'], location: 'Sinaloa/Mty', verified: false, tier: 'Startup', color: 'from-lime-600 to-lime-900', 
-    domain: 'amazon.com', 
+    domain: 'apple.com', 
     banner: 'https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?q=80&w=600&auto=format&fit=crop', 
     desc: 'Agricultura de precisión mediante drones autónomos y sensores IoT.',
-    services: ['Mapeo con Drones', 'Instalación IoT', 'Análisis de Suelos'],
+    services: [
+        'Mapeo Aéreo con Drones', 
+        'Instalación de Sensores IoT', 
+        'Análisis Químico de Suelos',
+        'Sistemas de Riego Inteligente',
+        'Pronóstico de Cosechas con IA',
+        'Trazabilidad Blockchain',
+        'Control de Plagas Digital'
+    ],
     products: 'FarmView Dashboard'
   },
   { 
@@ -108,7 +189,15 @@ const MOCK_DATA = [
     domain: 'vestas.com', 
     banner: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=600&auto=format&fit=crop', 
     desc: 'Monitoreo inteligente de redes eléctricas y soluciones de energía renovable.',
-    services: ['Auditoría Energética', 'Instalación Solar', 'Mantenimiento'],
+    services: [
+        'Auditoría Energética Industrial', 
+        'Instalación de Paneles Solares', 
+        'Mantenimiento de Turbinas',
+        'Gestión de Baterías Industriales',
+        'Balanceo de Red Eléctrica',
+        'Certificación de Huella de Carbono',
+        'Smart Metering'
+    ],
     products: 'SmartGrid Controller'
   },
 
@@ -118,7 +207,15 @@ const MOCK_DATA = [
     domain: 'crowdstrike.com', 
     banner: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=600&auto=format&fit=crop', 
     desc: 'Centro de operaciones de seguridad (SOC) y pentesting para startups.',
-    services: ['Pentesting', 'Monitoreo SOC 24/7', 'Consultoría ISO'],
+    services: [
+        'Ethical Hacking / Pentesting', 
+        'Monitoreo SOC 24/7', 
+        'Consultoría ISO 27001',
+        'Respuesta a Incidentes',
+        'Análisis Forense Digital',
+        'Seguridad en la Nube',
+        'Phishing Simulation'
+    ],
     products: 'ShieldWall Firewall'
   },
   { 
@@ -126,7 +223,15 @@ const MOCK_DATA = [
     domain: 'samsung.com', 
     banner: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=600&auto=format&fit=crop', 
     desc: 'Plataforma SaaS para gestión de flotillas y optimización de última milla.',
-    services: ['Rastreo Satelital', 'Optimización de Rutas', 'Gestión de Flota'],
+    services: [
+        'Rastreo Satelital GPS', 
+        'Optimización de Rutas con IA', 
+        'Gestión de Mantenimiento de Flota',
+        'Control de Inventarios (WMS)',
+        'Logística de Última Milla',
+        'Integración con ERPs',
+        'Monitoreo de Cadena de Frío'
+    ],
     products: 'FleetTrack 360'
   },
   { 
@@ -134,7 +239,15 @@ const MOCK_DATA = [
     domain: 'cemex.com', 
     banner: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=600&auto=format&fit=crop', 
     desc: 'Gemelos digitales para construcción y gestión de activos inmobiliarios.',
-    services: ['Modelado BIM', 'Recorridos VR', 'Supervisión de Obra'],
+    services: [
+        'Modelado BIM 3D/4D', 
+        'Recorridos Virtuales (VR)', 
+        'Supervisión de Obra Remota',
+        'Gestión de Activos Inmobiliarios',
+        'Escaneo Láser de Terrenos',
+        'Presupuestación Automatizada',
+        'Simulación Energética de Edificios'
+    ],
     products: 'DigitalTwin Builder'
   },
   { 
@@ -142,7 +255,15 @@ const MOCK_DATA = [
     domain: 'docusign.com', 
     banner: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=600&auto=format&fit=crop', 
     desc: 'Automatización de contratos y análisis legal mediante NLP.',
-    services: ['Automatización Legal', 'Gestión de Contratos', 'Firma Digital'],
+    services: [
+        'Automatización de Documentos', 
+        'Gestión del Ciclo de Vida de Contratos', 
+        'Firma Digital Certificada',
+        'Búsqueda Legal con IA',
+        'Compliance Corporativo',
+        'Notificaciones Legales Automatizadas',
+        'Propiedad Intelectual Digital'
+    ],
     products: 'ContractAI'
   },
   { 
@@ -150,7 +271,15 @@ const MOCK_DATA = [
     domain: 'coursera.org', 
     banner: 'https://images.unsplash.com/photo-1501504905252-473c47e087f8?q=80&w=600&auto=format&fit=crop', 
     desc: 'Plataformas de aprendizaje adaptativo para corporativos.',
-    services: ['Desarrollo de Cursos', 'Plataformas LMS', 'Gamificación'],
+    services: [
+        'Desarrollo de Cursos E-learning', 
+        'Implementación de LMS', 
+        'Gamificación Corporativa',
+        'Micro-learning Móvil',
+        'Evaluaciones Automatizadas',
+        'Certificaciones Digitales (Blockchain)',
+        'Consultoría Pedagógica'
+    ],
     products: 'LearnCorp Suite'
   },
   { 
@@ -158,7 +287,15 @@ const MOCK_DATA = [
     domain: '3m.com', 
     banner: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=600&auto=format&fit=crop', 
     desc: 'Desarrollo de nanomateriales avanzados para la industria aeroespacial.',
-    services: ['Investigación R&D', 'Pruebas de Materiales', 'Prototipado'],
+    services: [
+        'Investigación y Desarrollo (R&D)', 
+        'Pruebas de Resistencia de Materiales', 
+        'Prototipado Rápido',
+        'Recubrimientos Nanotecnológicos',
+        'Microscopía Electrónica',
+        'Síntesis Química Avanzada',
+        'Consultoría de Patentes'
+    ],
     products: 'AeroGraphene'
   },
   { 
@@ -166,7 +303,15 @@ const MOCK_DATA = [
     domain: 'nvidia.com', 
     banner: 'https://images.unsplash.com/photo-1573804633927-bfcbcd909acd?q=80&w=600&auto=format&fit=crop', 
     desc: 'Sensores urbanos y plataformas de gestión para ciudades inteligentes.',
-    services: ['Infraestructura Smart', 'Análisis de Tráfico', 'Seguridad Urbana'],
+    services: [
+        'Infraestructura Smart City', 
+        'Análisis de Tráfico en Tiempo Real', 
+        'Sistemas de Seguridad Urbana',
+        'Gestión Inteligente de Residuos',
+        'Iluminación Pública Automatizada',
+        'Monitoreo de Calidad del Aire',
+        'Apps de Participación Ciudadana'
+    ],
     products: 'CitySense Hub'
   },
 ];
