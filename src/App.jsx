@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Search, ArrowRight, X, MapPin, Globe, ShieldCheck, 
   Zap, Filter, ChevronDown, Check, 
   Linkedin, Twitter, Instagram, Mail, Briefcase, Users, Activity,
-  Share2 
+  Share2, Bot, Send, MessageSquare 
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import logo from './assets/logo.svg';
@@ -12,7 +12,7 @@ import heroImage from './assets/monterrey-hero.webp';
 // --- HELPER PARA LOGOS DE GOOGLE ---
 const getLogoUrl = (domain) => `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
 
-// --- DATASET ---
+// --- DATASET FINAL ---
 const MOCK_DATA = [
   // SOFTWARE & DATA
   { 
@@ -79,7 +79,7 @@ const MOCK_DATA = [
   // AGRO & CLEAN
   { 
     id: 4, name: 'AgroTech', industry: 'Agrotech', tags: ['IoT', 'Drones'], location: 'Sinaloa/Mty', verified: false, employees: '45', revenue: '$3M', tier: 'Startup', color: 'from-lime-600 to-lime-900', 
-    domain: 'samsung.com', 
+    domain: 'apple.com', 
     banner: 'https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?q=80&w=600&auto=format&fit=crop', 
     desc: 'Agricultura de precisión mediante drones autónomos y sensores IoT.' 
   },
@@ -99,7 +99,7 @@ const MOCK_DATA = [
   },
   { 
     id: 7, name: 'LogisticsOne', industry: 'Logística', tags: ['Fleet', 'SaaS'], location: 'Apodaca, NL', verified: true, employees: '500', revenue: '$80M', tier: 'Enterprise', color: 'from-orange-600 to-orange-900', 
-    domain: 'fedex.com', 
+    domain: 'samsung.com', 
     banner: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=600&auto=format&fit=crop', 
     desc: 'Plataforma SaaS para gestión de flotillas y optimización de última milla.' 
   },
@@ -144,12 +144,80 @@ const App = () => {
   const [selectedCompany, setSelectedCompany] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  
+  // --- ESTADOS PARA EL CHAT ---
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [showAiBubble, setShowAiBubble] = useState(false);
+  const [messages, setMessages] = useState([
+    { id: 1, text: '¡Hola! Soy la IA del Cluster. ¿Buscas algún proveedor en específico o necesitas recomendaciones?', sender: 'ai' }
+  ]);
+  const [inputValue, setInputValue] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+  const messagesEndRef = useRef(null);
 
+  // --- EFECTO: SCROLL NAV ---
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // --- EFECTO: ARREGLAR SCROLL DEL FONDO ---
+  useEffect(() => {
+    if (selectedCompany || isChatOpen) { 
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => { document.body.style.overflow = 'unset'; };
+  }, [selectedCompany, isChatOpen]);
+
+  // --- EFECTO: MOSTRAR BURBUJA DE IA (SIEMPRE AL ENTRAR) ---
+  useEffect(() => {
+    
+    const timer = setTimeout(() => {
+      setShowAiBubble(true);
+    }, 1500); 
+    
+    return () => clearTimeout(timer);
+  }, []);
+
+  // --- EFECTO: AUTO SCROLL CHAT ---
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+  useEffect(scrollToBottom, [messages, isTyping, isChatOpen]);
+
+  const handleCloseAiBubble = (e) => {
+    e.stopPropagation();
+    setShowAiBubble(false);
+  };
+
+  const toggleChat = () => {
+    setIsChatOpen(!isChatOpen);
+    if (showAiBubble) handleCloseAiBubble({ stopPropagation: () => {} });
+  };
+
+  const handleSendMessage = (e) => {
+    e.preventDefault();
+    if (!inputValue.trim()) return;
+
+    // 1. Agregar mensaje del usuario
+    const newMessage = { id: Date.now(), text: inputValue, sender: 'user' };
+    setMessages(prev => [...prev, newMessage]);
+    setInputValue('');
+    setIsTyping(true);
+
+    // 2. SIMULAR RESPUESTA BACKEND
+    setTimeout(() => {
+      setIsTyping(false);
+      setMessages(prev => [...prev, { 
+        id: Date.now() + 1, 
+        text: '¡Entendido! Estoy analizando nuestra base de datos para encontrar las mejores opciones para ti...', 
+        sender: 'ai' 
+      }]);
+    }, 2000);
+  };
 
   const filtered = MOCK_DATA.filter(item => {
     const matchCat = activeFilter === 'Todas' || item.industry === activeFilter;
@@ -160,10 +228,125 @@ const App = () => {
   });
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA] font-sans text-ink selection:bg-ink selection:text-white flex flex-col">
+    <div className="min-h-screen bg-[#FAFAFA] font-sans text-ink selection:bg-ink selection:text-white flex flex-col relative">
       
+      {/* --- WIDGET DE CHAT (Flotante) --- */}
+      {!selectedCompany && (
+        <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-3">
+          
+          {/* Burbuja de Texto (Notificación) */}
+          <AnimatePresence>
+            {showAiBubble && !isChatOpen && (
+              <motion.div 
+                initial={{ opacity: 0, y: 10, scale: 0.9 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                className="relative bg-white border border-border shadow-xl rounded-xl p-4 w-56 text-left origin-bottom-right"
+              >
+                <button 
+                  onClick={handleCloseAiBubble}
+                  className="absolute -top-2 -left-2 bg-slate-200 hover:bg-red-500 hover:text-white text-subtle rounded-full p-1 transition-colors"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+                <div className="flex items-center gap-2 mb-2">
+                   <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                   <p className="text-xs font-bold text-ink">Asistente Virtual</p>
+                </div>
+                <p className="text-xs text-subtle leading-snug">
+                  ¿Necesitas ayuda para encontrar un proveedor? ¡Puedo buscar por ti!
+                </p>
+                <div className="absolute -bottom-1.5 right-6 w-3 h-3 bg-white border-b border-r border-border rotate-45 transform"></div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Botón Flotante */}
+          <motion.button 
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={toggleChat}
+            className={`h-14 w-14 rounded-full shadow-2xl flex items-center justify-center transition-all z-50 ${isChatOpen ? 'bg-slate-800 rotate-90' : 'bg-gradient-to-br from-indigo-600 to-violet-600 hover:shadow-indigo-500/30'}`}
+          >
+            {isChatOpen ? <X className="h-6 w-6 text-white" /> : <Bot className="h-7 w-7 text-white" />}
+          </motion.button>
+
+          {/* VENTANA DE CHAT */}
+          <AnimatePresence>
+            {isChatOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 20, scale: 0.95 }}
+                className="absolute bottom-20 right-0 w-[90vw] md:w-96 h-[500px] max-h-[70vh] bg-white rounded-2xl shadow-2xl border border-border flex flex-col overflow-hidden origin-bottom-right z-40"
+              >
+                {/* Header Chat */}
+                <div className="bg-gradient-to-r from-slate-900 to-slate-800 p-4 flex items-center gap-3 shadow-sm">
+                  <div className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-sm border border-white/20">
+                    <Bot className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-white font-bold text-sm">Cluster AI Assistant</h3>
+                    <div className="flex items-center gap-1.5">
+                      <div className="h-1.5 w-1.5 rounded-full bg-emerald-400"></div>
+                      <span className="text-white/70 text-[10px] uppercase font-bold tracking-wide">En línea</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Area de Mensajes */}
+                <div className="flex-1 bg-slate-50 p-4 overflow-y-auto custom-scrollbar">
+                  <div className="flex flex-col gap-4">
+                    {messages.map((msg) => (
+                      <div key={msg.id} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+                        <div className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm ${
+                          msg.sender === 'user' 
+                            ? 'bg-indigo-600 text-white rounded-br-none' 
+                            : 'bg-white text-ink border border-border rounded-bl-none'
+                        }`}>
+                          {msg.text}
+                        </div>
+                      </div>
+                    ))}
+                    {/* Indicador de escribiendo */}
+                    {isTyping && (
+                      <div className="flex justify-start">
+                        <div className="bg-white border border-border rounded-2xl rounded-bl-none px-4 py-3 shadow-sm flex gap-1 items-center">
+                          <span className="h-1.5 w-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
+                          <span className="h-1.5 w-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
+                          <span className="h-1.5 w-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                        </div>
+                      </div>
+                    )}
+                    <div ref={messagesEndRef} />
+                  </div>
+                </div>
+
+                {/* Input Area */}
+                <form onSubmit={handleSendMessage} className="p-3 bg-white border-t border-border flex gap-2">
+                  <input 
+                    type="text" 
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    placeholder="Escribe tu consulta..."
+                    className="flex-1 bg-slate-50 border border-border rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all"
+                  />
+                  <button 
+                    type="submit"
+                    disabled={!inputValue.trim()}
+                    className="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white p-2.5 rounded-xl transition-colors flex items-center justify-center"
+                  >
+                    <Send className="h-5 w-5" />
+                  </button>
+                </form>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      )}
+
       {/* --- NAVBAR --- */}
-      <nav className={`fixed top-0 z-50 w-full transition-all duration-500 ${scrolled ? 'bg-white/95 backdrop-blur-md border-b border-border py-4 shadow-sm' : 'bg-transparent py-6'}`}>
+      <nav className={`fixed top-0 z-30 w-full transition-all duration-500 ${scrolled ? 'bg-white/95 backdrop-blur-md border-b border-border py-4 shadow-sm' : 'bg-transparent py-6'}`}>
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6">
           <div className="flex items-center gap-4">
             <img 
@@ -243,7 +426,7 @@ const App = () => {
       </header>
 
       {/* --- BARRA DE CONTROL --- */}
-      <div className="sticky top-[88px] z-40 px-6 pb-4 -mt-8">
+      <div className="sticky top-[88px] z-30 px-6 pb-4 -mt-8">
         <div className="mx-auto max-w-7xl">
           <div className="relative rounded-2xl bg-white/90 backdrop-blur-xl border border-white/50 shadow-[0_8px_30px_rgb(0,0,0,0.08)] p-2 flex flex-col md:flex-row items-center gap-2 transition-all hover:shadow-[0_12px_40px_rgb(0,0,0,0.12)]">
             
@@ -501,7 +684,6 @@ const App = () => {
                       url: window.location.href, 
                     }).catch(console.error);
                   } else {
-                     // Fallback para Desktop
                      navigator.clipboard.writeText(window.location.href);
                      alert('URL copiada al portapapeles');
                   }
@@ -520,7 +702,7 @@ const App = () => {
                 <X className="h-6 w-6 drop-shadow-md" />
               </button>
 
-              
+              {/* CONTENEDOR UNIFICADO CON SCROLL */}
               <div className="flex-1 overflow-y-auto bg-white relative pb-44"> 
                 
                 {/* HEADER / BANNER */}
@@ -613,8 +795,7 @@ const App = () => {
                 </div>
               </div>
 
-              {/* === Footer Flotante con FADE suave === */}
-
+              {/* === Footer Flotante === */}
               <div className="absolute bottom-0 w-full z-20">
                 <div className="h-12 w-full bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none"></div>
 
