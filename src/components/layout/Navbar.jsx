@@ -106,7 +106,7 @@ const Navbar = () => {
                     <div className="flex flex-col gap-2">
                         <MobileNavLink to="/" active={location.pathname === '/'} onClick={() => setIsMobileMenuOpen(false)}>Inicio</MobileNavLink>
                         <MobileNavLink to="/directorio" active={location.pathname === '/directorio'} onClick={() => setIsMobileMenuOpen(false)}>Directorio</MobileNavLink>
-                        <MobileNavLink to="/unirse" active={location.pathname === '/unirse'} onClick={() => setIsMobileMenuOpen(false)}>Unirse al Cluster</MobileNavLink>
+                        {/* Se eliminó el link duplicado de "Unirse" aquí */}
                     </div>
                     
                     <div className="h-px w-full bg-gray-100"></div>

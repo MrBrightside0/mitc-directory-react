@@ -1,0 +1,117 @@
+========================================
+GUÍA DE INTEGRACIÓN BACKEND – MITC CLUSTER
+(Para Mario)
+========================================
+
+Este documento detalla los puntos de conexión críticos entre el frontend
+desarrollado en React y los servicios backend para el portal de MITC Cluster.
+
+
+------------------------------------------------
+1. FORMULARIO DE AFILIACIÓN (LEADS)
+------------------------------------------------
+
+Ubicación del componente:
+src/components/unirse/ActionForm.jsx
+
+
+ESTADO ACTUAL
+-------------
+El formulario maneja su estado local mediante el objeto "formData".
+Al hacer clic en "Iniciar Proceso", se ejecuta la función handleSubmit
+que actualmente simula una carga usando setTimeout.
+
+
+TAREA DE BACKEND
+----------------
+Reemplazar la simulación de setTimeout (aprox. línea 80) con una llamada
+real a la API del backend.
+
+
+ESTRUCTURA DEL PAYLOAD (JSON)
+-----------------------------
+{
+  "nombre": "Juan Pérez",
+  "cargo": "Director General",
+  "email": "juan@empresa.com",
+  "telefono": "8112345678",
+  "tamano": "11-50 (PyME)",
+  "ubicacion": "Nuevo León",
+  "objetivo": "Ventas y Networking B2B"
+}
+
+
+EJEMPLO SUGERIDO DE IMPLEMENTACIÓN (FRONTEND)
+---------------------------------------------
+const response = await fetch(`${import.meta.env.VITE_API_URL}/api/leads`, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(formData)
+});
+
+if (response.ok) {
+  // Manejar éxito (mostrar mensaje, toast o redireccionar)
+}
+
+
+------------------------------------------------
+2. VARIABLES DE ENTORNO
+------------------------------------------------
+
+Para mantener flexibilidad entre entornos (desarrollo / producción),
+usar un archivo .env en la raíz del proyecto.
+
+IMPORTANTE:
+NO subir el archivo .env al repositorio.
+
+
+CONFIGURACIÓN REQUERIDA
+-----------------------
+
+# Desarrollo local
+VITE_API_URL=http://localhost:3000
+
+# Producción
+# Configurar esta variable directamente en el panel de Vercel u hosting
+
+
+------------------------------------------------
+3. DIRECTORIO Y MAPA DE EMPRESAS (PRÓXIMA FASE)
+------------------------------------------------
+
+Actualmente, el MarketMap y el Directorio consumen datos estáticos desde:
+
+src/data/mockData.js
+
+
+Si se habilita la carga dinámica desde base de datos:
+
+ENDPOINT
+--------
+GET /api/companies
+
+
+FORMATO ESPERADO DE RESPUESTA (JSON)
+------------------------------------
+El frontend espera un arreglo de objetos con la siguiente estructura:
+
+[
+  {
+    "id": 1,
+    "name": "Softtek",
+    "industry": "Software",
+    "tags": ["Global", "Consultoría"],
+    "domain": "softtek.com"
+  },
+  {
+    "id": 2,
+    "name": "Empresa Ejemplo",
+    "industry": "Hardware",
+    "tags": ["Local", "Manufactura"],
+    "domain": "ejemplo.mx"
+  }
+]
+
+========================================
+FIN DEL DOCUMENTO
+========================================
