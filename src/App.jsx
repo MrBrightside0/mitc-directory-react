@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react'; 
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-
+import { clarity } from 'react-microsoft-clarity';
 
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
@@ -11,6 +11,12 @@ import Inicio from './pages/Inicio';
 import Unirse from './pages/Unirse'; 
 
 const App = () => {
+
+  useEffect(() => {
+    
+    clarity.init('TU_ID_AQUI'); 
+  }, []);
+
   return (
     <Router>
       <div className="flex flex-col min-h-screen bg-white">
