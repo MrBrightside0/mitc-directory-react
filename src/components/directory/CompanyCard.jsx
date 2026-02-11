@@ -2,8 +2,6 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, ShieldCheck, Building2, Store, Rocket, Briefcase } from 'lucide-react';
 
-const getLogoUrl = (domain) => `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
-
 // --- HELPERS PARA ICONOS Y COLORES DE "TARGET" ---
 const getTargetIcon = (target) => {
   switch (target) {
@@ -24,6 +22,9 @@ const getTargetStyle = (target) => {
 };
 
 const CompanyCard = ({ item, onClick }) => {
+  const coverImage = item.banner || item.cover;
+  const locationLabel = (item.location || 'Nuevo León').split(',')[0];
+
   return (
     <motion.div
       layout
@@ -36,7 +37,11 @@ const CompanyCard = ({ item, onClick }) => {
       {/* BANNER TARJETA */}
       <div className="h-28 w-full relative overflow-hidden bg-gray-50 flex-shrink-0">
         <div className="absolute inset-0 bg-gray-900/10 group-hover:bg-transparent transition-colors z-10"></div>
-        <img loading="lazy" src={item.banner} alt={item.name} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" />
+        {coverImage ? (
+          <img loading="lazy" src={coverImage} alt={item.name} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" />
+        ) : (
+          <div className="w-full h-full bg-gradient-to-br from-slate-100 to-slate-200" />
+        )}
         {item.verified && (
           <div className="absolute top-2 right-2 z-20 bg-white/90 backdrop-blur text-emerald-700 p-1.5 rounded-full shadow-sm" title="Verificado">
             <ShieldCheck className="h-3.5 w-3.5" />
@@ -48,7 +53,7 @@ const CompanyCard = ({ item, onClick }) => {
         {/* LOGO OVERLAP & HEADER */}
         <div className="-mt-8 mb-2 relative z-20 flex justify-between items-end">
           <div className="h-14 w-14 rounded-xl bg-white flex items-center justify-center shadow-lg border-[3px] border-white overflow-hidden p-1">
-            <img src={getLogoUrl(item.domain)} alt="Logo" className="w-full h-full object-contain" />
+            <img src={item.logoUrl} alt="Logo" className="w-full h-full object-contain" />
           </div>
           <span className="text-[9px] font-mono font-bold uppercase tracking-widest text-gray-500 bg-gray-100 px-2 py-0.5 rounded border border-gray-200">
             {item.tier}
@@ -98,7 +103,7 @@ const CompanyCard = ({ item, onClick }) => {
       {/* FOOTER CARD */}
       <div className="px-5 py-3 bg-gray-50/50 border-t border-gray-200 flex items-center justify-between text-xs group-hover:bg-white transition-colors">
         <span className="flex items-center gap-1 text-gray-500 font-medium">
-          <MapPin className="h-3 w-3 text-red-500"/> {item.location.split(',')[0]}
+          <MapPin className="h-3 w-3 text-red-500"/> {locationLabel}
         </span>
         
         <span className="font-bold text-indigo-600 text-[10px] uppercase tracking-wider group-hover:underline decoration-dotted">

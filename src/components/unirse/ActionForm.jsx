@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { 
   Users, Building2, Mail, Calendar, User, Briefcase, Phone, MapPin, ArrowRight, Send, Loader2
 } from 'lucide-react';
+import { submitLead } from '../../services/api';
 
 const MEETING_URL = "https://meetings.hubspot.com/javier-m1?uuid=ac0d2c09-6a95-4b62-8a18-346e39571970";
 
@@ -60,6 +61,7 @@ const SelectGroup = ({ label, icon: Icon, options, placeholder, name, value, onC
 const ActionForm = () => {
   const [formType, setFormType] = useState('empresa');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState({ type: '', text: '' });
   
   // Estado para guardar los datos del formulario
   const [formData, setFormData] = useState({
@@ -82,30 +84,30 @@ const ActionForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setSubmitMessage({ type: '', text: '' });
 
     try {
-      // TODO PARA MARIO: Descomentar y poner la URL real del endpoint
-      /*
-      const response = await fetch('https://api.tudominio.com/api/v1/leads', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+      await submitLead(formData);
+      setSubmitMessage({
+        type: 'success',
+        text: 'Solicitud enviada correctamente. Te contactaremos pronto.'
       });
-      
-      if (!response.ok) throw new Error('Error al enviar');
-      */
-
-      // Simulación de envío exitoso (borrar esto cuando esté el backend)
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      console.log("Datos enviados al backend:", formData);
-      alert("¡Solicitud enviada! (Simulación)");
       
       // Resetear form
       setFormData({ nombre: '', cargo: '', email: '', telefono: '', tamano: '', ubicacion: '', objetivo: '' });
 
     } catch (error) {
-      console.error("Error:", error);
-      alert("Hubo un error al enviar la solicitud.");
+      console.error("Error al enviar lead:", error);
+
+      if (error?.code === 'missing_required') {
+        setSubmitMessage({ type: 'error', text: 'Faltan campos requeridos. Revisa nombre y correo.' });
+      } else if (error?.code === 'invalid_email') {
+        setSubmitMessage({ type: 'error', text: 'El correo no es válido. Verifica e intenta de nuevo.' });
+      } else if (error?.code === 'too_many_attempts' || error?.status === 429) {
+        setSubmitMessage({ type: 'error', text: 'Se alcanzó el límite de intentos. Intenta más tarde.' });
+      } else {
+        setSubmitMessage({ type: 'error', text: 'No fue posible enviar tu solicitud. Intenta de nuevo.' });
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -176,6 +178,11 @@ const ActionForm = () => {
                                   <>Iniciar Proceso <Send className="h-5 w-5" /></>
                                 )}
                             </button>
+                            {submitMessage.text && (
+                              <p className={`text-center text-xs mt-4 px-4 font-medium ${submitMessage.type === 'success' ? 'text-emerald-600' : 'text-rose-600'}`}>
+                                {submitMessage.text}
+                              </p>
+                            )}
                             <p className="text-center text-xs text-slate-400 mt-4 px-4 leading-relaxed">Tus datos están seguros. Al enviar aceptas ser contactado por el equipo comercial de MITC.</p>
                         </div>
                     </motion.form>

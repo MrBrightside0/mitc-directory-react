@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, ChevronDown, Check, ShieldCheck, X } from 'lucide-react';
-import { CATEGORIES } from '../../data/mockData'; 
 
 const FilterBar = ({ 
   searchTerm, setSearchTerm, 
   activeFilter, setActiveFilter, 
-  onlyVerified, setOnlyVerified 
+  onlyVerified, setOnlyVerified,
+  categories = ['Todas']
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -52,7 +52,7 @@ const FilterBar = ({
                         className="absolute right-0 top-full mt-2 z-20 w-full md:w-64 rounded-xl border border-gray-200 bg-white p-2 shadow-xl ring-1 ring-black/5"
                       >
                         <div className="max-h-64 overflow-y-auto custom-scrollbar">
-                          {CATEGORIES.map((cat) => (
+                          {categories.map((cat) => (
                             <button
                               key={cat}
                               onClick={() => { setActiveFilter(cat); setIsDropdownOpen(false); }}

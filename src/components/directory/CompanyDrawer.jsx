@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
   X, Share2, Layers, Package, Briefcase, Activity, 
@@ -6,8 +6,7 @@ import {
   Store, Rocket, Mail, Phone // <--- Agregados Mail y Phone
 } from 'lucide-react';
 import ContactModal from './ContactModal'; 
-
-const getLogoUrl = (domain) => `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+import { fetchCompanyById } from '../../services/api';
 
 // Helpers visuales
 const getTargetIcon = (target) => {
@@ -31,8 +30,58 @@ const getTargetStyle = (target) => {
 const CompanyDrawer = ({ selectedCompany, onClose }) => {
   // ESTADO PARA EL MODAL DE CONTACTO
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [companyDetails, setCompanyDetails] = useState(selectedCompany);
+  const [isLoadingDetails, setIsLoadingDetails] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadDetails = async () => {
+      if (!selectedCompany?.id) {
+        setCompanyDetails(selectedCompany);
+        return;
+      }
+
+      setCompanyDetails(selectedCompany);
+      setIsLoadingDetails(true);
+
+      try {
+        const details = await fetchCompanyById(selectedCompany.id, selectedCompany);
+        if (isMounted) setCompanyDetails(details);
+      } catch (error) {
+        if (isMounted) setCompanyDetails(selectedCompany);
+        console.error('No se pudo cargar el detalle del socio:', error);
+      } finally {
+        if (isMounted) setIsLoadingDetails(false);
+      }
+    };
+
+    loadDetails();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [selectedCompany]);
 
   if (!selectedCompany) return null;
+
+  const company = companyDetails || selectedCompany;
+  const coverImage = company.banner || company.cover;
+  const showCommercialName = company.commercialName && company.commercialName !== company.name;
+  const services = Array.isArray(company.services) ? company.services.filter(Boolean) : [];
+  const targetAudience = Array.isArray(company.targetAudience) ? company.targetAudience.filter(Boolean) : [];
+  const tags = Array.isArray(company.tags) ? company.tags.filter(Boolean) : [];
+  const hasServices = services.length > 0;
+  const hasProducts = Boolean(company.products);
+  const hasTargetAudience = targetAudience.length > 0;
+  const hasBusinessSection = hasServices || hasProducts || hasTargetAudience;
+  const hasExecutiveProfile = isLoadingDetails || Boolean(company.desc);
+  const hasTags = tags.length > 0;
+  const hasWebsite = Boolean(company.domain);
+  const hasLocation = Boolean(company.location);
+  const hasEmail = Boolean(company.email);
+  const hasPhone = Boolean(company.phone);
+  const hasContactInfo = hasWebsite || hasLocation || hasEmail || hasPhone;
 
   return (
     <>
@@ -41,7 +90,7 @@ const CompanyDrawer = ({ selectedCompany, onClose }) => {
         <ContactModal 
             isOpen={isModalOpen} 
             onClose={() => setIsModalOpen(false)} 
-            companyName={selectedCompany.name} 
+            companyName={company.name} 
         />
       )}
 
@@ -83,12 +132,16 @@ const CompanyDrawer = ({ selectedCompany, onClose }) => {
           
           {/* Header con Banner */}
           <div className="relative h-64 bg-gray-100">
-              <img src={selectedCompany.banner} alt="Cover" className="w-full h-full object-cover" />
+              {coverImage ? (
+                <img src={coverImage} alt="Cover" className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full bg-gradient-to-br from-slate-100 to-slate-300" />
+              )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent"></div>
               
               <div className="absolute -bottom-10 left-6 md:left-8 h-24 w-24 rounded-2xl bg-white p-2 shadow-2xl z-20">
                 <div className="h-full w-full rounded-xl bg-white flex items-center justify-center overflow-hidden">
-                  <img src={getLogoUrl(selectedCompany.domain)} alt="Logo" className="w-full h-full object-contain p-1.5" />
+                  <img src={company.logoUrl} alt="Logo" className="w-full h-full object-contain p-1.5" />
                 </div>
               </div>
           </div>
@@ -96,19 +149,19 @@ const CompanyDrawer = ({ selectedCompany, onClose }) => {
           <div className="px-6 md:px-8 pt-16">
             <div className="flex justify-between items-start mb-6">
               <div>
-                <h1 className="text-4xl font-display font-bold text-gray-900 tracking-tight leading-none">{selectedCompany.name}</h1>
+                <h1 className="text-4xl font-display font-bold text-gray-900 tracking-tight leading-none">{company.name}</h1>
                 
-                {selectedCompany.commercialName && (
-                    <p className="text-lg font-medium text-gray-400 mt-1">{selectedCompany.commercialName}</p>
+                {showCommercialName && (
+                    <p className="text-lg font-medium text-gray-400 mt-1">{company.commercialName}</p>
                 )}
 
                 <p className="text-sm font-mono text-gray-500 uppercase tracking-wider mt-3 flex items-center gap-2">
-                    {selectedCompany.industry} 
+                    {company.industry} 
                     <span className="w-1 h-1 bg-gray-400 rounded-full"></span> 
-                    {selectedCompany.tier}
+                    {company.tier}
                 </p>
               </div>
-              {selectedCompany.verified && (
+              {company.verified && (
                 <div className="hidden sm:flex flex-col items-end">
                   <ShieldCheck className="h-8 w-8 text-emerald-500 mb-1" />
                   <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">Verificado</span>
@@ -117,130 +170,149 @@ const CompanyDrawer = ({ selectedCompany, onClose }) => {
             </div>
 
             {/* Diferenciador Destacado */}
-            {selectedCompany.differentiator && (
+            {company.differentiator && (
                 <div className="mb-8 p-4 rounded-xl bg-amber-50 border border-amber-100 flex items-start gap-3 shadow-sm">
                     <Sparkles className="h-5 w-5 text-amber-500 flex-shrink-0 mt-0.5" />
                     <div>
                         <p className="text-xs font-bold text-amber-600 uppercase tracking-wide mb-1">Propuesta de Valor</p>
                         <p className="text-sm font-bold text-amber-900 italic leading-relaxed">
-                            "{selectedCompany.differentiator}"
+                            "{company.differentiator}"
                         </p>
                     </div>
                 </div>
             )}
 
             {/* Grid de Servicios y Detalles */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
-                <div className="p-5 rounded-2xl bg-gray-50 border border-gray-200 flex flex-col gap-3">
-                  <div className="flex items-center gap-2 text-gray-400 text-xs font-bold uppercase tracking-wider mb-1">
-                      <Layers className="h-3 w-3" /> Servicios Principales
-                  </div>
-                  <ul className="space-y-2">
-                    {selectedCompany.services && selectedCompany.services.map((svc, idx) => (
-                      <li key={idx} className="text-sm font-medium text-gray-800 flex items-start gap-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 mt-1.5 shrink-0"></span>
-                        {svc}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div className="p-5 rounded-2xl bg-gray-50 border border-gray-200 flex flex-col gap-4">
-                  <div>
-                    <div className="flex items-center gap-2 text-gray-400 text-xs font-bold uppercase tracking-wider mb-2">
-                        <Package className="h-3 w-3" /> Productos Core
-                    </div>
-                    <p className="text-sm font-bold text-gray-900">{selectedCompany.products}</p>
-                  </div>
-                  
-                  {selectedCompany.targetAudience && (
-                      <div>
-                        <div className="flex items-center gap-2 text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 mt-2">
-                            <Rocket className="h-3 w-3" /> Enfoque de Mercado
-                        </div>
-                        <div className="flex flex-wrap gap-2">
-                            {selectedCompany.targetAudience.map(target => (
-                                <span key={target} className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border text-xs font-bold uppercase tracking-wide ${getTargetStyle(target)}`}>
-                                    {getTargetIcon(target)} {target}
-                                </span>
-                            ))}
-                        </div>
+            {hasBusinessSection && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
+                  {hasServices && (
+                    <div className="p-5 rounded-2xl bg-gray-50 border border-gray-200 flex flex-col gap-3">
+                      <div className="flex items-center gap-2 text-gray-400 text-xs font-bold uppercase tracking-wider mb-1">
+                          <Layers className="h-3 w-3" /> Servicios Principales
                       </div>
+                      <ul className="space-y-2">
+                        {services.map((svc, idx) => (
+                          <li key={idx} className="text-sm font-medium text-gray-800 flex items-start gap-2">
+                            <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 mt-1.5 shrink-0"></span>
+                            {svc}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   )}
-                </div>
-            </div>
+
+                  {(hasProducts || hasTargetAudience) && (
+                    <div className="p-5 rounded-2xl bg-gray-50 border border-gray-200 flex flex-col gap-4">
+                      {hasProducts && (
+                        <div>
+                          <div className="flex items-center gap-2 text-gray-400 text-xs font-bold uppercase tracking-wider mb-2">
+                              <Package className="h-3 w-3" /> Productos Core
+                          </div>
+                          <p className="text-sm font-bold text-gray-900">{company.products}</p>
+                        </div>
+                      )}
+                      
+                      {hasTargetAudience && (
+                        <div>
+                          <div className="flex items-center gap-2 text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 mt-2">
+                              <Rocket className="h-3 w-3" /> Enfoque de Mercado
+                          </div>
+                          <div className="flex flex-wrap gap-2">
+                              {targetAudience.map(target => (
+                                  <span key={target} className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border text-xs font-bold uppercase tracking-wide ${getTargetStyle(target)}`}>
+                                      {getTargetIcon(target)} {target}
+                                  </span>
+                              ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+              </div>
+            )}
 
             {/* Descripción */}
-            <div className="prose prose-slate mb-10">
-              <h3 className="text-sm font-bold uppercase tracking-widest text-gray-900 mb-4 border-l-4 border-gray-900 pl-3">Perfil Ejecutivo</h3>
-              <p className="text-gray-500 leading-relaxed text-base">
-                {selectedCompany.desc}
-              </p>
-            </div>
+            {hasExecutiveProfile && (
+              <div className="prose prose-slate mb-10">
+                <h3 className="text-sm font-bold uppercase tracking-widest text-gray-900 mb-4 border-l-4 border-gray-900 pl-3">Perfil Ejecutivo</h3>
+                <p className="text-gray-500 leading-relaxed text-base">
+                  {isLoadingDetails ? 'Cargando perfil ejecutivo...' : company.desc}
+                </p>
+              </div>
+            )}
 
             {/* Stack Tecnológico */}
-            <div className="mb-10">
-              <h3 className="text-sm font-bold uppercase tracking-widest text-gray-900 mb-4">Stack Tecnológico</h3>
-              <div className="flex flex-wrap gap-2">
-                {selectedCompany.tags.map(tag => (
-                  <span key={tag} className="px-4 py-2 rounded-lg border border-gray-200 bg-white text-xs font-bold text-gray-800 shadow-sm flex items-center gap-1.5">
-                    <Activity className="h-3 w-3 text-gray-400" /> {tag}
-                  </span>
-                ))}
+            {hasTags && (
+              <div className="mb-10">
+                <h3 className="text-sm font-bold uppercase tracking-widest text-gray-900 mb-4">Stack Tecnológico</h3>
+                <div className="flex flex-wrap gap-2">
+                  {tags.map(tag => (
+                    <span key={tag} className="px-4 py-2 rounded-lg border border-gray-200 bg-white text-xs font-bold text-gray-800 shadow-sm flex items-center gap-1.5">
+                      <Activity className="h-3 w-3 text-gray-400" /> {tag}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Sección de Contacto Ampliada */}
-            <div className="flex flex-col gap-5 pt-8 border-t border-gray-200">
-                <h3 className="text-sm font-bold uppercase tracking-widest text-gray-900">Información de Contacto</h3>
-                
-                {/* Sitio Web */}
-                <a href={`https://${selectedCompany.domain}`} target="_blank" rel="noreferrer" className="flex items-center gap-4 group p-3 rounded-xl hover:bg-gray-50 transition-colors -mx-3">
-                  <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition-colors border border-gray-200 shadow-sm">
-                    <Globe className="h-5 w-5 text-gray-600 group-hover:text-white" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-gray-400 uppercase group-hover:text-indigo-600 transition-colors">Sitio Web</p>
-                    <p className="font-medium text-gray-900 underline decoration-dotted">{selectedCompany.domain}</p>
-                  </div>
-                </a>
+            {hasContactInfo && (
+              <div className="flex flex-col gap-5 pt-8 border-t border-gray-200">
+                  <h3 className="text-sm font-bold uppercase tracking-widest text-gray-900">Información de Contacto</h3>
+                  
+                  {/* Sitio Web */}
+                  {hasWebsite && (
+                    <a href={`https://${company.domain}`} target="_blank" rel="noreferrer" className="flex items-center gap-4 group p-3 rounded-xl hover:bg-gray-50 transition-colors -mx-3">
+                      <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition-colors border border-gray-200 shadow-sm">
+                        <Globe className="h-5 w-5 text-gray-600 group-hover:text-white" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-gray-400 uppercase group-hover:text-indigo-600 transition-colors">Sitio Web</p>
+                        <p className="font-medium text-gray-900 underline decoration-dotted">{company.domain}</p>
+                      </div>
+                    </a>
+                  )}
 
-                {/* Ubicación */}
-                <div className="flex items-center gap-4 p-3 -mx-3">
-                  <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center border border-gray-200 shadow-sm">
-                    <MapPin className="h-5 w-5 text-red-500" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-gray-400 uppercase">Ubicación</p>
-                    <p className="font-medium text-gray-900">{selectedCompany.location}</p>
-                  </div>
-                </div>
+                  {/* Ubicación */}
+                  {hasLocation && (
+                    <div className="flex items-center gap-4 p-3 -mx-3">
+                      <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center border border-gray-200 shadow-sm">
+                        <MapPin className="h-5 w-5 text-red-500" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-gray-400 uppercase">Ubicación</p>
+                        <p className="font-medium text-gray-900">{company.location}</p>
+                      </div>
+                    </div>
+                  )}
 
-                {/* Correo (Si existe) */}
-                {selectedCompany.email && (
-                  <a href={`mailto:${selectedCompany.email}`} className="flex items-center gap-4 group p-3 rounded-xl hover:bg-gray-50 transition-colors -mx-3">
-                    <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition-colors border border-gray-200 shadow-sm">
-                      <Mail className="h-5 w-5 text-gray-600 group-hover:text-white" />
-                    </div>
-                    <div>
-                      <p className="text-xs font-bold text-gray-400 uppercase group-hover:text-indigo-600 transition-colors">Correo Electrónico</p>
-                      <p className="font-medium text-gray-900">{selectedCompany.email}</p>
-                    </div>
-                  </a>
-                )}
+                  {/* Correo (Si existe) */}
+                  {hasEmail && (
+                    <a href={`mailto:${company.email}`} className="flex items-center gap-4 group p-3 rounded-xl hover:bg-gray-50 transition-colors -mx-3">
+                      <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition-colors border border-gray-200 shadow-sm">
+                        <Mail className="h-5 w-5 text-gray-600 group-hover:text-white" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-gray-400 uppercase group-hover:text-indigo-600 transition-colors">Correo Electrónico</p>
+                        <p className="font-medium text-gray-900">{company.email}</p>
+                      </div>
+                    </a>
+                  )}
 
-                {/* Teléfono (Si existe) */}
-                {selectedCompany.phone && (
-                  <a href={`tel:${selectedCompany.phone}`} className="flex items-center gap-4 group p-3 rounded-xl hover:bg-gray-50 transition-colors -mx-3">
-                    <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition-colors border border-gray-200 shadow-sm">
-                      <Phone className="h-5 w-5 text-gray-600 group-hover:text-white" />
-                    </div>
-                    <div>
-                      <p className="text-xs font-bold text-gray-400 uppercase group-hover:text-indigo-600 transition-colors">Teléfono</p>
-                      <p className="font-medium text-gray-900">{selectedCompany.phone}</p>
-                    </div>
-                  </a>
-                )}
-            </div>
+                  {/* Teléfono (Si existe) */}
+                  {hasPhone && (
+                    <a href={`tel:${company.phone}`} className="flex items-center gap-4 group p-3 rounded-xl hover:bg-gray-50 transition-colors -mx-3">
+                      <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition-colors border border-gray-200 shadow-sm">
+                        <Phone className="h-5 w-5 text-gray-600 group-hover:text-white" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-gray-400 uppercase group-hover:text-indigo-600 transition-colors">Teléfono</p>
+                        <p className="font-medium text-gray-900">{company.phone}</p>
+                      </div>
+                    </a>
+                  )}
+              </div>
+            )}
           </div>
         </div>
 

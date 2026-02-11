@@ -5,54 +5,7 @@ import {
   Search, Briefcase, Settings, Database, ArrowRight, Box, Layers
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { MOCK_DATA } from '../../data/mockData';
-
-// Helper para obtener logos automáticamente
-const getLogoUrl = (domain) => `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
-
-const getCompaniesByCriteria = (criteria) => {
-  return MOCK_DATA.filter(company => {
-    if (typeof criteria === 'string') return company.industry === criteria;
-    if (Array.isArray(criteria)) return criteria.some(c => company.tags.includes(c) || company.industry === c);
-    return false;
-  }).slice(0, 9); // Mostramos hasta 9 logos por caja para que se vea lleno pero no explotado
-};
-
-const MARKET_STRUCTURE = [
-  {
-    category: "Software & Aplicaciones",
-    color: "bg-blue-50 border-blue-100 text-blue-700",
-    accent: "bg-blue-600",
-    items: [
-      { title: "Fábrica de Software", icon: Code, desc: "Desarrollo a medida.", companies: getCompaniesByCriteria(['Software', 'Global']) },
-      { title: "Fintech & Banca", icon: Briefcase, desc: "Blockchain y pagos.", companies: getCompaniesByCriteria('Fintech') },
-      { title: "SaaS B2B", icon: Box, desc: "Gestión empresarial.", companies: getCompaniesByCriteria(['SaaS', 'Logística']) },
-      { title: "IA & Data", icon: Search, desc: "Automatización.", companies: getCompaniesByCriteria(['AI', 'Data Science']) }
-    ]
-  },
-  {
-    category: "Infraestructura 4.0",
-    color: "bg-emerald-50 border-emerald-100 text-emerald-700",
-    accent: "bg-emerald-600",
-    items: [
-      { title: "Manufactura", icon: Settings, desc: "Robótica industrial.", companies: getCompaniesByCriteria(['Manufactura 4.0', 'Automotriz']) },
-      { title: "IoT & Sensores", icon: Wifi, desc: "Smart Cities.", companies: getCompaniesByCriteria(['IoT', 'Agrotech']) },
-      { title: "Energía & Hardware", icon: Cpu, desc: "Sustentabilidad.", companies: getCompaniesByCriteria(['Cleantech', 'Materials']) },
-      { title: "Ciberseguridad", icon: Shield, desc: "Protección crítica.", companies: getCompaniesByCriteria('Ciberseguridad') }
-    ]
-  },
-  {
-    category: "Servicios Estratégicos",
-    color: "bg-purple-50 border-purple-100 text-purple-700",
-    accent: "bg-purple-600",
-    items: [
-      { title: "Investigación R&D", icon: PenTool, desc: "Innovación científica.", companies: getCompaniesByCriteria(['Biotech', 'Nanotech']) },
-      { title: "Healthtech", icon: Users, desc: "Salud digital.", companies: getCompaniesByCriteria('Healthtech') },
-      { title: "Proptech", icon: Layers, desc: "Activos inmobiliarios.", companies: getCompaniesByCriteria('Proptech') },
-      { title: "Edtech", icon: BookOpen, desc: "Talento TI.", companies: getCompaniesByCriteria('Edtech') }
-    ]
-  }
-];
+import useCompanies from '../../hooks/useCompanies';
 
 const FadeIn = ({ children, delay = 0 }) => (
   <motion.div
@@ -66,6 +19,52 @@ const FadeIn = ({ children, delay = 0 }) => (
 );
 
 const MarketMap = () => {
+  const { companies, isLoading } = useCompanies();
+
+  const getCompaniesByCriteria = (criteria) => {
+    return companies.filter((company) => {
+      if (typeof criteria === 'string') return company.industry === criteria;
+      if (Array.isArray(criteria)) return criteria.some((c) => company.tags.includes(c) || company.industry === c);
+      return false;
+    }).slice(0, 9);
+  };
+
+  const marketStructure = [
+    {
+      category: "Software & Aplicaciones",
+      color: "bg-blue-50 border-blue-100 text-blue-700",
+      accent: "bg-blue-600",
+      items: [
+        { title: "Fábrica de Software", icon: Code, desc: "Desarrollo a medida.", companies: getCompaniesByCriteria(['Software', 'Global']) },
+        { title: "Fintech & Banca", icon: Briefcase, desc: "Blockchain y pagos.", companies: getCompaniesByCriteria('Fintech') },
+        { title: "SaaS B2B", icon: Box, desc: "Gestión empresarial.", companies: getCompaniesByCriteria(['SaaS', 'Logística']) },
+        { title: "IA & Data", icon: Search, desc: "Automatización.", companies: getCompaniesByCriteria(['AI', 'Data Science']) }
+      ]
+    },
+    {
+      category: "Infraestructura 4.0",
+      color: "bg-emerald-50 border-emerald-100 text-emerald-700",
+      accent: "bg-emerald-600",
+      items: [
+        { title: "Manufactura", icon: Settings, desc: "Robótica industrial.", companies: getCompaniesByCriteria(['Manufactura 4.0', 'Automotriz']) },
+        { title: "IoT & Sensores", icon: Wifi, desc: "Smart Cities.", companies: getCompaniesByCriteria(['IoT', 'Agrotech']) },
+        { title: "Energía & Hardware", icon: Cpu, desc: "Sustentabilidad.", companies: getCompaniesByCriteria(['Cleantech', 'Materials']) },
+        { title: "Ciberseguridad", icon: Shield, desc: "Protección crítica.", companies: getCompaniesByCriteria('Ciberseguridad') }
+      ]
+    },
+    {
+      category: "Servicios Estratégicos",
+      color: "bg-purple-50 border-purple-100 text-purple-700",
+      accent: "bg-purple-600",
+      items: [
+        { title: "Investigación R&D", icon: PenTool, desc: "Innovación científica.", companies: getCompaniesByCriteria(['Biotech', 'Nanotech']) },
+        { title: "Healthtech", icon: Users, desc: "Salud digital.", companies: getCompaniesByCriteria('Healthtech') },
+        { title: "Proptech", icon: Layers, desc: "Activos inmobiliarios.", companies: getCompaniesByCriteria('Proptech') },
+        { title: "Edtech", icon: BookOpen, desc: "Talento TI.", companies: getCompaniesByCriteria('Edtech') }
+      ]
+    }
+  ];
+
   return (
     <section className="py-24 px-4 md:px-8 bg-slate-50 border-b border-slate-200">
       <div className="max-w-7xl mx-auto">
@@ -83,7 +82,7 @@ const MarketMap = () => {
         </div>
 
         <div className="space-y-20">
-          {MARKET_STRUCTURE.map((sector, sectionIdx) => (
+          {marketStructure.map((sector, sectionIdx) => (
             <div key={sectionIdx}>
               <FadeIn>
                 <div className="flex items-center gap-4 mb-10">
@@ -122,7 +121,7 @@ const MarketMap = () => {
                                         <div key={company.id} className="relative group/logo">
                                             <div className="aspect-square bg-white rounded-lg border border-slate-200 flex items-center justify-center p-1.5 hover:border-indigo-300 transition-colors cursor-help shadow-sm">
                                                 <img 
-                                                    src={getLogoUrl(company.domain)} 
+                                                    src={company.logoUrl} 
                                                     alt={company.name} 
                                                     className="w-full h-full object-contain grayscale group-hover/logo:grayscale-0 opacity-80 group-hover/logo:opacity-100 transition-all"
                                                     onError={(e) => {e.target.style.display='none'}} // Ocultar si falla
@@ -145,8 +144,8 @@ const MarketMap = () => {
                                 </div>
                             ) : (
                                 <div className="h-full flex flex-col items-center justify-center text-center py-2">
-                                    <span className="text-xs text-slate-400 italic mb-1">Espacio disponible</span>
-                                    <Link to="/unirse" className="text-[10px] font-bold text-indigo-600 hover:underline">¡Únete aquí!</Link>
+                                    <span className="text-xs text-slate-400 italic mb-1">{isLoading ? 'Cargando...' : 'Espacio disponible'}</span>
+                                    {!isLoading && <Link to="/unirse" className="text-[10px] font-bold text-indigo-600 hover:underline">¡Únete aquí!</Link>}
                                 </div>
                             )}
                         </div>
