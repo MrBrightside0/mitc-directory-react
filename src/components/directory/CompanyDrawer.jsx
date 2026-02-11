@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import ContactModal from './ContactModal'; 
 import { fetchCompanyById } from '../../services/api';
+import mitcLogo from '../../assets/logo.svg';
 
 // Helpers visuales
 const getTargetIcon = (target) => {
@@ -135,7 +136,9 @@ const CompanyDrawer = ({ selectedCompany, onClose }) => {
               {coverImage ? (
                 <img src={coverImage} alt="Cover" className="w-full h-full object-cover" />
               ) : (
-                <div className="w-full h-full bg-gradient-to-br from-slate-100 to-slate-300" />
+                <div className="w-full h-full bg-white flex items-center justify-center">
+                  <img src={mitcLogo} alt="MITC" className="h-20 w-auto opacity-90" />
+                </div>
               )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent"></div>
               

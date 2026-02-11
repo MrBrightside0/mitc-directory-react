@@ -3,15 +3,34 @@ import { MOCK_DATA } from '../data/mockData';
 const DEFAULT_API_BASE_URL = '';
 
 export const API_BASE_URL = (import.meta.env.VITE_API_URL || DEFAULT_API_BASE_URL).replace(/\/+$/, '');
+const API_SUFFIX = '/api';
+
+const stripApiPrefix = (path) => {
+  if (!path.startsWith('/api')) return path;
+  const stripped = path.slice(API_SUFFIX.length);
+  return stripped || '';
+};
 
 export const getApiUrl = (path) => {
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
-  return `${API_BASE_URL}${normalizedPath}`;
+  const baseEndsWithApi = API_BASE_URL.endsWith(API_SUFFIX);
+  const finalPath = baseEndsWithApi ? stripApiPrefix(normalizedPath) : normalizedPath;
+  return `${API_BASE_URL}${finalPath}`;
 };
 
 const resolveAssetUrl = (path) => {
   if (!path || typeof path !== 'string') return '';
   if (path.startsWith('http://') || path.startsWith('https://')) return path;
+  if (path.startsWith('/uploads/')) {
+    if (API_BASE_URL.startsWith('http://') || API_BASE_URL.startsWith('https://')) {
+      try {
+        return `${new URL(API_BASE_URL).origin}${path}`;
+      } catch {
+        return path;
+      }
+    }
+    return path;
+  }
   return getApiUrl(path);
 };
 
@@ -159,7 +178,7 @@ export const fetchCompanies = async () => {
   return companies
     .filter((company) => company && typeof company === 'object')
     .map(toUiCompany)
-    .filter((company) => company.logo && company.cover);
+    .filter((company) => company.logo);
 };
 
 export const fetchCompanyById = async (id, baseCompany = {}) => {

@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, ShieldCheck, Building2, Store, Rocket, Briefcase } from 'lucide-react';
+import mitcLogo from '../../assets/logo.svg';
 
 // --- HELPERS PARA ICONOS Y COLORES DE "TARGET" ---
 const getTargetIcon = (target) => {
@@ -24,6 +25,12 @@ const getTargetStyle = (target) => {
 const CompanyCard = ({ item, onClick }) => {
   const coverImage = item.banner || item.cover;
   const locationLabel = (item.location || 'Nuevo León').split(',')[0];
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      onClick?.();
+    }
+  };
 
   return (
     <motion.div
@@ -32,15 +39,29 @@ const CompanyCard = ({ item, onClick }) => {
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
       onClick={onClick}
-      className="group relative cursor-pointer flex flex-col justify-between h-full bg-white rounded-2xl border border-gray-200 overflow-hidden hover:border-indigo-500/30 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+      onKeyDown={handleKeyDown}
+      tabIndex={0}
+      role="button"
+      aria-label={`Ver perfil de ${item.name}`}
+      className="group relative cursor-pointer flex flex-col justify-between h-full bg-white rounded-2xl border border-gray-200 overflow-hidden hover:border-indigo-500/30 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/40"
     >
       {/* BANNER TARJETA */}
       <div className="h-28 w-full relative overflow-hidden bg-gray-50 flex-shrink-0">
-        <div className="absolute inset-0 bg-gray-900/10 group-hover:bg-transparent transition-colors z-10"></div>
+        <div
+          className={`absolute inset-0 transition-colors z-10 ${
+            coverImage ? 'bg-gray-900/10 group-hover:bg-transparent' : 'bg-transparent'
+          }`}
+        ></div>
         {coverImage ? (
           <img loading="lazy" src={coverImage} alt={item.name} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-slate-100 to-slate-200" />
+          <div className="w-full h-full bg-white flex items-center justify-center">
+            <img
+              src={mitcLogo}
+              alt="MITC"
+              className="h-10 w-auto opacity-100 transform transition-transform duration-500 ease-out group-hover:scale-110 group-focus-within:scale-110"
+            />
+          </div>
         )}
         {item.verified && (
           <div className="absolute top-2 right-2 z-20 bg-white/90 backdrop-blur text-emerald-700 p-1.5 rounded-full shadow-sm" title="Verificado">
