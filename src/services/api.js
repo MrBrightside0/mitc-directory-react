@@ -51,7 +51,10 @@ const toUiCompany = (company) => {
   const differentiator = sanitizeText(fallback?.differentiator) || sanitizeText(company.differentiator);
   const location = sanitizeText(company.location) || sanitizeText(fallback?.location) || '';
   const tier = sanitizeText(company.tier) || sanitizeText(fallback?.tier) || 'Partner';
-  const desc = sanitizeText(fallback?.desc) || `${name} forma parte del ecosistema MITC.`;
+  const desc =
+    sanitizeText(company.publicSummary) ||
+    sanitizeText(fallback?.desc) ||
+    `${name} forma parte del ecosistema MITC.`;
   const products = sanitizeText(fallback?.products) || '';
   const email = sanitizeText(fallback?.email);
   const phone = sanitizeText(fallback?.phone);
@@ -81,6 +84,24 @@ const toUiCompany = (company) => {
     email,
     phone
   };
+};
+
+const getCompaniesList = (payload) => {
+  if (Array.isArray(payload)) return payload;
+  if (payload && typeof payload === 'object' && Array.isArray(payload.companies)) {
+    return payload.companies;
+  }
+  return null;
+};
+
+const getCompanyDetail = (payload) => {
+  if (payload && typeof payload === 'object' && payload.company && typeof payload.company === 'object') {
+    return payload.company;
+  }
+  if (payload && typeof payload === 'object' && !Array.isArray(payload)) {
+    return payload;
+  }
+  return null;
 };
 
 const toUiCompanyDetail = (company, baseCompany = {}) => {
@@ -130,11 +151,13 @@ export const fetchCompanies = async () => {
   }
 
   const payload = await response.json();
-  if (!Array.isArray(payload)) {
+  const companies = getCompaniesList(payload);
+  if (!companies) {
     throw new Error('companies_invalid_payload');
   }
 
-  return payload
+  return companies
+    .filter((company) => company && typeof company === 'object')
     .map(toUiCompany)
     .filter((company) => company.logo && company.cover);
 };
@@ -149,11 +172,12 @@ export const fetchCompanyById = async (id, baseCompany = {}) => {
   }
 
   const payload = await response.json();
-  if (!payload || typeof payload !== 'object' || !payload.company || typeof payload.company !== 'object') {
+  const company = getCompanyDetail(payload);
+  if (!company) {
     throw new Error('company_invalid_payload');
   }
 
-  return toUiCompanyDetail(payload.company, baseCompany);
+  return toUiCompanyDetail(company, baseCompany);
 };
 
 export const submitLead = async (formData) => {
