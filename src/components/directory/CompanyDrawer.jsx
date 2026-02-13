@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
   X, Share2, Layers, Package, Briefcase, Activity, 
-  Globe, MapPin, ShieldCheck, Sparkles, Building2, 
-  Store, Rocket, Mail, Phone // <--- Agregados Mail y Phone
+  MapPin, ShieldCheck, Sparkles, Building2, 
+  Store, Rocket, Mail, Phone, UserRound // <--- Agregados Mail y Phone
 } from 'lucide-react';
 import ContactModal from './ContactModal'; 
 import { fetchCompanyById } from '../../services/api';
@@ -78,11 +78,11 @@ const CompanyDrawer = ({ selectedCompany, onClose }) => {
   const hasBusinessSection = hasServices || hasProducts || hasTargetAudience;
   const hasExecutiveProfile = isLoadingDetails || Boolean(company.desc);
   const hasTags = tags.length > 0;
-  const hasWebsite = Boolean(company.domain);
   const hasLocation = Boolean(company.location);
+  const hasContactName = Boolean(company.contactName);
   const hasEmail = Boolean(company.email);
   const hasPhone = Boolean(company.phone);
-  const hasContactInfo = hasWebsite || hasLocation || hasEmail || hasPhone;
+  const hasContactInfo = hasLocation || hasContactName || hasEmail || hasPhone;
 
   return (
     <>
@@ -262,19 +262,6 @@ const CompanyDrawer = ({ selectedCompany, onClose }) => {
             {hasContactInfo && (
               <div className="flex flex-col gap-5 pt-8 border-t border-gray-200">
                   <h3 className="text-sm font-bold uppercase tracking-widest text-gray-900">Información de Contacto</h3>
-                  
-                  {/* Sitio Web */}
-                  {hasWebsite && (
-                    <a href={`https://${company.domain}`} target="_blank" rel="noreferrer" className="flex items-center gap-4 group p-3 rounded-xl hover:bg-gray-50 transition-colors -mx-3">
-                      <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition-colors border border-gray-200 shadow-sm">
-                        <Globe className="h-5 w-5 text-gray-600 group-hover:text-white" />
-                      </div>
-                      <div>
-                        <p className="text-xs font-bold text-gray-400 uppercase group-hover:text-indigo-600 transition-colors">Sitio Web</p>
-                        <p className="font-medium text-gray-900 underline decoration-dotted">{company.domain}</p>
-                      </div>
-                    </a>
-                  )}
 
                   {/* Ubicación */}
                   {hasLocation && (
@@ -285,6 +272,19 @@ const CompanyDrawer = ({ selectedCompany, onClose }) => {
                       <div>
                         <p className="text-xs font-bold text-gray-400 uppercase">Ubicación</p>
                         <p className="font-medium text-gray-900">{company.location}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Contacto Público (Nombre) */}
+                  {hasContactName && (
+                    <div className="flex items-center gap-4 p-3 -mx-3">
+                      <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center border border-gray-200 shadow-sm">
+                        <UserRound className="h-5 w-5 text-indigo-500" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-gray-400 uppercase">Contacto Público</p>
+                        <p className="font-medium text-gray-900">{company.contactName}</p>
                       </div>
                     </div>
                   )}

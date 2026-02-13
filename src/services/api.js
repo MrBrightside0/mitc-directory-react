@@ -49,6 +49,59 @@ const sanitizeList = (value) => {
     .map((item) => sanitizeText(item))
     .filter(Boolean);
 };
+const isLikelyEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(sanitizeText(value));
+const isLikelyPhone = (value) => sanitizeText(value).replace(/\D/g, '').length >= 7;
+const sanitizeDomain = (value) => {
+  const text = sanitizeText(value).replace(/^https?:\/\//i, '').replace(/\/+$/, '');
+  if (!text || isLikelyEmail(text) || text.includes(' ')) return '';
+  if (!text.includes('.')) return '';
+  return text.toLowerCase();
+};
+const normalizePublicContactValue = (value) => {
+  const normalized = normalizeText(value);
+  if (!normalized) return '';
+  if (['email', 'correo', 'mail'].includes(normalized)) return 'email';
+  if (['telefono', 'tel', 'phone'].includes(normalized)) return 'phone';
+  if (['nombre', 'name'].includes(normalized)) return 'name';
+  return '';
+};
+const inferPublicContactChannel = ({ value, publicLead, contact, publicContact }) => {
+  const explicit =
+    normalizePublicContactValue(value) ||
+    normalizePublicContactValue(publicLead) ||
+    normalizePublicContactValue(contact);
+  if (explicit) return explicit;
+
+  const rawValue = sanitizeText(value);
+  if (isLikelyEmail(rawValue)) return 'email';
+  if (isLikelyPhone(rawValue)) return 'phone';
+
+  const safeContact = publicContact || {};
+  const publicEmail = sanitizeText(safeContact.email);
+  const publicPhone = sanitizeText(safeContact.phone);
+  const publicName = sanitizeText(safeContact.name);
+  const normalizedRawValue = normalizeText(rawValue);
+  const normalizedEmail = normalizeText(publicEmail);
+  const normalizedName = normalizeText(publicName);
+  const rawDigits = rawValue.replace(/\D/g, '');
+  const phoneDigits = publicPhone.replace(/\D/g, '');
+
+  if (normalizedRawValue && normalizedRawValue === normalizedEmail) return 'email';
+  if (rawDigits && rawDigits === phoneDigits) return 'phone';
+  if (normalizedRawValue && normalizedRawValue === normalizedName) return 'name';
+
+  return '';
+};
+const sanitizePublicContact = (value) => {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
+  return {
+    role: sanitizeText(value.role),
+    name: sanitizeText(value.name),
+    email: sanitizeText(value.email),
+    phone: sanitizeText(value.phone),
+    value: sanitizeText(value.value)
+  };
+};
 
 const mockByDomain = new Map(MOCK_DATA.map((company) => [normalize(company.domain), company]));
 const mockByName = new Map(MOCK_DATA.map((company) => [normalize(company.name), company]));
@@ -63,7 +116,7 @@ const toUiCompany = (company) => {
   const fallback = findMockFallback(company);
   const coverUrl = resolveAssetUrl(sanitizeText(company.cover));
   const logoUrl = resolveAssetUrl(sanitizeText(company.logo));
-  const domain = sanitizeText(company.domain) || sanitizeText(fallback?.domain) || '';
+  const domain = sanitizeDomain(company.domain) || sanitizeDomain(fallback?.domain) || '';
   const name = sanitizeText(company.name) || sanitizeText(fallback?.name) || 'Empresa MITC';
   const industry = sanitizeText(company.industry) || sanitizeText(fallback?.industry) || 'General';
   const commercialName = sanitizeText(fallback?.commercialName) || sanitizeText(company.commercialName);
@@ -117,6 +170,9 @@ const getCompanyDetail = (payload) => {
   if (payload && typeof payload === 'object' && payload.company && typeof payload.company === 'object') {
     return payload.company;
   }
+  if (payload && typeof payload === 'object' && payload.partner && typeof payload.partner === 'object') {
+    return payload.partner;
+  }
   if (payload && typeof payload === 'object' && !Array.isArray(payload)) {
     return payload;
   }
@@ -129,8 +185,41 @@ const toUiCompanyDetail = (company, baseCompany = {}) => {
   const name = sanitizeText(company.name) || sanitizeText(baseCompany.name) || 'Empresa MITC';
   const products = sanitizeText(company.products) || sanitizeText(baseCompany.products);
   const location = sanitizeText(company.location) || sanitizeText(baseCompany.location);
-  const email = sanitizeText(company.email) || sanitizeText(baseCompany.email);
-  const phone = sanitizeText(company.phone) || sanitizeText(baseCompany.phone);
+  const legacyEmail = sanitizeText(company.email) || sanitizeText(baseCompany.email);
+  const legacyPhone = sanitizeText(company.phone) || sanitizeText(baseCompany.phone);
+  const contact = sanitizeText(company.contact) || sanitizeText(baseCompany.contact);
+  const publicLead = sanitizeText(company.publicLead) || sanitizeText(baseCompany.publicLead);
+  const publicContact = sanitizePublicContact(company.publicContact) || sanitizePublicContact(baseCompany.publicContact);
+  const publicContactValue = sanitizeText(publicContact?.value);
+  const publicContactChannel = inferPublicContactChannel({
+    value: publicContactValue,
+    publicLead,
+    contact,
+    publicContact
+  });
+  const hasPublicContact = Boolean(
+    publicContactChannel ||
+      publicContactValue ||
+      publicContact?.name ||
+      publicContact?.email ||
+      publicContact?.phone ||
+      publicLead ||
+      contact
+  );
+  const showPublicName = !publicContactChannel || publicContactChannel === 'name';
+  const showPublicEmail = !publicContactChannel || publicContactChannel === 'email';
+  const showPublicPhone = !publicContactChannel || publicContactChannel === 'phone';
+
+  const emailCandidates = [publicContact?.email, publicContactValue, publicLead, contact];
+  const phoneCandidates = [publicContact?.phone, publicContactValue, publicLead, contact];
+  const nameCandidates = [publicContact?.name, publicContactValue, publicLead, contact];
+  const resolvedPublicEmail = emailCandidates.map(sanitizeText).find(isLikelyEmail) || '';
+  const resolvedPublicPhone = phoneCandidates.map(sanitizeText).find(isLikelyPhone) || '';
+  const resolvedPublicName = nameCandidates.map(sanitizeText).find(Boolean) || '';
+
+  const contactName = hasPublicContact && showPublicName ? resolvedPublicName : '';
+  const email = hasPublicContact ? (showPublicEmail ? (resolvedPublicEmail || legacyEmail) : '') : legacyEmail;
+  const phone = hasPublicContact ? (showPublicPhone ? (resolvedPublicPhone || legacyPhone) : '') : legacyPhone;
   const services = sanitizeList(company.services).length > 0 ? sanitizeList(company.services) : sanitizeList(baseCompany.services);
   const targetAudience = sanitizeList(company.targetIndustries).length > 0 ? sanitizeList(company.targetIndustries) : sanitizeList(baseCompany.targetAudience);
   const tags = sanitizeList(company.tags).length > 0 ? sanitizeList(company.tags) : sanitizeList(baseCompany.tags);
@@ -142,7 +231,7 @@ const toUiCompanyDetail = (company, baseCompany = {}) => {
     name,
     industry: sanitizeText(company.industry) || sanitizeText(baseCompany.industry) || 'General',
     tags,
-    domain: sanitizeText(company.domain) || sanitizeText(baseCompany.domain) || '',
+    domain: sanitizeDomain(company.domain) || sanitizeDomain(baseCompany.domain) || '',
     logo: logoUrl || baseCompany.logo || '',
     logoUrl: logoUrl || baseCompany.logoUrl || '',
     cover: coverUrl || baseCompany.cover || '',
@@ -155,6 +244,18 @@ const toUiCompanyDetail = (company, baseCompany = {}) => {
     location,
     email,
     phone,
+    contactName,
+    contact,
+    publicLead,
+    publicContact: publicContact
+      ? {
+          role: sanitizeText(publicContact.role),
+          name: sanitizeText(publicContact.name),
+          email: sanitizeText(publicContact.email),
+          phone: sanitizeText(publicContact.phone),
+          value: publicContactValue
+        }
+      : null,
     targetAudience,
     desc
   };
@@ -182,15 +283,26 @@ export const fetchCompanies = async () => {
 };
 
 export const fetchCompanyById = async (id, baseCompany = {}) => {
-  const response = await fetch(getApiUrl(`/api/companies/${id}`), {
-    headers: { Accept: 'application/json' }
-  });
-
-  if (!response.ok) {
-    throw new Error(`company_fetch_failed_${response.status}`);
+  let payload = null;
+  let latestStatus = 0;
+  for (const path of [`/api/companies/${id}`, `/api/partners/${id}`]) {
+    const response = await fetch(getApiUrl(path), {
+      headers: { Accept: 'application/json' }
+    });
+    latestStatus = response.status;
+    if (response.ok) {
+      payload = await response.json();
+      break;
+    }
+    if (response.status !== 404) {
+      throw new Error(`company_fetch_failed_${response.status}`);
+    }
   }
 
-  const payload = await response.json();
+  if (!payload) {
+    throw new Error(`company_fetch_failed_${latestStatus || 'unknown'}`);
+  }
+
   const company = getCompanyDetail(payload);
   if (!company) {
     throw new Error('company_invalid_payload');
@@ -199,18 +311,22 @@ export const fetchCompanyById = async (id, baseCompany = {}) => {
   return toUiCompanyDetail(company, baseCompany);
 };
 
-export const submitLead = async (formData) => {
+const buildLeadPayload = (formData) => ({
+  name: formData.nombre.trim(),
+  role: formData.cargo.trim(),
+  email: formData.email.trim(),
+  phone: formData.telefono.trim(),
+  size: formData.tamano,
+  location: formData.ubicacion,
+  objective: formData.objetivo
+});
+
+const submitLeadRequest = async (path, formData) => {
   const payload = {
-    name: formData.nombre.trim(),
-    role: formData.cargo.trim(),
-    email: formData.email.trim(),
-    phone: formData.telefono.trim(),
-    size: formData.tamano,
-    location: formData.ubicacion,
-    objective: formData.objetivo
+    ...buildLeadPayload(formData)
   };
 
-  const response = await fetch(getApiUrl('/api/leads'), {
+  const response = await fetch(getApiUrl(path), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -236,3 +352,7 @@ export const submitLead = async (formData) => {
 
   return body;
 };
+
+export const submitLead = async (formData) => submitLeadRequest('/api/leads', formData);
+
+export const submitClusterLead = async (formData) => submitLeadRequest('/api/leads-cluster', formData);

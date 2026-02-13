@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import logo from '../../assets/logo.svg';
 
 
-const ADMIN_PANEL_URL = "#"; // Pon aquí la url real si la tienes, ej: https://admin.mitc.mx
+const ADMIN_PANEL_URL = "https://admin.monterreyitcluster.com/";
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);

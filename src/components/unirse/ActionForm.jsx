@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { 
   Users, Building2, Mail, Calendar, User, Briefcase, Phone, MapPin, ArrowRight, Send, Loader2
 } from 'lucide-react';
-import { submitLead } from '../../services/api';
+import { submitClusterLead } from '../../services/api';
 
 const MEETING_URL = "https://meetings.hubspot.com/javier-m1?uuid=ac0d2c09-6a95-4b62-8a18-346e39571970";
 
@@ -87,7 +87,7 @@ const ActionForm = () => {
     setSubmitMessage({ type: '', text: '' });
 
     try {
-      await submitLead(formData);
+      await submitClusterLead(formData);
       setSubmitMessage({
         type: 'success',
         text: 'Solicitud enviada correctamente. Te contactaremos pronto.'
