@@ -261,6 +261,64 @@ const toUiCompanyDetail = (company, baseCompany = {}) => {
   };
 };
 
+const toUiAssistPartner = (partner) => {
+  if (!partner || typeof partner !== 'object' || Array.isArray(partner)) return null;
+
+  const safeContact =
+    partner.contact && typeof partner.contact === 'object' && !Array.isArray(partner.contact)
+      ? partner.contact
+      : {};
+  const logoUrl = resolveAssetUrl(sanitizeText(partner.logo));
+  const coverUrl = resolveAssetUrl(sanitizeText(partner.cover));
+  const contactEmail = sanitizeText(safeContact.email) || sanitizeText(partner.email);
+  const contactPhone = sanitizeText(safeContact.phone) || sanitizeText(partner.phone);
+  const contactName = sanitizeText(safeContact.name);
+  const location =
+    sanitizeText(partner.location) ||
+    sanitizeText(partner.address) ||
+    [sanitizeText(partner.city), sanitizeText(partner.region)].filter(Boolean).join(', ');
+  const summary = sanitizeText(partner.publicSummary);
+
+  return {
+    id: sanitizeText(partner.id),
+    name: sanitizeText(partner.name) || 'Empresa MITC',
+    industry: sanitizeText(partner.industry) || 'General',
+    tags: sanitizeList(partner.tags),
+    domain: sanitizeDomain(partner.domain),
+    logo: logoUrl,
+    logoUrl,
+    cover: coverUrl,
+    banner: coverUrl,
+    location,
+    verified: Boolean(partner.verified),
+    tier: sanitizeText(partner.tier) || 'Partner',
+    services: sanitizeList(partner.services),
+    products: sanitizeText(partner.products),
+    desc: summary || 'Socio público del ecosistema MITC.',
+    contactName,
+    email: contactEmail,
+    phone: contactPhone,
+    website: sanitizeText(partner.website)
+  };
+};
+
+const toUiAssistRecommendation = (recommendation, index) => {
+  if (!recommendation || typeof recommendation !== 'object' || Array.isArray(recommendation)) return null;
+  const partner = toUiAssistPartner(recommendation.partner);
+  if (!partner?.id) return null;
+
+  const rawScore = recommendation.score;
+  const score = typeof rawScore === 'number' ? rawScore : Number(rawScore);
+
+  return {
+    id: `${partner.id}-${index}`,
+    partner,
+    reason: sanitizeText(recommendation.reason),
+    score: Number.isFinite(score) ? score : 0,
+    matchedTags: sanitizeList(recommendation.matchedTags)
+  };
+};
+
 export const fetchCompanies = async () => {
   const response = await fetch(getApiUrl('/api/companies'), {
     headers: { Accept: 'application/json' }
@@ -309,6 +367,64 @@ export const fetchCompanyById = async (id, baseCompany = {}) => {
   }
 
   return toUiCompanyDetail(company, baseCompany);
+};
+
+export const assistPublicPartners = async ({ message, limit = 5 }) => {
+  const text = sanitizeText(message);
+  if (!text) {
+    const err = new Error('assist_message_required');
+    err.code = 'assist_message_required';
+    throw err;
+  }
+
+  const parsedLimit = Number.parseInt(limit, 10);
+  const safeLimit = Number.isFinite(parsedLimit) ? Math.min(8, Math.max(1, parsedLimit)) : 5;
+
+  const response = await fetch(getApiUrl('/api/public/partners/assist'), {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json'
+    },
+    body: JSON.stringify({
+      message: text,
+      limit: safeLimit
+    })
+  });
+
+  let payload = null;
+  try {
+    payload = await response.json();
+  } catch {
+    payload = null;
+  }
+
+  if (!response.ok) {
+    const error = payload?.error || `assist_public_partners_failed_${response.status}`;
+    const err = new Error(error);
+    err.status = response.status;
+    err.code = error;
+    throw err;
+  }
+
+  if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
+    throw new Error('assist_public_partners_invalid_payload');
+  }
+
+  const recommendations = Array.isArray(payload.recommendations)
+    ? payload.recommendations
+        .map((recommendation, index) => toUiAssistRecommendation(recommendation, index))
+        .filter(Boolean)
+    : [];
+
+  return {
+    reply: sanitizeText(payload.reply) || 'Encontré socios que pueden ayudarte.',
+    detectedNeeds: sanitizeList(payload.detectedNeeds),
+    needsClarification: Boolean(payload.needsClarification),
+    followUpQuestion: sanitizeText(payload.followUpQuestion),
+    recommendations,
+    meta: payload.meta && typeof payload.meta === 'object' && !Array.isArray(payload.meta) ? payload.meta : null
+  };
 };
 
 const buildLeadPayload = (formData) => ({

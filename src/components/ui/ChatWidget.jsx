@@ -1,12 +1,24 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Bot, Send } from 'lucide-react';
+import { X, Bot, Send, MapPin } from 'lucide-react';
+import { assistPublicPartners } from '../../services/api';
+
+const ASSIST_LIMIT = 5;
+
+const createMessageId = () => `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
 const ChatWidget = () => {
+  const navigate = useNavigate();
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [showAiBubble, setShowAiBubble] = useState(false);
   const [messages, setMessages] = useState([
-    { id: 1, text: '¡Hola! Soy la IA del Cluster. ¿Buscas algún proveedor en específico?', sender: 'ai' }
+    {
+      id: createMessageId(),
+      sender: 'ai',
+      type: 'text',
+      text: '¡Hola! Soy la IA del Cluster. Cuéntame qué necesitas y te recomiendo socios públicos.'
+    }
   ]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -21,22 +33,83 @@ const ChatWidget = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isTyping, isChatOpen]);
 
-  const handleSendMessage = (e) => {
+  const handleRecommendationClick = (partnerId) => {
+    if (!partnerId) return;
+    setIsChatOpen(false);
+    setShowAiBubble(false);
+    navigate(`/directorio?socio=${encodeURIComponent(String(partnerId))}`);
+  };
+
+  const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (!inputValue.trim()) return;
-    const newMessage = { id: Date.now(), text: inputValue, sender: 'user' };
-    setMessages(prev => [...prev, newMessage]);
+    const message = inputValue.trim();
+    if (!message || isTyping) return;
+
+    const userMessage = { id: createMessageId(), type: 'text', text: message, sender: 'user' };
+    setMessages((prev) => [...prev, userMessage]);
     setInputValue('');
     setIsTyping(true);
 
-    setTimeout(() => {
+    try {
+      const response = await assistPublicPartners({ message, limit: ASSIST_LIMIT });
+      const nextMessages = [];
+
+      nextMessages.push({
+        id: createMessageId(),
+        type: 'text',
+        text: response.reply || 'Estos socios públicos pueden ayudarte.',
+        sender: 'ai'
+      });
+
+      if (response.detectedNeeds.length > 0) {
+        nextMessages.push({
+          id: createMessageId(),
+          type: 'text',
+          text: `Necesidades detectadas: ${response.detectedNeeds.join(', ')}`,
+          sender: 'ai'
+        });
+      }
+
+      if (response.needsClarification && response.followUpQuestion) {
+        nextMessages.push({
+          id: createMessageId(),
+          type: 'text',
+          text: response.followUpQuestion,
+          sender: 'ai'
+        });
+      }
+
+      if (response.recommendations.length > 0) {
+        nextMessages.push({
+          id: createMessageId(),
+          type: 'recommendations',
+          sender: 'ai',
+          recommendations: response.recommendations
+        });
+      } else if (!response.needsClarification) {
+        nextMessages.push({
+          id: createMessageId(),
+          type: 'text',
+          text: 'No encontré socios públicos con suficiente coincidencia. Puedes dar más detalle para afinar la búsqueda.',
+          sender: 'ai'
+        });
+      }
+
+      setMessages((prev) => [...prev, ...nextMessages]);
+    } catch (error) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: createMessageId(),
+          type: 'text',
+          sender: 'ai',
+          text: 'No pude consultar recomendaciones en este momento. Intenta nuevamente en unos segundos.'
+        }
+      ]);
+      console.error('No se pudo consultar la IA pública de socios:', error);
+    } finally {
       setIsTyping(false);
-      setMessages(prev => [...prev, { 
-        id: Date.now() + 1, 
-        text: '¡Entendido! Estoy analizando nuestra base de datos...', 
-        sender: 'ai' 
-      }]);
-    }, 2000);
+    }
   };
 
   return (
@@ -83,9 +156,46 @@ const ChatWidget = () => {
                  <div className="flex flex-col gap-4">
                  {messages.map((msg) => (
                     <div key={msg.id} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-                        <div className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm ${msg.sender === 'user' ? 'bg-indigo-600 text-white rounded-br-none' : 'bg-white text-gray-800 border border-gray-200 rounded-bl-none'}`}>
+                        {msg.type === 'recommendations' ? (
+                          <div className="max-w-[92%] rounded-2xl px-3 py-3 text-sm bg-white text-gray-800 border border-gray-200 rounded-bl-none">
+                            <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Socios recomendados</p>
+                            <div className="space-y-2">
+                              {msg.recommendations.map((recommendation) => (
+                                <button
+                                  key={recommendation.id}
+                                  type="button"
+                                  onClick={() => handleRecommendationClick(recommendation.partner.id)}
+                                  className="w-full p-3 rounded-xl border border-gray-200 bg-slate-50 hover:bg-white hover:border-indigo-300 transition-colors text-left"
+                                >
+                                  <p className="text-sm font-bold text-slate-900">{recommendation.partner.name}</p>
+                                  <p className="text-xs text-slate-500 mt-0.5">{recommendation.partner.industry}</p>
+                                  {recommendation.partner.location && (
+                                    <p className="text-xs text-slate-500 mt-1 inline-flex items-center gap-1">
+                                      <MapPin className="h-3 w-3" />
+                                      {recommendation.partner.location}
+                                    </p>
+                                  )}
+                                  {recommendation.reason && (
+                                    <p className="text-xs text-slate-600 mt-2 line-clamp-2">{recommendation.reason}</p>
+                                  )}
+                                  {recommendation.matchedTags.length > 0 && (
+                                    <div className="mt-2 flex flex-wrap gap-1">
+                                      {recommendation.matchedTags.slice(0, 4).map((tag) => (
+                                        <span key={tag} className="px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 text-[10px] font-semibold uppercase tracking-wide">
+                                          {tag}
+                                        </span>
+                                      ))}
+                                    </div>
+                                  )}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        ) : (
+                          <div className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm ${msg.sender === 'user' ? 'bg-indigo-600 text-white rounded-br-none' : 'bg-white text-gray-800 border border-gray-200 rounded-bl-none'}`}>
                             {msg.text}
-                        </div>
+                          </div>
+                        )}
                     </div>
                  ))}
                  {isTyping && <div className="text-xs text-gray-400">Escribiendo...</div>}

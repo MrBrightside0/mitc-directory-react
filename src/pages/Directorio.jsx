@@ -1,4 +1,5 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Filter } from 'lucide-react';
 import CompanyCard from '../components/directory/CompanyCard';
@@ -6,13 +7,17 @@ import CompanyDrawer from '../components/directory/CompanyDrawer';
 import FilterBar from '../components/directory/FilterBar';
 import heroImage from '../assets/monterrey-hero.webp'; 
 import useCompanies from '../hooks/useCompanies';
+import { fetchCompanyById } from '../services/api';
 
 const Directorio = () => {
   const [activeFilter, setActiveFilter] = useState('Todas');
   const [searchTerm, setSearchTerm] = useState('');
   const [onlyVerified, setOnlyVerified] = useState(false);
   const [selectedCompany, setSelectedCompany] = useState(null);
+  const [searchParams, setSearchParams] = useSearchParams();
   const { companies, isLoading, error } = useCompanies();
+  const companyIdFromQuery = searchParams.get('socio');
+  const selectedCompanyId = selectedCompany?.id ? String(selectedCompany.id) : '';
 
   const categories = useMemo(() => {
     const values = companies
@@ -31,6 +36,66 @@ const Directorio = () => {
   });
 
   const hasActiveFilters = activeFilter !== 'Todas' || onlyVerified || searchTerm.trim() !== '';
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const syncCompanyFromQuery = async () => {
+      if (!companyIdFromQuery) {
+        if (selectedCompanyId) setSelectedCompany(null);
+        return;
+      }
+
+      const companyFromList = companies.find((company) => String(company.id) === companyIdFromQuery);
+      if (companyFromList) {
+        if (selectedCompanyId !== String(companyFromList.id)) {
+          setSelectedCompany(companyFromList);
+        }
+        return;
+      }
+
+      if (selectedCompanyId === companyIdFromQuery) return;
+      if (isLoading) return;
+
+      try {
+        const companyFromApi = await fetchCompanyById(companyIdFromQuery);
+        if (isMounted) setSelectedCompany(companyFromApi);
+      } catch {
+        if (!isMounted) return;
+        setSearchParams((prev) => {
+          const next = new URLSearchParams(prev);
+          next.delete('socio');
+          return next;
+        }, { replace: true });
+      }
+    };
+
+    syncCompanyFromQuery();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [companyIdFromQuery, companies, isLoading, selectedCompanyId, setSearchParams]);
+
+  const openCompany = (company) => {
+    if (!company?.id) return;
+    setSelectedCompany(company);
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      next.set('socio', String(company.id));
+      return next;
+    });
+  };
+
+  const closeCompany = () => {
+    setSelectedCompany(null);
+    setSearchParams((prev) => {
+      if (!prev.has('socio')) return prev;
+      const next = new URLSearchParams(prev);
+      next.delete('socio');
+      return next;
+    });
+  };
 
   return (
     <div className="flex-1 flex flex-col relative">
@@ -86,7 +151,7 @@ const Directorio = () => {
           <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             <AnimatePresence>
               {filtered.map((item) => (
-                <CompanyCard key={item.id} item={item} onClick={() => setSelectedCompany(item)} />
+                <CompanyCard key={item.id} item={item} onClick={() => openCompany(item)} />
               ))}
             </AnimatePresence>
           </motion.div>
@@ -110,7 +175,7 @@ const Directorio = () => {
       {/* DRAWER */}
       <AnimatePresence>
         {selectedCompany && (
-            <CompanyDrawer selectedCompany={selectedCompany} onClose={() => setSelectedCompany(null)} />
+            <CompanyDrawer selectedCompany={selectedCompany} onClose={closeCompany} />
         )}
       </AnimatePresence>
     </div>
