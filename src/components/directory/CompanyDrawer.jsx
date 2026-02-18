@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { 
   X, Share2, Layers, Package, Briefcase, Activity, 
   MapPin, ShieldCheck, Sparkles, Building2, 
-  Store, Rocket, Mail, Phone, UserRound // <--- Agregados Mail y Phone
+  Store, Rocket, Mail, Phone, UserRound, Globe
 } from 'lucide-react';
 import ContactModal from './ContactModal'; 
 import { fetchCompanyById } from '../../services/api';
@@ -26,6 +26,130 @@ const getTargetStyle = (target) => {
       case 'PyME': return 'bg-blue-50 text-blue-700 border-blue-200';
       default: return 'bg-gray-50 text-gray-700 border-gray-200';
     }
+};
+
+const splitContactValues = (value) => {
+  const text = (value || '').toString().trim();
+  if (!text) return [];
+
+  const seen = new Set();
+  return text
+    .split(/[,\n;]+/)
+    .map((item) => item.trim())
+    .filter(Boolean)
+    .filter((item) => {
+      const key = item.toLowerCase();
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+};
+
+const normalizeWebsiteHref = (value) => {
+  const text = (value || '').toString().trim();
+  if (!text || text.includes('@')) return '';
+
+  let normalized = text.replace(/\s+/g, '');
+  normalized = normalized.replace(/^https?:\/?(?!\/)/i, 'https://');
+
+  if (/^www\./i.test(normalized)) {
+    normalized = `https://${normalized}`;
+  }
+
+  const hasScheme = /^https?:\/\//i.test(normalized);
+  if (!hasScheme && /^[a-z0-9.-]+\.[a-z]{2,}(\/\S*)?$/i.test(normalized)) {
+    normalized = `https://${normalized}`;
+  }
+
+  try {
+    const parsed = new URL(normalized);
+    if (!parsed.hostname || !parsed.hostname.includes('.')) return '';
+    return parsed.toString();
+  } catch {
+    return '';
+  }
+};
+
+const formatWebsiteLabel = (href) => {
+  try {
+    const parsed = new URL(href);
+    const path = parsed.pathname && parsed.pathname !== '/' ? parsed.pathname : '';
+    return `${parsed.hostname}${path}${parsed.search}${parsed.hash}`;
+  } catch {
+    return href.replace(/^https?:\/\//i, '');
+  }
+};
+
+const isLikelyEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((value || '').toString().trim());
+const isLikelyPhone = (value) => (value || '').toString().replace(/\D/g, '').length >= 7;
+const isLikelyWebsite = (value) => Boolean(normalizeWebsiteHref(value));
+
+const stripContactPrefix = (value) =>
+  (value || '')
+    .toString()
+    .trim()
+    .replace(/^(correo|email|mail|telefono|tel|phone|nombre|name|web|sitio web|pagina web|website)\s*:\s*/i, '');
+
+const isChannelLabel = (value) => {
+  const normalized = (value || '').toString().trim().toLowerCase();
+  return [
+    'correo',
+    'email',
+    'mail',
+    'telefono',
+    'tel',
+    'phone',
+    'nombre',
+    'name',
+    'web',
+    'sitio web',
+    'pagina web',
+    'website'
+  ].includes(normalized);
+};
+
+const parseContactInfo = (values) => {
+  const names = [];
+  const emails = [];
+  const phones = [];
+  const websites = [];
+
+  const seenNames = new Set();
+  const seenEmails = new Set();
+  const seenPhones = new Set();
+  const seenWebsites = new Set();
+
+  const pushUnique = (list, seen, value, key = value.toLowerCase()) => {
+    if (!value || seen.has(key)) return;
+    seen.add(key);
+    list.push(value);
+  };
+
+  const tokens = values.flatMap((value) => splitContactValues(value));
+  tokens.forEach((rawToken) => {
+    const token = stripContactPrefix(rawToken);
+    if (!token || isChannelLabel(token)) return;
+
+    if (isLikelyEmail(token)) {
+      pushUnique(emails, seenEmails, token);
+      return;
+    }
+
+    if (isLikelyPhone(token)) {
+      pushUnique(phones, seenPhones, token, token.replace(/\D/g, ''));
+      return;
+    }
+
+    if (isLikelyWebsite(token)) {
+      const href = normalizeWebsiteHref(token);
+      pushUnique(websites, seenWebsites, href, href.toLowerCase());
+      return;
+    }
+
+    pushUnique(names, seenNames, token);
+  });
+
+  return { names, emails, phones, websites };
 };
 
 const CompanyDrawer = ({ selectedCompany, onClose }) => {
@@ -79,10 +203,27 @@ const CompanyDrawer = ({ selectedCompany, onClose }) => {
   const hasExecutiveProfile = isLoadingDetails || Boolean(company.desc);
   const hasTags = tags.length > 0;
   const hasLocation = Boolean(company.location);
-  const hasContactName = Boolean(company.contactName);
-  const hasEmail = Boolean(company.email);
-  const hasPhone = Boolean(company.phone);
-  const hasContactInfo = hasLocation || hasContactName || hasEmail || hasPhone;
+  const parsedContactInfo = parseContactInfo([
+    company.contactName,
+    company.email,
+    company.phone,
+    company.website,
+    company.contact,
+    company.publicLead,
+    company.publicContact?.name,
+    company.publicContact?.email,
+    company.publicContact?.phone,
+    company.publicContact?.value
+  ]);
+  const contactNames = parsedContactInfo.names;
+  const emails = parsedContactInfo.emails;
+  const phones = parsedContactInfo.phones;
+  const websites = parsedContactInfo.websites;
+  const hasContactName = contactNames.length > 0;
+  const hasEmail = emails.length > 0;
+  const hasPhone = phones.length > 0;
+  const hasWebsite = websites.length > 0;
+  const hasContactInfo = hasLocation || hasContactName || hasEmail || hasPhone || hasWebsite;
 
   return (
     <>
@@ -284,35 +425,76 @@ const CompanyDrawer = ({ selectedCompany, onClose }) => {
                       </div>
                       <div>
                         <p className="text-xs font-bold text-gray-400 uppercase">Contacto Público</p>
-                        <p className="font-medium text-gray-900">{company.contactName}</p>
+                        <div className="flex flex-col gap-1">
+                          {contactNames.map((name) => (
+                            <p key={name} className="font-medium text-gray-900">{name}</p>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   )}
 
                   {/* Correo (Si existe) */}
                   {hasEmail && (
-                    <a href={`mailto:${company.email}`} className="flex items-center gap-4 group p-3 rounded-xl hover:bg-gray-50 transition-colors -mx-3">
-                      <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition-colors border border-gray-200 shadow-sm">
-                        <Mail className="h-5 w-5 text-gray-600 group-hover:text-white" />
+                    <div className="flex items-center gap-4 p-3 rounded-xl hover:bg-gray-50 transition-colors -mx-3">
+                      <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center transition-colors border border-gray-200 shadow-sm">
+                        <Mail className="h-5 w-5 text-gray-600" />
                       </div>
                       <div>
-                        <p className="text-xs font-bold text-gray-400 uppercase group-hover:text-indigo-600 transition-colors">Correo Electrónico</p>
-                        <p className="font-medium text-gray-900">{company.email}</p>
+                        <p className="text-xs font-bold text-gray-400 uppercase">Correo Electrónico</p>
+                        <div className="flex flex-col gap-1">
+                          {emails.map((email) => (
+                            <a key={email} href={`mailto:${email}`} className="font-medium text-gray-900 hover:text-indigo-600 transition-colors break-all">
+                              {email}
+                            </a>
+                          ))}
+                        </div>
                       </div>
-                    </a>
+                    </div>
+                  )}
+
+                  {/* Sitio Web (Si existe) */}
+                  {hasWebsite && (
+                    <div className="flex items-center gap-4 p-3 rounded-xl hover:bg-gray-50 transition-colors -mx-3">
+                      <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center transition-colors border border-gray-200 shadow-sm">
+                        <Globe className="h-5 w-5 text-gray-600" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-gray-400 uppercase">Sitio Web</p>
+                        <div className="flex flex-col gap-1">
+                          {websites.map((website) => (
+                            <a
+                              key={website}
+                              href={website}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="font-medium text-gray-900 hover:text-indigo-600 transition-colors break-all"
+                            >
+                              {formatWebsiteLabel(website)}
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
                   )}
 
                   {/* Teléfono (Si existe) */}
                   {hasPhone && (
-                    <a href={`tel:${company.phone}`} className="flex items-center gap-4 group p-3 rounded-xl hover:bg-gray-50 transition-colors -mx-3">
-                      <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition-colors border border-gray-200 shadow-sm">
-                        <Phone className="h-5 w-5 text-gray-600 group-hover:text-white" />
+                    <div className="flex items-center gap-4 p-3 rounded-xl hover:bg-gray-50 transition-colors -mx-3">
+                      <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center transition-colors border border-gray-200 shadow-sm">
+                        <Phone className="h-5 w-5 text-gray-600" />
                       </div>
                       <div>
-                        <p className="text-xs font-bold text-gray-400 uppercase group-hover:text-indigo-600 transition-colors">Teléfono</p>
-                        <p className="font-medium text-gray-900">{company.phone}</p>
+                        <p className="text-xs font-bold text-gray-400 uppercase">Teléfono</p>
+                        <div className="flex flex-col gap-1">
+                          {phones.map((phone) => (
+                            <a key={phone} href={`tel:${phone}`} className="font-medium text-gray-900 hover:text-indigo-600 transition-colors">
+                              {phone}
+                            </a>
+                          ))}
+                        </div>
                       </div>
-                    </a>
+                    </div>
                   )}
               </div>
             )}
