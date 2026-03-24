@@ -63,6 +63,7 @@ const Navbar = () => {
             <div className="hidden lg:flex items-center gap-6">
                 <NavLink to="/" active={location.pathname === '/'} baseColor={baseTextColor} hoverColor={hoverTextColor}>Inicio</NavLink>
                 <NavLink to="/directorio" active={location.pathname === '/directorio'} baseColor={baseTextColor} hoverColor={hoverTextColor}>Directorio</NavLink>
+                <NavLink to="/autodiagnostico" active={location.pathname === '/autodiagnostico'} baseColor={baseTextColor} hoverColor={hoverTextColor}>Autodiagnóstico</NavLink>
             </div>
         </div>
 
@@ -106,7 +107,7 @@ const Navbar = () => {
                     <div className="flex flex-col gap-2">
                         <MobileNavLink to="/" active={location.pathname === '/'} onClick={() => setIsMobileMenuOpen(false)}>Inicio</MobileNavLink>
                         <MobileNavLink to="/directorio" active={location.pathname === '/directorio'} onClick={() => setIsMobileMenuOpen(false)}>Directorio</MobileNavLink>
-                        {/* Se eliminó el link duplicado de "Unirse" aquí */}
+                        <MobileNavLink to="/autodiagnostico" active={location.pathname === '/autodiagnostico'} onClick={() => setIsMobileMenuOpen(false)}>Autodiagnóstico</MobileNavLink>
                     </div>
                     
                     <div className="h-px w-full bg-gray-100"></div>

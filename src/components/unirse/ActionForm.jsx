@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { 
+import {
   Users, Building2, Mail, Calendar, User, Briefcase, Phone, MapPin, ArrowRight, Send, Loader2
 } from 'lucide-react';
 import { submitClusterLead } from '../../services/api';
+import { useScrollReveal } from '../../hooks/useGSAPAnimations';
 
 const MEETING_URL = "https://meetings.hubspot.com/javier-m1?uuid=ac0d2c09-6a95-4b62-8a18-346e39571970";
 
@@ -59,6 +60,9 @@ const SelectGroup = ({ label, icon: Icon, options, placeholder, name, value, onC
 );
 
 const ActionForm = () => {
+  const sectionRef = useRef(null);
+  useScrollReveal(sectionRef, '.reveal-form', { y: 40, duration: 0.8 });
+
   const [formType, setFormType] = useState('empresa');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState({ type: '', text: '' });
@@ -114,8 +118,8 @@ const ActionForm = () => {
   };
 
   return (
-    <section className="bg-slate-50 py-12 md:py-24 md:-mt-10 relative z-20" id="formulario">
-        <div className="max-w-7xl mx-auto bg-white md:rounded-[2.5rem] shadow-none md:shadow-2xl overflow-hidden border-y md:border border-slate-200 flex flex-col lg:flex-row relative">
+    <section ref={sectionRef} className="bg-slate-50 py-12 md:py-24 md:-mt-10 relative z-20" id="formulario">
+        <div className="reveal-form max-w-7xl mx-auto bg-white md:rounded-[2.5rem] shadow-none md:shadow-2xl overflow-hidden border-y md:border border-slate-200 flex flex-col lg:flex-row relative">
             
             {/* COLUMNA IZQUIERDA (Igual que antes) */}
             <div className="lg:w-5/12 bg-slate-900 text-white p-8 lg:p-14 flex flex-col justify-between relative overflow-hidden">

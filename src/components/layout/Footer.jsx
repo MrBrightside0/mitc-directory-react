@@ -33,6 +33,7 @@ const Footer = () => {
                         <li><Link to="/directorio" className="hover:text-indigo-600 transition-colors">Directorio</Link></li>
                         {/* Nuevo enlace aquí */}
                         <li><Link to="/unirse" className="hover:text-indigo-600 transition-colors">Unirse al Cluster</Link></li>
+                        <li><Link to="/autodiagnostico" className="hover:text-indigo-600 transition-colors">Autodiagnóstico</Link></li>
                     </ul>
                 </div>
 
