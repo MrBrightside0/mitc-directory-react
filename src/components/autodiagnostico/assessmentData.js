@@ -206,6 +206,34 @@ export function getNivelMadurez(score) {
   return NIVELES_MADUREZ[0];
 }
 
+// Hints por pregunta (se muestran durante el cuestionario)
+export const HINTS = {
+  // Sección 1
+  sector: 'El sector y tamaño de tu empresa definen el punto de partida realista para IA. Las empresas de manufactura y logística suelen tener datos estructurados ideales para IA predictiva. Las de servicios profesionales tienen mayor oportunidad con IA generativa. Empresas de 11 a 250 colaboradores son las que más se benefician de quick wins de IA.',
+
+  // Sección 2
+  retos: 'Los retos que selecciones determinan qué tipo de IA tiene sentido para ti hoy. Si eliges 3 retos de áreas completamente distintas, es señal de que la empresa necesita primero un ejercicio de priorización antes de implementar IA.',
+  areasMejora: 'El área con mayor necesidad de mejora es generalmente el mejor candidato para un primer piloto de IA: hay motivación, hay problema claro, hay receptividad al cambio. El área seleccionada debe coincidir con el líder que será el sponsor del primer proyecto.',
+  prioridad: 'Un score de 1 o 2 no es malo: significa que antes de IA hay que resolver fundamentos. Un score de 4 o 5 sin bases sólidas en datos y tecnología es una señal de riesgo: hay urgencia pero no hay condiciones.',
+  resultadoEsperado: 'Las respuestas vagas ("ser más eficientes") sugieren exploración; las específicas ("reducir 20% el tiempo de atención") sugieren preparación real. Si el resultado involucra tecnología específica, redirige hacia el problema de negocio primero.',
+
+  // Sección 3
+  erp: 'SAP, Oracle y Dynamics 365 tienen conectores nativos con plataformas de IA, lo que acelera la integración. Si operas en Excel, puedes usar IA generativa como punto de entrada. Si tienes ERP, solicita a TI un inventario de datos disponibles vía API.',
+  crm: 'Salesforce y HubSpot tienen módulos de IA integrados (Einstein AI, HubSpot AI) que son quick wins inmediatos. Si tienes CRM pero no lo usas consistentemente, la IA sobre datos incompletos amplifica errores.',
+  tiposIA: 'Si solo conoces IA generativa, hay riesgo de intentar resolver con ChatGPT problemas que necesitan análisis predictivo. Conocer Business Intelligence pero no IA predictiva indica un paso intermedio: la empresa analiza el pasado pero no predice el futuro.',
+
+  // Sección 10
+  areasImpacto: 'Las áreas seleccionadas, cruzadas con tus retos y nivel de madurez, definen el mapa de oportunidades real. Pregúntate: ¿en cuál de estas áreas tengo mejores datos hoy? Esa es tu punto de entrada ideal.',
+  soluciones: 'Las soluciones con mayor ROI demostrado en empresas medianas son: análisis de documentos con IA, asistentes virtuales para atención a clientes y gestión inteligente de cobranza. El criterio debe ser: impacto × factibilidad × velocidad.',
+  tipoApoyo: '"Claridad estratégica" y "Capacitación ejecutiva" indican etapa temprana; "Piloto rápido" e "Implementación" indican etapa avanzada. Si es "Aún no lo tengo claro", el primer paso es un diagnóstico guiado.',
+
+  // Sección 11
+  desafios: 'Los frenos más comunes: falta de claridad sobre por dónde empezar (40%), falta de datos de calidad (30%), resistencia cultural (15%) y presupuesto insuficiente (15%). Cada freno tiene una ruta de desbloqueamiento diferente.',
+  preocupacion: 'Las preocupaciones más frecuentes: perder control sobre decisiones, exposición de datos, que el equipo no adopte la tecnología y que la inversión no se justifique. Todas son legítimas y todas tienen respuesta.',
+  recursosNecesarios: 'El recurso más subestimado no es el dinero ni la tecnología: es el tiempo de personas clave del negocio para participar activamente en los proyectos.',
+  comentarioExtra: 'Presta atención a menciones de cambios organizacionales recientes: fusiones, reestructuras, crisis. Estos contextos afectan profundamente la capacidad de implementar cualquier iniciativa de cambio.',
+};
+
 // Retroalimentación contextual por sección
 export const RETRO_SECTOR = 'El sector y tamaño de tu empresa definen el punto de partida realista para IA. Las empresas de manufactura y logística suelen tener datos estructurados que son ideales para IA predictiva. Las de servicios profesionales tienen mayor oportunidad con IA generativa.';
 

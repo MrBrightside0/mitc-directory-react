@@ -12,6 +12,7 @@ import Directorio from './pages/Directorio';
 import Inicio from './pages/Inicio';
 import Unirse from './pages/Unirse';
 import Autodiagnostico from './pages/Autodiagnostico';
+import NotFound from './pages/NotFound';
 
 const AppLayout = () => {
   const location = useLocation();
@@ -26,7 +27,7 @@ const AppLayout = () => {
         <Route path="/directorio" element={<Directorio />} />
         <Route path="/unirse" element={<Unirse />} />
         <Route path="/autodiagnostico" element={<Autodiagnostico />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
       {!isAutodiagnostico && <Footer />}
     </div>
@@ -38,6 +39,13 @@ const App = () => {
   useEffect(() => {
     ReactGA.initialize('TU_ID_DE_GOOGLE_AQUI');
     ReactGA.send({ hitType: "pageview", page: window.location.pathname });
+
+    // Remove splash screen
+    const splash = document.getElementById('splash');
+    if (splash) {
+      splash.classList.add('hide');
+      setTimeout(() => splash.remove(), 600);
+    }
   }, []);
 
   return (

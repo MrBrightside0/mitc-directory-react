@@ -11,10 +11,42 @@ import { useGSAP } from '@gsap/react';
 import {
   SECTORES, TAMANOS, RETOS, AREAS_MEJORA, ERP_OPTIONS, CRM_OPTIONS,
   TIPOS_IA, PILARES, ESCALA_LABELS, AREAS_IMPACTO, SOLUCIONES,
-  TIPOS_APOYO, getNivelMadurez, RETRO_RETOS, RETRO_ERP, RETRO_CRM
+  TIPOS_APOYO, getNivelMadurez, RETRO_RETOS, RETRO_ERP, RETRO_CRM, HINTS
 } from './assessmentData';
 import RadarChart from './RadarChart';
 import logo from '../../assets/logo.svg';
+import { submitAssessment, getAssessmentPdfUrl } from '../../services/api';
+
+// ─── Hint component (collapsible tip) ───────────────────────
+
+const Hint = ({ text }) => {
+  const [open, setOpen] = useState(false);
+  if (!text) return null;
+  return (
+    <div className="mt-2 mb-1">
+      <button type="button" onClick={() => setOpen(!open)}
+        className="inline-flex items-center gap-1.5 text-xs text-indigo-500 hover:text-indigo-700 font-medium transition-colors">
+        <Lightbulb className="w-3.5 h-3.5" />
+        {open ? 'Ocultar recomendación' : 'Ver recomendación'}
+      </button>
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="overflow-hidden"
+          >
+            <p className="mt-2 text-xs text-indigo-600/80 bg-indigo-50 border border-indigo-100 rounded-xl p-3 leading-relaxed">
+              💡 {text}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
 
 const PILAR_ICONS = [Target, Database, Users, Cpu, Rocket, Shield];
 const TOTAL_STEPS = 12;
@@ -324,12 +356,13 @@ const LIKERT_COLORS = [
   'bg-emerald-500 border-emerald-500 ring-emerald-100',
 ];
 
-const LikertScale = ({ question, value, onChange, index }) => (
+const LikertScale = ({ question, value, onChange, index, hint }) => (
   <div className="py-5 border-b border-slate-100 last:border-0">
-    <p className="text-sm font-medium text-slate-800 mb-4 leading-relaxed">
+    <p className="text-sm font-medium text-slate-800 mb-2 leading-relaxed">
       <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-indigo-100 text-indigo-600 text-xs font-bold mr-2">{index}</span>
       {question}
     </p>
+    {hint && <div className="ml-8 mb-3"><Hint text={hint} /></div>}
     <div className="grid grid-cols-5 gap-2">
       {ESCALA_LABELS.map(({ value: v, label }) => (
         <button key={v} type="button" onClick={() => onChange(v)}
@@ -373,7 +406,7 @@ const PriorityScale = ({ value, onChange }) => {
 
 // ─── Results Component ──────────────────────────────────────
 
-const Results = ({ data, pilarScores, onReset }) => {
+const Results = ({ data, pilarScores, onReset, assessmentId, submitError }) => {
   const totalScore = pilarScores.reduce((a, b) => a + b, 0) / pilarScores.length;
   const nivel = getNivelMadurez(totalScore);
   const labels = PILARES.map(p => p.nombre.split(' ').slice(0, 2).join(' '));
@@ -577,14 +610,37 @@ const Results = ({ data, pilarScores, onReset }) => {
         </div>
       </div>
 
+      {/* Envío */}
+      {submitError && (
+        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-start gap-3">
+          <AlertTriangle className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
+          <div>
+            <p className="text-sm font-bold text-amber-800">No se pudo guardar tu diagnóstico</p>
+            <p className="text-xs text-amber-700">Tu reporte se generó correctamente pero no pudimos enviarlo al servidor. Puedes descargar el PDF de todas formas.</p>
+          </div>
+        </div>
+      )}
+
       {/* Cierre */}
       <div className="bg-slate-50 rounded-2xl p-8 text-center border border-slate-200">
         <p className="text-xs font-bold text-indigo-600 uppercase tracking-widest mb-3">CII.IA</p>
         <p className="text-slate-600 mb-2">Gracias por completar tu autodiagnóstico.</p>
         <p className="text-sm text-slate-500 mb-6">¿Tienes preguntas? Contáctanos para una sesión de interpretación de resultados.</p>
-        <button onClick={onReset} className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-slate-300 rounded-xl text-sm font-bold text-slate-700 hover:bg-white transition-all">
-          <RotateCcw className="w-4 h-4" /> Hacer otro diagnóstico
-        </button>
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          {assessmentId && (
+            <a
+              href={getAssessmentPdfUrl(assessmentId)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-xl text-sm font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200/50"
+            >
+              <ArrowRight className="w-4 h-4" /> Descargar Reporte PDF
+            </a>
+          )}
+          <button onClick={onReset} className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-slate-300 rounded-xl text-sm font-bold text-slate-700 hover:bg-white transition-all">
+            <RotateCcw className="w-4 h-4" /> Hacer otro diagnóstico
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -595,6 +651,9 @@ const Results = ({ data, pilarScores, onReset }) => {
 const AssessmentWizard = () => {
   const [step, setStep] = useState(0);
   const [showResults, setShowResults] = useState(false);
+  const [assessmentId, setAssessmentId] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(false);
 
   const [formData, setFormData] = useState({
     nombre: '', apellidos: '', empresa: '', puesto: '', email: '',
@@ -607,8 +666,6 @@ const AssessmentWizard = () => {
     desafios: '', preocupacion: '', recursosNecesarios: '', comentarioExtra: '',
     aceptaDatos: false
   });
-
-  // scroll handled via scrollRef in the layout
 
   const update = (field, value) => setFormData(prev => ({ ...prev, [field]: value }));
   const updatePilarScore = (pilarIdx, preguntaIdx, value) => {
@@ -628,10 +685,32 @@ const AssessmentWizard = () => {
     return true;
   };
 
-  const next = () => { step < TOTAL_STEPS - 1 ? setStep(step + 1) : setShowResults(true); };
+  const handleFinish = async () => {
+    setShowResults(true);
+    setIsSubmitting(true);
+    setSubmitError(false);
+
+    try {
+      const result = await submitAssessment(formData, pilarScoresAvg);
+      setAssessmentId(result.id);
+    } catch (err) {
+      console.error('Error al enviar diagnóstico:', err);
+      setSubmitError(true);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const next = () => {
+    if (step < TOTAL_STEPS - 1) {
+      setStep(step + 1);
+    } else {
+      handleFinish();
+    }
+  };
   const prev = () => { if (step > 0) setStep(step - 1); };
   const reset = () => {
-    setStep(0); setShowResults(false);
+    setStep(0); setShowResults(false); setAssessmentId(null); setSubmitError(false);
     setFormData({ nombre: '', apellidos: '', empresa: '', puesto: '', email: '', sector: '', tamano: '', retos: [], areasMejora: [], prioridad: 0, resultadoEsperado: '', erp: [], crm: [], tiposIA: [], pilarScores: PILARES.map(() => Array(5).fill(0)), dondeViveDatos: [], areasImpacto: [], soluciones: [], tipoApoyo: '', desafios: '', preocupacion: '', recursosNecesarios: '', comentarioExtra: '', aceptaDatos: false });
   };
 
@@ -648,7 +727,7 @@ const AssessmentWizard = () => {
       <div className="flex h-screen pt-16 lg:pt-0">
         <Sidebar step={TOTAL_STEPS} />
         <div className="flex-1 overflow-y-auto" ref={scrollRef}>
-          <div className="max-w-3xl mx-auto px-4 py-12"><Results data={formData} pilarScores={pilarScoresAvg} onReset={reset} /></div>
+          <div className="max-w-3xl mx-auto px-4 py-12"><Results data={formData} pilarScores={pilarScoresAvg} onReset={reset} assessmentId={assessmentId} submitError={submitError} /></div>
         </div>
       </div>
     );
@@ -713,6 +792,7 @@ const AssessmentWizard = () => {
                 <SelectField label="Sector de la empresa" options={SECTORES} placeholder="Selecciona un sector" value={formData.sector} onChange={v => update('sector', v)} />
                 <SelectField label="Tamaño de la empresa" options={TAMANOS} placeholder="Número de colaboradores" value={formData.tamano} onChange={v => update('tamano', v)} />
               </div>
+              <Hint text={HINTS.sector} />
             </div>
           </div>
         );
@@ -722,16 +802,24 @@ const AssessmentWizard = () => {
           <div>
             <StepHeader icon={Building2} title="Contexto del negocio" subtitle="Entendamos la situación actual de tu empresa." stepNum="Sección 2 de 8" />
             <div className="space-y-8">
-              <MultiSelect label="¿Cuáles son hoy los principales retos de tu empresa?" options={RETOS} selected={formData.retos} onChange={v => update('retos', v)} max={3} />
-              <MultiSelect label="¿Qué áreas tienen hoy mayor necesidad de mejora?" options={AREAS_MEJORA} selected={formData.areasMejora} onChange={v => update('areasMejora', v)} max={3} />
+              <div>
+                <MultiSelect label="¿Cuáles son hoy los principales retos de tu empresa?" options={RETOS} selected={formData.retos} onChange={v => update('retos', v)} max={3} />
+                <Hint text={HINTS.retos} />
+              </div>
+              <div>
+                <MultiSelect label="¿Qué áreas tienen hoy mayor necesidad de mejora?" options={AREAS_MEJORA} selected={formData.areasMejora} onChange={v => update('areasMejora', v)} max={3} />
+                <Hint text={HINTS.areasMejora} />
+              </div>
               <div>
                 <label className="block text-sm font-bold text-slate-700 mb-3">¿Qué tan prioritario es implementar IA en los próximos 12 meses?</label>
                 <PriorityScale value={formData.prioridad} onChange={v => update('prioridad', v)} />
+                <Hint text={HINTS.prioridad} />
               </div>
               <div>
                 <label className="block text-sm font-bold text-slate-700 mb-2">¿Qué resultado te gustaría lograr con IA en los próximos 12 meses?</label>
                 <textarea value={formData.resultadoEsperado} onChange={e => update('resultadoEsperado', e.target.value)} placeholder="Describe brevemente tu expectativa..." rows={3}
                   className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-slate-900 placeholder-slate-400 resize-none hover:border-slate-300" />
+                <Hint text={HINTS.resultadoEsperado} />
               </div>
             </div>
           </div>
@@ -742,9 +830,18 @@ const AssessmentWizard = () => {
           <div>
             <StepHeader icon={Cpu} title="Contexto tecnológico" subtitle="¿Qué sistemas y herramientas usa tu empresa hoy?" stepNum="Sección 3 de 8" />
             <div className="space-y-8">
-              <CheckboxGroup label="¿Cuenta la empresa con alguno de estos ERP?" options={ERP_OPTIONS} selected={formData.erp} onChange={v => update('erp', v)} />
-              <CheckboxGroup label="¿Utilizan actualmente un CRM?" options={CRM_OPTIONS} selected={formData.crm} onChange={v => update('crm', v)} />
-              <CheckboxGroup label="¿Qué tipos de IA conoces o has escuchado aplicar en negocios?" options={TIPOS_IA} selected={formData.tiposIA} onChange={v => update('tiposIA', v)} />
+              <div>
+                <CheckboxGroup label="¿Cuenta la empresa con alguno de estos ERP?" options={ERP_OPTIONS} selected={formData.erp} onChange={v => update('erp', v)} />
+                <Hint text={HINTS.erp} />
+              </div>
+              <div>
+                <CheckboxGroup label="¿Utilizan actualmente un CRM?" options={CRM_OPTIONS} selected={formData.crm} onChange={v => update('crm', v)} />
+                <Hint text={HINTS.crm} />
+              </div>
+              <div>
+                <CheckboxGroup label="¿Qué tipos de IA conoces o has escuchado aplicar en negocios?" options={TIPOS_IA} selected={formData.tiposIA} onChange={v => update('tiposIA', v)} />
+                <Hint text={HINTS.tiposIA} />
+              </div>
             </div>
           </div>
         );
@@ -775,7 +872,7 @@ const AssessmentWizard = () => {
                 <span className="text-xs font-bold text-indigo-600">{answered}/5 respondidas</span>
               </div>
               {pilar.preguntas.map((pregunta, i) => (
-                <LikertScale key={i} question={pregunta} value={formData.pilarScores[pilarIdx][i]} onChange={v => updatePilarScore(pilarIdx, i, v)} index={i + 1} />
+                <LikertScale key={i} question={pregunta} value={formData.pilarScores[pilarIdx][i]} onChange={v => updatePilarScore(pilarIdx, i, v)} index={i + 1} hint={pilar.retroalimentacion?.[i]} />
               ))}
             </div>
           </div>
@@ -787,9 +884,18 @@ const AssessmentWizard = () => {
           <div>
             <StepHeader icon={Lightbulb} title="Oportunidades prioritarias" subtitle="Identifica dónde ves más potencial para IA en tu empresa." stepNum="Sección 7 de 8" />
             <div className="space-y-8">
-              <MultiSelect label="¿En qué áreas ves mayor impacto potencial de IA?" options={AREAS_IMPACTO} selected={formData.areasImpacto} onChange={v => update('areasImpacto', v)} max={3} />
-              <MultiSelect label="¿Qué soluciones te interesan más?" options={SOLUCIONES} selected={formData.soluciones} onChange={v => update('soluciones', v)} max={3} />
-              <SelectField label="¿Qué tipo de apoyo sería más valioso para tu empresa?" options={TIPOS_APOYO} placeholder="Selecciona una opción" value={formData.tipoApoyo} onChange={v => update('tipoApoyo', v)} />
+              <div>
+                <MultiSelect label="¿En qué áreas ves mayor impacto potencial de IA?" options={AREAS_IMPACTO} selected={formData.areasImpacto} onChange={v => update('areasImpacto', v)} max={3} />
+                <Hint text={HINTS.areasImpacto} />
+              </div>
+              <div>
+                <MultiSelect label="¿Qué soluciones te interesan más?" options={SOLUCIONES} selected={formData.soluciones} onChange={v => update('soluciones', v)} max={3} />
+                <Hint text={HINTS.soluciones} />
+              </div>
+              <div>
+                <SelectField label="¿Qué tipo de apoyo sería más valioso para tu empresa?" options={TIPOS_APOYO} placeholder="Selecciona una opción" value={formData.tipoApoyo} onChange={v => update('tipoApoyo', v)} />
+                <Hint text={HINTS.tipoApoyo} />
+              </div>
             </div>
           </div>
         );
@@ -809,6 +915,7 @@ const AssessmentWizard = () => {
                   <label className="block text-sm font-bold text-slate-700 mb-2">{label}</label>
                   <textarea value={formData[field]} onChange={e => update(field, e.target.value)} rows={2} placeholder="Escribe tu respuesta..."
                     className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-slate-900 placeholder-slate-400 resize-none hover:border-slate-300" />
+                  <Hint text={HINTS[field]} />
                 </div>
               ))}
               <label className="flex items-start gap-3 cursor-pointer p-4 bg-white rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors">

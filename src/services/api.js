@@ -472,3 +472,80 @@ const submitLeadRequest = async (path, formData) => {
 export const submitLead = async (formData) => submitLeadRequest('/api/leads', formData);
 
 export const submitClusterLead = async (formData) => submitLeadRequest('/api/leads-cluster', formData);
+
+// ─── Assessment (Autodiagnóstico) ───────────────────────────
+
+export const submitAssessment = async (formData, pilarScores) => {
+  const PILLAR_IDS = ['estrategia', 'datos', 'capacidades', 'tecnologia', 'adopcion', 'liderazgo'];
+  const totalScore = pilarScores.reduce((a, b) => a + b, 0) / pilarScores.length;
+
+  const payload = {
+    personal: {
+      nombre: formData.nombre,
+      apellidos: formData.apellidos,
+      empresa: formData.empresa,
+      puesto: formData.puesto,
+      email: formData.email,
+      sector: formData.sector,
+      tamano: formData.tamano,
+    },
+    contextoNegocio: {
+      retos: formData.retos,
+      areasMejora: formData.areasMejora,
+      prioridad: formData.prioridad,
+      resultadoEsperado: formData.resultadoEsperado,
+    },
+    contextoTecnologico: {
+      erp: formData.erp,
+      crm: formData.crm,
+      tiposIA: formData.tiposIA,
+    },
+    pilares: {
+      estrategia: formData.pilarScores[0],
+      datos: {
+        dondeViveDatos: formData.dondeViveDatos,
+        scores: formData.pilarScores[1],
+      },
+      capacidades: formData.pilarScores[2],
+      tecnologia: formData.pilarScores[3],
+      adopcion: formData.pilarScores[4],
+      liderazgo: formData.pilarScores[5],
+    },
+    oportunidades: {
+      areasImpacto: formData.areasImpacto,
+      soluciones: formData.soluciones,
+      tipoApoyo: formData.tipoApoyo,
+    },
+    preguntasAbiertas: {
+      desafios: formData.desafios,
+      preocupacion: formData.preocupacion,
+      recursosNecesarios: formData.recursosNecesarios,
+      comentarioExtra: formData.comentarioExtra,
+    },
+    aceptaDatos: formData.aceptaDatos,
+    scores: {
+      porPilar: PILLAR_IDS.reduce((acc, id, i) => {
+        acc[id] = pilarScores[i];
+        return acc;
+      }, {}),
+      total: totalScore,
+    },
+  };
+
+  const res = await fetch(getApiUrl('/api/assessments'), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw { status: res.status, code: err.code || 'unknown', message: err.message || 'Error al enviar diagnóstico' };
+  }
+
+  return res.json();
+};
+
+export const getAssessmentPdfUrl = (assessmentId) => {
+  return getApiUrl(`/api/assessments/${assessmentId}/pdf`);
+};
