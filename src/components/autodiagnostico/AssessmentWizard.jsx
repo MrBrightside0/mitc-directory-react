@@ -4,7 +4,7 @@ import {
   ArrowRight, ArrowLeft, User, Building2, Mail, Briefcase,
   CheckCircle2, Brain, Database, Users, Cpu, Rocket, Shield,
   ChevronRight, Target, Lightbulb, BarChart3, AlertTriangle, TrendingUp,
-  RotateCcw, Check, Circle
+  RotateCcw, Check, Circle, Download, FileText, ExternalLink, X as XIcon
 } from 'lucide-react';
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
@@ -406,6 +406,68 @@ const PriorityScale = ({ value, onChange }) => {
 
 // ─── Results Component ──────────────────────────────────────
 
+// ─── PDF Preview + Download ─────────────────────────────────
+
+const PdfSection = ({ assessmentId }) => {
+  const [showPreview, setShowPreview] = useState(false);
+  const pdfUrl = getAssessmentPdfUrl(assessmentId);
+
+  return (
+    <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+      {/* Header */}
+      <div className="p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center text-indigo-600">
+            <FileText className="w-5 h-5" />
+          </div>
+          <div>
+            <h3 className="text-sm font-bold text-slate-900">Reporte Ejecutivo PDF</h3>
+            <p className="text-xs text-slate-500">Tu diagnóstico personalizado listo para descargar</p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full sm:w-auto">
+          <button
+            onClick={() => setShowPreview(!showPreview)}
+            className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-2.5 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-50 transition-all"
+          >
+            {showPreview ? <XIcon className="w-3.5 h-3.5" /> : <ExternalLink className="w-3.5 h-3.5" />}
+            {showPreview ? 'Cerrar vista previa' : 'Vista previa'}
+          </button>
+          <a
+            href={pdfUrl}
+            download
+            className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-indigo-600 text-white rounded-xl text-xs font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200/50"
+          >
+            <Download className="w-3.5 h-3.5" /> Descargar PDF
+          </a>
+        </div>
+      </div>
+
+      {/* Preview iframe */}
+      <AnimatePresence>
+        {showPreview && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="overflow-hidden"
+          >
+            <div className="border-t border-slate-200 bg-slate-50 p-4">
+              <iframe
+                src={pdfUrl}
+                title="Reporte Ejecutivo de Madurez"
+                className="w-full rounded-xl border border-slate-200 bg-white"
+                style={{ height: '600px' }}
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
 const Results = ({ data, pilarScores, onReset, assessmentId, submitError }) => {
   const totalScore = pilarScores.reduce((a, b) => a + b, 0) / pilarScores.length;
   const nivel = getNivelMadurez(totalScore);
@@ -616,31 +678,22 @@ const Results = ({ data, pilarScores, onReset, assessmentId, submitError }) => {
           <AlertTriangle className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
           <div>
             <p className="text-sm font-bold text-amber-800">No se pudo guardar tu diagnóstico</p>
-            <p className="text-xs text-amber-700">Tu reporte se generó correctamente pero no pudimos enviarlo al servidor. Puedes descargar el PDF de todas formas.</p>
+            <p className="text-xs text-amber-700">Tu reporte se generó correctamente pero no pudimos enviarlo al servidor.</p>
           </div>
         </div>
       )}
+
+      {/* PDF Preview + Download */}
+      {assessmentId && <PdfSection assessmentId={assessmentId} />}
 
       {/* Cierre */}
       <div className="bg-slate-50 rounded-2xl p-8 text-center border border-slate-200">
         <p className="text-xs font-bold text-indigo-600 uppercase tracking-widest mb-3">CII.IA</p>
         <p className="text-slate-600 mb-2">Gracias por completar tu autodiagnóstico.</p>
         <p className="text-sm text-slate-500 mb-6">¿Tienes preguntas? Contáctanos para una sesión de interpretación de resultados.</p>
-        <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          {assessmentId && (
-            <a
-              href={getAssessmentPdfUrl(assessmentId)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-xl text-sm font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200/50"
-            >
-              <ArrowRight className="w-4 h-4" /> Descargar Reporte PDF
-            </a>
-          )}
-          <button onClick={onReset} className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-slate-300 rounded-xl text-sm font-bold text-slate-700 hover:bg-white transition-all">
-            <RotateCcw className="w-4 h-4" /> Hacer otro diagnóstico
-          </button>
-        </div>
+        <button onClick={onReset} className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-slate-300 rounded-xl text-sm font-bold text-slate-700 hover:bg-white transition-all">
+          <RotateCcw className="w-4 h-4" /> Hacer otro diagnóstico
+        </button>
       </div>
     </div>
   );
