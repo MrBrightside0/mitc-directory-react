@@ -546,6 +546,16 @@ export const submitAssessment = async (formData, pilarScores) => {
   return res.json();
 };
 
-export const getAssessmentPdfUrl = (assessmentId) => {
-  return getApiUrl(`/api/assessments/${assessmentId}/pdf`);
+export const generateAssessmentPdf = async (assessmentId) => {
+  const res = await fetch(getApiUrl(`/api/assessments/${assessmentId}/pdf`), {
+    method: 'POST',
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw { status: res.status, code: err.code || 'unknown', message: err.message || 'Error al generar PDF' };
+  }
+
+  const blob = await res.blob();
+  return blob;
 };
