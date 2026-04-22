@@ -38,7 +38,7 @@ const Hint = ({ text }) => {
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            <p className="mt-2 text-xs text-indigo-600/80 bg-indigo-50 border border-indigo-100 rounded-xl p-3 leading-relaxed">
+            <p className="mt-2 text-xs text-indigo-600/80 bg-indigo-50 border border-indigo-100 p-3 leading-relaxed">
               💡 {text}
             </p>
           </motion.div>
@@ -107,7 +107,7 @@ const Sidebar = ({ step }) => {
     <div ref={sidebarRef} className="hidden lg:flex w-[340px] shrink-0 bg-slate-900 flex-col items-center justify-center relative overflow-hidden">
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950"></div>
-      <div className="absolute top-[-20%] left-[-20%] w-[300px] h-[300px] bg-indigo-600/[0.08] rounded-full blur-[80px]"></div>
+      <div className="absolute top-[-20%] left-[-20%] w-[300px] h-[300px] bg-indigo-600/[0.08] blur-[80px]"></div>
 
       {/* Grid pattern */}
       <div className="absolute inset-0 opacity-[0.03]" style={{
@@ -136,7 +136,7 @@ const Sidebar = ({ step }) => {
           </svg>
 
           <div className="sidebar-glow absolute inset-0 flex items-center justify-center pointer-events-none">
-            <div className="w-24 h-24 bg-indigo-500/15 rounded-full blur-2xl"></div>
+            <div className="w-24 h-24 bg-indigo-500/15 blur-2xl"></div>
           </div>
 
           <div className="sidebar-logo absolute inset-0 flex items-center justify-center">
@@ -149,7 +149,7 @@ const Sidebar = ({ step }) => {
         <p className="text-xs text-slate-500 text-center px-8 leading-relaxed">Centro de Innovación<br/>de Inteligencia Artificial</p>
 
         {/* Back to site button */}
-        <a href="/" className="mt-6 mb-2 inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-white hover:bg-white/10 transition-all">
+        <a href="/" className="mt-6 mb-2 inline-flex items-center gap-2 px-4 py-2 text-xs font-bold text-slate-400 hover:text-white hover:bg-white/10 transition-all">
           <ArrowLeft className="w-3.5 h-3.5" /> Volver al sitio
         </a>
 
@@ -204,7 +204,7 @@ const StepIndicator = ({ step }) => {
         return (
           <React.Fragment key={i}>
             <div className="flex flex-col items-center gap-1.5">
-              <div className={`w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 ${
+              <div className={`w-9 h-9 flex items-center justify-center transition-all duration-300 ${
                 done ? 'bg-indigo-600 text-white scale-90' :
                 active ? 'bg-indigo-600 text-white ring-4 ring-indigo-100 scale-110' :
                 'bg-slate-100 text-slate-400'
@@ -216,7 +216,7 @@ const StepIndicator = ({ step }) => {
               </span>
             </div>
             {i < STEP_SECTIONS.length - 1 && (
-              <div className={`flex-1 h-0.5 mx-1 rounded-full transition-all ${i < currentSection ? 'bg-indigo-600' : 'bg-slate-100'}`} />
+              <div className={`flex-1 h-0.5 mx-1 transition-all ${i < currentSection ? 'bg-indigo-600' : 'bg-slate-100'}`} />
             )}
           </React.Fragment>
         );
@@ -233,7 +233,7 @@ const PilarMiniNav = ({ currentPilar, scores }) => (
       const done = scores[i].every(s => s > 0);
       const active = i === currentPilar;
       return (
-        <div key={i} className={`flex-1 flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold transition-all ${
+        <div key={i} className={`flex-1 flex items-center gap-2 px-3 py-2 text-xs font-bold transition-all ${
           active ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' :
           done ? 'bg-emerald-50 text-emerald-600' :
           'bg-slate-50 text-slate-400'
@@ -252,7 +252,7 @@ const PilarMiniNav = ({ currentPilar, scores }) => (
 const StepHeader = ({ icon: Icon, title, subtitle, stepNum, totalInSection }) => (
   <div className="mb-8">
     <div className="flex items-center gap-3 mb-3">
-      {Icon && <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-indigo-200/50"><Icon className="w-5 h-5" /></div>}
+      {Icon && <div className="w-11 h-11 bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-indigo-200/50"><Icon className="w-5 h-5" /></div>}
       <div>
         <h2 className="text-2xl md:text-3xl font-display font-bold text-slate-900">{title}</h2>
         {stepNum && <p className="text-xs text-slate-400 font-bold">{stepNum}</p>}
@@ -271,7 +271,7 @@ const InputField = ({ label, type = 'text', placeholder, value, onChange, requir
       onChange={e => onChange(e.target.value)}
       placeholder={placeholder}
       required={required}
-      className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-slate-900 placeholder-slate-400 hover:border-slate-300"
+      className="w-full px-4 py-3.5 bg-white border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-slate-900 placeholder-slate-400 hover:border-slate-300"
     />
   </div>
 );
@@ -282,7 +282,7 @@ const SelectField = ({ label, options, placeholder, value, onChange }) => (
     <select
       value={value}
       onChange={e => onChange(e.target.value)}
-      className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-slate-900 appearance-none cursor-pointer hover:border-slate-300 bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%236b7280%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px_12px] bg-[right_1rem_center] bg-no-repeat"
+      className="w-full px-4 py-3.5 bg-white border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-slate-900 appearance-none cursor-pointer hover:border-slate-300 bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%236b7280%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px_12px] bg-[right_1rem_center] bg-no-repeat"
     >
       <option value="" disabled>{placeholder}</option>
       {options.map((opt, i) => <option key={i} value={opt}>{opt}</option>)}
@@ -304,7 +304,7 @@ const MultiSelect = ({ label, options, selected, onChange, max = 3 }) => {
           const active = selected.includes(opt);
           return (
             <button key={i} type="button" onClick={() => toggle(opt)}
-              className={`px-4 py-2.5 rounded-xl text-sm font-medium border transition-all ${
+              className={`px-4 py-2.5 text-sm font-medium border transition-all ${
                 active ? 'bg-indigo-600 text-white border-indigo-600 shadow-md shadow-indigo-200/50' :
                 selected.length >= max ? 'bg-slate-50 text-slate-300 border-slate-100 cursor-not-allowed' :
                 'bg-white text-slate-600 border-slate-200 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50/50'
@@ -330,11 +330,11 @@ const CheckboxGroup = ({ label, options, selected, onChange }) => {
           const active = selected.includes(opt);
           return (
             <button key={i} type="button" onClick={() => toggle(opt)}
-              className={`px-4 py-3 rounded-xl text-sm text-left font-medium border transition-all flex items-center gap-3 ${
+              className={`px-4 py-3 text-sm text-left font-medium border transition-all flex items-center gap-3 ${
                 active ? 'bg-indigo-50 text-indigo-700 border-indigo-200' : 'bg-white text-slate-600 border-slate-200 hover:border-indigo-200 hover:bg-slate-50'
               }`}
             >
-              <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center shrink-0 transition-all ${active ? 'bg-indigo-600 border-indigo-600' : 'border-slate-300'}`}>
+              <div className={`w-5 h-5 border-2 flex items-center justify-center shrink-0 transition-all ${active ? 'bg-indigo-600 border-indigo-600' : 'border-slate-300'}`}>
                 {active && <Check className="w-3 h-3 text-white" />}
               </div>
               {opt}
@@ -359,14 +359,14 @@ const LIKERT_COLORS = [
 const LikertScale = ({ question, value, onChange, index, hint }) => (
   <div className="py-5 border-b border-slate-100 last:border-0">
     <p className="text-sm font-medium text-slate-800 mb-2 leading-relaxed">
-      <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-indigo-100 text-indigo-600 text-xs font-bold mr-2">{index}</span>
+      <span className="inline-flex items-center justify-center w-6 h-6 bg-indigo-100 text-indigo-600 text-xs font-bold mr-2">{index}</span>
       {question}
     </p>
     {hint && <div className="ml-8 mb-3"><Hint text={hint} /></div>}
     <div className="grid grid-cols-5 gap-2">
       {ESCALA_LABELS.map(({ value: v, label }) => (
         <button key={v} type="button" onClick={() => onChange(v)}
-          className={`py-3 px-1 rounded-xl text-xs font-medium border-2 transition-all text-center ${
+          className={`py-3 px-1 text-xs font-medium border-2 transition-all text-center ${
             value === v
               ? `${LIKERT_COLORS[v]} text-white ring-4`
               : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300'
@@ -392,11 +392,11 @@ const PriorityScale = ({ value, onChange }) => {
     <div className="flex flex-col gap-2">
       {options.map(({ v, label, color }) => (
         <button key={v} type="button" onClick={() => onChange(v)}
-          className={`py-3.5 px-5 rounded-xl text-sm font-medium border-2 border-l-4 transition-all text-left flex items-center gap-3 ${color} ${
+          className={`py-3.5 px-5 text-sm font-medium border-2 border-l-4 transition-all text-left flex items-center gap-3 ${color} ${
             value === v ? 'bg-indigo-50 border-indigo-200 text-indigo-700' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
           }`}
         >
-          <span className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold transition-all ${value === v ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-500'}`}>{v}</span>
+          <span className={`w-8 h-8 flex items-center justify-center text-sm font-bold transition-all ${value === v ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-500'}`}>{v}</span>
           {label}
         </button>
       ))}
@@ -424,34 +424,34 @@ const PdfModal = ({ isOpen, onClose, status, error }) => {
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
           transition={{ type: 'spring', duration: 0.4 }}
-          className="bg-white rounded-2xl p-8 max-w-sm w-full text-center shadow-2xl"
+          className="bg-white p-8 max-w-sm w-full text-center shadow-2xl"
           onClick={e => e.stopPropagation()}
         >
           {status === 'loading' && (
             <>
               <div className="w-16 h-16 mx-auto mb-5 relative">
-                <div className="absolute inset-0 rounded-full border-4 border-slate-100"></div>
-                <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-indigo-600 animate-spin"></div>
+                <div className="absolute inset-0 border-4 border-slate-100"></div>
+                <div className="absolute inset-0 border-4 border-transparent border-t-indigo-600 animate-spin"></div>
                 <div className="absolute inset-0 flex items-center justify-center">
                   <FileText className="w-6 h-6 text-indigo-600" />
                 </div>
               </div>
               <h3 className="text-lg font-display font-bold text-slate-900 mb-2">Generando reporte</h3>
               <p className="text-sm text-slate-500">Estamos preparando tu Reporte Ejecutivo de Madurez personalizado...</p>
-              <div className="mt-5 w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
-                <div className="h-full bg-gradient-to-r from-indigo-500 to-cyan-500 rounded-full animate-[shimmer_2s_ease-in-out_infinite]" style={{ width: '70%', animation: 'sLoad 1.5s ease-in-out infinite' }}></div>
+              <div className="mt-5 w-full bg-slate-100 h-1.5 overflow-hidden">
+                <div className="h-full bg-gradient-to-r from-indigo-500 to-cyan-500 animate-[shimmer_2s_ease-in-out_infinite]" style={{ width: '70%', animation: 'sLoad 1.5s ease-in-out infinite' }}></div>
               </div>
             </>
           )}
 
           {status === 'success' && (
             <>
-              <div className="w-16 h-16 mx-auto mb-5 bg-emerald-50 rounded-full flex items-center justify-center">
+              <div className="w-16 h-16 mx-auto mb-5 bg-emerald-50 flex items-center justify-center">
                 <CheckCircle2 className="w-8 h-8 text-emerald-500" />
               </div>
               <h3 className="text-lg font-display font-bold text-slate-900 mb-2">Reporte descargado</h3>
               <p className="text-sm text-slate-500 mb-5">Tu PDF se descargó correctamente.</p>
-              <button onClick={onClose} className="px-6 py-2.5 bg-slate-100 text-slate-700 rounded-xl text-sm font-bold hover:bg-slate-200 transition-all">
+              <button onClick={onClose} className="px-6 py-2.5 bg-slate-100 text-slate-700 text-sm font-bold hover:bg-slate-200 transition-all">
                 Cerrar
               </button>
             </>
@@ -459,12 +459,12 @@ const PdfModal = ({ isOpen, onClose, status, error }) => {
 
           {status === 'error' && (
             <>
-              <div className="w-16 h-16 mx-auto mb-5 bg-rose-50 rounded-full flex items-center justify-center">
+              <div className="w-16 h-16 mx-auto mb-5 bg-rose-50 flex items-center justify-center">
                 <AlertTriangle className="w-8 h-8 text-rose-500" />
               </div>
               <h3 className="text-lg font-display font-bold text-slate-900 mb-2">Error al generar</h3>
               <p className="text-sm text-slate-500 mb-5">{error || 'No pudimos generar el PDF. Inténtalo de nuevo.'}</p>
-              <button onClick={onClose} className="px-6 py-2.5 bg-slate-100 text-slate-700 rounded-xl text-sm font-bold hover:bg-slate-200 transition-all">
+              <button onClick={onClose} className="px-6 py-2.5 bg-slate-100 text-slate-700 text-sm font-bold hover:bg-slate-200 transition-all">
                 Cerrar
               </button>
             </>
@@ -509,9 +509,9 @@ const PdfSection = ({ assessmentId }) => {
         status={pdfStatus}
         error={pdfError}
       />
-      <div className="bg-gradient-to-r from-indigo-600 to-blue-500 rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div className="bg-gradient-to-r from-indigo-600 to-blue-500 p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-3 text-white">
-          <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+          <div className="w-10 h-10 bg-white/20 flex items-center justify-center">
             <FileText className="w-5 h-5" />
           </div>
           <div>
@@ -522,7 +522,7 @@ const PdfSection = ({ assessmentId }) => {
         <button
           onClick={handleDownload}
           disabled={pdfStatus === 'loading'}
-          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 bg-white text-indigo-700 rounded-xl text-sm font-bold hover:bg-indigo-50 transition-all shadow-lg disabled:opacity-70"
+          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 bg-white text-indigo-700 text-sm font-bold hover:bg-indigo-50 transition-all shadow-lg disabled:opacity-70"
         >
           <Download className="w-4 h-4" /> Descargar PDF
         </button>
@@ -574,11 +574,11 @@ const Results = ({ data, pilarScores, onReset, assessmentId, submitError }) => {
       </div>
 
       {/* Score card */}
-      <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-8 text-white text-center relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-48 h-48 bg-indigo-500/10 rounded-full blur-3xl -mr-12 -mt-12"></div>
+      <div className="bg-gradient-to-br from-slate-900 to-slate-800 p-8 text-white text-center relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-48 h-48 bg-indigo-500/10 blur-3xl -mr-12 -mt-12"></div>
         <p className="text-sm text-slate-400 uppercase tracking-wider font-bold mb-3 relative z-10">Score total de madurez</p>
         <div className="text-7xl font-display font-bold mb-2 relative z-10">{totalScore.toFixed(1)}<span className="text-3xl text-slate-500">/5.0</span></div>
-        <div className={`inline-block px-5 py-2 rounded-full text-sm font-bold mt-2 ${
+        <div className={`inline-block px-5 py-2 text-sm font-bold mt-2 ${
           totalScore >= 4.1 ? 'bg-emerald-500/20 text-emerald-300' :
           totalScore >= 3.1 ? 'bg-blue-500/20 text-blue-300' :
           totalScore >= 2.1 ? 'bg-amber-500/20 text-amber-300' :
@@ -588,13 +588,13 @@ const Results = ({ data, pilarScores, onReset, assessmentId, submitError }) => {
       </div>
 
       {/* Radar */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6">
+      <div className="bg-white border border-slate-200 p-6">
         <h3 className="text-lg font-bold text-slate-900 mb-4 text-center">Perfil por dimensión</h3>
         <RadarChart scores={pilarScores} labels={labels} />
       </div>
 
       {/* Pilares detail */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6">
+      <div className="bg-white border border-slate-200 p-6">
         <h3 className="text-lg font-bold text-slate-900 mb-6">Resultado por pilar</h3>
         <div className="space-y-3">
           {PILARES.map((pilar, i) => {
@@ -605,20 +605,20 @@ const Results = ({ data, pilarScores, onReset, assessmentId, submitError }) => {
             const hasRisk = pilar.riesgo && score < 2.5;
             return (
               <div key={pilar.id}>
-                <div className="flex items-center gap-4 p-4 rounded-xl bg-slate-50 hover:bg-slate-100/80 transition-colors">
-                  <div className="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center text-indigo-600 shrink-0"><Icon className="w-5 h-5" /></div>
+                <div className="flex items-center gap-4 p-4 bg-slate-50 hover:bg-slate-100/80 transition-colors">
+                  <div className="w-10 h-10 bg-indigo-100 flex items-center justify-center text-indigo-600 shrink-0"><Icon className="w-5 h-5" /></div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-bold text-slate-800">{pilar.nombre}</p>
                     <div className="flex items-center gap-2 mt-1">
-                      <div className="flex-1 bg-slate-200 rounded-full h-1.5">
-                        <div className={`h-1.5 rounded-full transition-all ${getBarColor(score)}`} style={{ width: `${(score / 5) * 100}%` }} />
+                      <div className="flex-1 bg-slate-200 h-1.5">
+                        <div className={`h-1.5 transition-all ${getBarColor(score)}`} style={{ width: `${(score / 5) * 100}%` }} />
                       </div>
-                      <span className={`text-xs font-bold px-2 py-0.5 rounded-md ${getColor(score)}`}>{score.toFixed(1)}</span>
+                      <span className={`text-xs font-bold px-2 py-0.5 ${getColor(score)}`}>{score.toFixed(1)}</span>
                     </div>
                   </div>
                 </div>
                 {hasRisk && (
-                  <div className="mt-1 mx-2 p-3 bg-rose-50 border border-rose-100 rounded-xl flex items-start gap-2">
+                  <div className="mt-1 mx-2 p-3 bg-rose-50 border border-rose-100 flex items-start gap-2">
                     <AlertTriangle className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
                     <p className="text-xs text-rose-700 leading-relaxed">{pilar.riesgo}</p>
                   </div>
@@ -626,7 +626,7 @@ const Results = ({ data, pilarScores, onReset, assessmentId, submitError }) => {
                 {lowRetros.length > 0 && (
                   <div className="mt-1 mx-2 space-y-1">
                     {lowRetros.map((lr, j) => (
-                      <div key={j} className="p-3 bg-amber-50 border border-amber-100 rounded-xl">
+                      <div key={j} className="p-3 bg-amber-50 border border-amber-100">
                         <p className="text-xs text-amber-700 leading-relaxed"><span className="font-bold">Recomendación:</span> {lr.retro}</p>
                       </div>
                     ))}
@@ -640,13 +640,13 @@ const Results = ({ data, pilarScores, onReset, assessmentId, submitError }) => {
 
       {/* Fortalezas y brechas */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="bg-emerald-50 rounded-2xl p-6 border border-emerald-100">
+        <div className="bg-emerald-50 p-6 border border-emerald-100">
           <div className="flex items-center gap-2 mb-4"><TrendingUp className="w-5 h-5 text-emerald-600" /><h3 className="font-bold text-emerald-900">Top fortalezas</h3></div>
           {fortalezas.map(({ score, pilar }, i) => (
             <div key={i} className="flex items-center justify-between py-2"><span className="text-sm text-emerald-800">{pilar.nombre}</span><span className="text-sm font-bold text-emerald-600">{score.toFixed(1)}</span></div>
           ))}
         </div>
-        <div className="bg-amber-50 rounded-2xl p-6 border border-amber-100">
+        <div className="bg-amber-50 p-6 border border-amber-100">
           <div className="flex items-center gap-2 mb-4"><AlertTriangle className="w-5 h-5 text-amber-600" /><h3 className="font-bold text-amber-900">Brechas prioritarias</h3></div>
           {brechas.map(({ score, pilar }, i) => (
             <div key={i} className="flex items-center justify-between py-2"><span className="text-sm text-amber-800">{pilar.nombre}</span><span className="text-sm font-bold text-amber-600">{score.toFixed(1)}</span></div>
@@ -656,14 +656,14 @@ const Results = ({ data, pilarScores, onReset, assessmentId, submitError }) => {
 
       {/* Lectura de negocio */}
       {(data.retos?.length > 0 || data.resultadoEsperado) && (
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 space-y-4">
+        <div className="bg-white border border-slate-200 p-6 space-y-4">
           <div className="flex items-center gap-2"><Lightbulb className="w-5 h-5 text-indigo-600" /><h3 className="text-lg font-bold text-slate-900">Lectura de negocio</h3></div>
           {data.retos?.length > 0 && (
             <div>
               <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Retos principales</p>
-              <div className="flex flex-wrap gap-2 mb-3">{data.retos.map((r, i) => <span key={i} className="px-3 py-1 bg-slate-100 text-slate-700 rounded-lg text-sm">{r}</span>)}</div>
+              <div className="flex flex-wrap gap-2 mb-3">{data.retos.map((r, i) => <span key={i} className="px-3 py-1 bg-slate-100 text-slate-700 text-sm">{r}</span>)}</div>
               {retoRetros.length > 0 && retoRetros.map((rr, i) => (
-                <div key={i} className="p-3 bg-indigo-50 border border-indigo-100 rounded-xl mb-2">
+                <div key={i} className="p-3 bg-indigo-50 border border-indigo-100 mb-2">
                   <p className="text-xs text-indigo-600 leading-relaxed"><span className="font-bold">{rr.reto}:</span> {rr.retro}</p>
                 </div>
               ))}
@@ -672,7 +672,7 @@ const Results = ({ data, pilarScores, onReset, assessmentId, submitError }) => {
           {data.resultadoEsperado && (
             <div>
               <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Resultado esperado en 12 meses</p>
-              <p className="text-sm text-slate-700 bg-slate-50 p-3 rounded-xl">{data.resultadoEsperado}</p>
+              <p className="text-sm text-slate-700 bg-slate-50 p-3">{data.resultadoEsperado}</p>
             </div>
           )}
         </div>
@@ -680,10 +680,10 @@ const Results = ({ data, pilarScores, onReset, assessmentId, submitError }) => {
 
       {/* Tech context */}
       {(erpRetros.length > 0 || crmRetros.length > 0) && (
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 space-y-2">
+        <div className="bg-white border border-slate-200 p-6 space-y-2">
           <div className="flex items-center gap-2 mb-2"><Cpu className="w-5 h-5 text-indigo-600" /><h3 className="text-lg font-bold text-slate-900">Contexto tecnológico</h3></div>
           {[...erpRetros.map(e => ({ label: `ERP: ${e.system}`, text: e.retro })), ...crmRetros.map(c => ({ label: `CRM: ${c.system}`, text: c.retro }))].map((item, i) => (
-            <div key={i} className="p-3 bg-slate-50 border border-slate-100 rounded-xl">
+            <div key={i} className="p-3 bg-slate-50 border border-slate-100">
               <p className="text-xs text-slate-600 leading-relaxed"><span className="font-bold text-slate-700">{item.label}:</span> {item.text}</p>
             </div>
           ))}
@@ -692,15 +692,15 @@ const Results = ({ data, pilarScores, onReset, assessmentId, submitError }) => {
 
       {/* Oportunidades */}
       {(data.areasImpacto?.length > 0 || data.soluciones?.length > 0) && (
-        <div className="bg-white rounded-2xl border border-slate-200 p-6">
+        <div className="bg-white border border-slate-200 p-6">
           <div className="flex items-center gap-2 mb-4"><BarChart3 className="w-5 h-5 text-indigo-600" /><h3 className="text-lg font-bold text-slate-900">Mapa de oportunidades</h3></div>
-          {data.areasImpacto?.length > 0 && <div className="mb-4"><p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Áreas de impacto</p><div className="flex flex-wrap gap-2">{data.areasImpacto.map((a, i) => <span key={i} className="px-3 py-1 bg-indigo-50 text-indigo-700 rounded-lg text-sm font-medium">{a}</span>)}</div></div>}
-          {data.soluciones?.length > 0 && <div><p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Soluciones de interés</p><div className="flex flex-wrap gap-2">{data.soluciones.map((s, i) => <span key={i} className="px-3 py-1 bg-indigo-50 text-indigo-700 rounded-lg text-sm font-medium">{s}</span>)}</div></div>}
+          {data.areasImpacto?.length > 0 && <div className="mb-4"><p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Áreas de impacto</p><div className="flex flex-wrap gap-2">{data.areasImpacto.map((a, i) => <span key={i} className="px-3 py-1 bg-indigo-50 text-indigo-700 text-sm font-medium">{a}</span>)}</div></div>}
+          {data.soluciones?.length > 0 && <div><p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Soluciones de interés</p><div className="flex flex-wrap gap-2">{data.soluciones.map((s, i) => <span key={i} className="px-3 py-1 bg-indigo-50 text-indigo-700 text-sm font-medium">{s}</span>)}</div></div>}
         </div>
       )}
 
       {/* Roadmap */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6">
+      <div className="bg-white border border-slate-200 p-6">
         <h3 className="text-lg font-bold text-slate-900 mb-6">Roadmap recomendado</h3>
         <div className="space-y-4">
           {[
@@ -708,7 +708,7 @@ const Results = ({ data, pilarScores, onReset, assessmentId, submitError }) => {
             { periodo: '2–6 meses', items: ['Piloto en área concreta', 'Medición de impacto', 'Habilitación de datos', 'Adopción interna'], bg: 'bg-blue-50 text-blue-700 border-blue-100' },
             { periodo: '6–12 meses', items: ['Escalamiento', 'Integración', 'Gobierno', 'Modelos avanzados'], bg: 'bg-emerald-50 text-emerald-700 border-emerald-100' }
           ].map(({ periodo, items, bg }, i) => (
-            <div key={i} className={`p-4 rounded-xl border ${bg}`}>
+            <div key={i} className={`p-4 border ${bg}`}>
               <p className="text-sm font-bold mb-2">{periodo}</p>
               <div className="grid grid-cols-2 gap-1">
                 {items.map((item, j) => <span key={j} className="text-xs flex items-center gap-1"><ChevronRight className="w-3 h-3 shrink-0" />{item}</span>)}
@@ -719,17 +719,17 @@ const Results = ({ data, pilarScores, onReset, assessmentId, submitError }) => {
       </div>
 
       {/* Recomendaciones */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 space-y-3">
+      <div className="bg-white border border-slate-200 p-6 space-y-3">
         <h3 className="text-lg font-bold text-slate-900 mb-2">Recomendaciones finales</h3>
-        <div className="flex items-start gap-3 p-3 bg-emerald-50 rounded-xl">
+        <div className="flex items-start gap-3 p-3 bg-emerald-50">
           <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
           <div><p className="text-sm font-bold text-emerald-800">Qué hacer primero</p><p className="text-xs text-emerald-700">Enfocarse en {fortalezas[0]?.pilar.nombre} para generar quick wins que validen el valor de la IA.</p></div>
         </div>
-        <div className="flex items-start gap-3 p-3 bg-amber-50 rounded-xl">
+        <div className="flex items-start gap-3 p-3 bg-amber-50">
           <AlertTriangle className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
           <div><p className="text-sm font-bold text-amber-800">Qué no hacer todavía</p><p className="text-xs text-amber-700">No invertir en implementaciones complejas hasta fortalecer {brechas[0]?.pilar.nombre}.</p></div>
         </div>
-        <div className="flex items-start gap-3 p-3 bg-rose-50 rounded-xl">
+        <div className="flex items-start gap-3 p-3 bg-rose-50">
           <Shield className="w-5 h-5 text-rose-500 shrink-0 mt-0.5" />
           <div><p className="text-sm font-bold text-rose-800">Qué riesgo evitar</p><p className="text-xs text-rose-700">Implementar IA sin datos de calidad o sin patrocinio directivo.</p></div>
         </div>
@@ -737,7 +737,7 @@ const Results = ({ data, pilarScores, onReset, assessmentId, submitError }) => {
 
       {/* Envío */}
       {submitError && (
-        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-start gap-3">
+        <div className="bg-amber-50 border border-amber-200 p-4 flex items-start gap-3">
           <AlertTriangle className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
           <div>
             <p className="text-sm font-bold text-amber-800">No se pudo guardar tu diagnóstico</p>
@@ -750,11 +750,11 @@ const Results = ({ data, pilarScores, onReset, assessmentId, submitError }) => {
       {assessmentId && <PdfSection assessmentId={assessmentId} />}
 
       {/* Cierre */}
-      <div className="bg-slate-50 rounded-2xl p-8 text-center border border-slate-200">
+      <div className="bg-slate-50 p-8 text-center border border-slate-200">
         <p className="text-xs font-bold text-indigo-600 uppercase tracking-widest mb-3">CII.IA</p>
         <p className="text-slate-600 mb-2">Gracias por completar tu autodiagnóstico.</p>
         <p className="text-sm text-slate-500 mb-6">¿Tienes preguntas? Contáctanos para una sesión de interpretación de resultados.</p>
-        <button onClick={onReset} className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-slate-300 rounded-xl text-sm font-bold text-slate-700 hover:bg-white transition-all">
+        <button onClick={onReset} className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-slate-300 text-sm font-bold text-slate-700 hover:bg-white transition-all">
           <RotateCcw className="w-4 h-4" /> Hacer otro diagnóstico
         </button>
       </div>
@@ -840,7 +840,7 @@ const AssessmentWizard = () => {
 
   if (showResults) {
     return (
-      <div className="flex h-screen pt-16 lg:pt-0">
+      <div className="flex h-full pt-16 lg:pt-0">
         <Sidebar step={TOTAL_STEPS} />
         <div className="flex-1 overflow-y-auto" ref={scrollRef}>
           <div className="max-w-3xl mx-auto px-4 py-12"><Results data={formData} pilarScores={pilarScoresAvg} onReset={reset} assessmentId={assessmentId} submitError={submitError} /></div>
@@ -854,7 +854,7 @@ const AssessmentWizard = () => {
       case 0:
         return (
           <div className="text-center py-6">
-            <div className="w-20 h-20 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl shadow-indigo-200/50">
+            <div className="w-20 h-20 bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center mx-auto mb-6 shadow-xl shadow-indigo-200/50">
               <Brain className="w-10 h-10 text-white" />
             </div>
             <p className="text-xs font-bold text-indigo-600 uppercase tracking-widest mb-3">CII.IA &mdash; Centro de Innovación de Inteligencia Artificial</p>
@@ -870,15 +870,15 @@ const AssessmentWizard = () => {
               {PILARES.map((p, i) => {
                 const Icon = PILAR_ICONS[i];
                 return (
-                  <div key={i} className="flex items-center gap-2.5 p-3 bg-white rounded-xl border border-slate-100 text-left">
-                    <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600 shrink-0"><Icon className="w-4 h-4" /></div>
+                  <div key={i} className="flex items-center gap-2.5 p-3 bg-white border border-slate-100 text-left">
+                    <div className="w-8 h-8 bg-indigo-50 flex items-center justify-center text-indigo-600 shrink-0"><Icon className="w-4 h-4" /></div>
                     <span className="text-xs font-bold text-slate-700 leading-tight">{p.nombre}</span>
                   </div>
                 );
               })}
             </div>
 
-            <div className="bg-white rounded-2xl p-5 max-w-lg mx-auto text-left border border-slate-100">
+            <div className="bg-white p-5 max-w-lg mx-auto text-left border border-slate-100">
               <p className="text-sm font-bold text-slate-700 mb-3">Al finalizar obtendrás:</p>
               <ul className="space-y-2">
                 {['Nivel de madurez total y por dimensión', 'Fortalezas y brechas identificadas', 'Oportunidades concretas de IA', 'Recomendaciones priorizadas', 'Roadmap de implementación (0–12 meses)'].map((item, i) => (
@@ -934,7 +934,7 @@ const AssessmentWizard = () => {
               <div>
                 <label className="block text-sm font-bold text-slate-700 mb-2">¿Qué resultado te gustaría lograr con IA en los próximos 12 meses?</label>
                 <textarea value={formData.resultadoEsperado} onChange={e => update('resultadoEsperado', e.target.value)} placeholder="Describe brevemente tu expectativa..." rows={3}
-                  className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-slate-900 placeholder-slate-400 resize-none hover:border-slate-300" />
+                  className="w-full px-4 py-3 bg-white border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-slate-900 placeholder-slate-400 resize-none hover:border-slate-300" />
                 <Hint text={HINTS.resultadoEsperado} />
               </div>
             </div>
@@ -982,7 +982,7 @@ const AssessmentWizard = () => {
               </div>
             )}
 
-            <div className="bg-white rounded-2xl p-4 sm:p-6 border border-slate-200">
+            <div className="bg-white p-4 sm:p-6 border border-slate-200">
               <div className="flex items-center justify-between mb-4">
                 <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Evalúa cada afirmación del 1 al 5</p>
                 <span className="text-xs font-bold text-indigo-600">{answered}/5 respondidas</span>
@@ -1030,12 +1030,12 @@ const AssessmentWizard = () => {
                 <div key={i}>
                   <label className="block text-sm font-bold text-slate-700 mb-2">{label}</label>
                   <textarea value={formData[field]} onChange={e => update(field, e.target.value)} rows={2} placeholder="Escribe tu respuesta..."
-                    className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-slate-900 placeholder-slate-400 resize-none hover:border-slate-300" />
+                    className="w-full px-4 py-3 bg-white border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-slate-900 placeholder-slate-400 resize-none hover:border-slate-300" />
                   <Hint text={HINTS[field]} />
                 </div>
               ))}
-              <label className="flex items-start gap-3 cursor-pointer p-4 bg-white rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors">
-                <input type="checkbox" checked={formData.aceptaDatos} onChange={e => update('aceptaDatos', e.target.checked)} className="mt-0.5 w-5 h-5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500" />
+              <label className="flex items-start gap-3 cursor-pointer p-4 bg-white border border-slate-200 hover:bg-slate-50 transition-colors">
+                <input type="checkbox" checked={formData.aceptaDatos} onChange={e => update('aceptaDatos', e.target.checked)} className="mt-0.5 w-5 h-5 border-slate-300 text-indigo-600 focus:ring-indigo-500" />
                 <span className="text-sm text-slate-600">Acepto el uso de mis datos para recibir mi resultado, recomendaciones y seguimiento.</span>
               </label>
             </div>
@@ -1047,7 +1047,7 @@ const AssessmentWizard = () => {
   };
 
   return (
-    <div className="flex h-screen pt-16 lg:pt-0">
+    <div className="flex h-full pt-16 lg:pt-0">
       {/* Left sidebar with animated logo */}
       <Sidebar step={step} />
 
@@ -1080,11 +1080,11 @@ const AssessmentWizard = () => {
         <div className="shrink-0 bg-white border-t border-slate-200 px-4 md:px-8 py-4">
           <div className="max-w-3xl mx-auto flex items-center justify-between">
             <button onClick={prev} disabled={step === 0}
-              className={`inline-flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-bold transition-all ${step === 0 ? 'text-slate-300 cursor-not-allowed' : 'text-slate-600 hover:bg-slate-100'}`}>
+              className={`inline-flex items-center gap-2 px-5 py-3 text-sm font-bold transition-all ${step === 0 ? 'text-slate-300 cursor-not-allowed' : 'text-slate-600 hover:bg-slate-100'}`}>
               <ArrowLeft className="w-4 h-4" /> Anterior
             </button>
             <button onClick={next} disabled={!canAdvance()}
-              className={`inline-flex items-center gap-2 px-7 py-3 rounded-xl text-sm font-bold transition-all ${
+              className={`inline-flex items-center gap-2 px-7 py-3 text-sm font-bold transition-all ${
                 canAdvance() ? 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-lg shadow-indigo-200/50' : 'bg-slate-200 text-slate-400 cursor-not-allowed'
               }`}>
               {step === TOTAL_STEPS - 1 ? 'Ver resultados' : 'Siguiente'} <ArrowRight className="w-4 h-4" />

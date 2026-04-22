@@ -13,7 +13,7 @@ const CTA = () => {
                 Invierte en el <strong>PRESENTE</strong> de tu empresa. Beneficios tangibles desde el arranque.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
-                <Link to="/unirse" className="px-10 py-4 bg-white text-slate-900 rounded-xl font-bold text-lg hover:bg-indigo-50 transition-all shadow-xl hover:-translate-y-1 flex items-center justify-center gap-2">
+                <Link to="/unirse" className="px-10 py-4 bg-white text-slate-900 font-bold text-lg hover:bg-indigo-50 transition-all shadow-xl hover:-translate-y-1 flex items-center justify-center gap-2">
                     Obtén tu Membresía <ArrowRight className="h-5 w-5" />
                 </Link>
             </div>

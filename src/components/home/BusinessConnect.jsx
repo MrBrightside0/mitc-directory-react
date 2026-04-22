@@ -28,20 +28,20 @@ const BusinessConnect = () => {
                     </p>
                     <ul className="space-y-4 mb-8">
                         <li className="flex items-center gap-3 font-bold text-slate-800">
-                            <div className="w-2 h-2 bg-indigo-600 rounded-full"></div> Vinculación estratégica
+                            <div className="w-2 h-2 bg-indigo-600"></div> Vinculación estratégica
                         </li>
                         <li className="flex items-center gap-3 font-bold text-slate-800">
-                            <div className="w-2 h-2 bg-indigo-600 rounded-full"></div> Acceso a Real Tech
+                            <div className="w-2 h-2 bg-indigo-600"></div> Acceso a Real Tech
                         </li>
                         <li className="flex items-center gap-3 font-bold text-slate-800">
-                            <div className="w-2 h-2 bg-indigo-600 rounded-full"></div> Instalaciones para fomentar la innovación
+                            <div className="w-2 h-2 bg-indigo-600"></div> Instalaciones para fomentar la innovación
                         </li>
                     </ul>
                     <p className="text-slate-600 italic border-l-4 border-indigo-600 pl-4 mb-8">
                         "Imagínate ser acompañado por nosotros y estar ligado a mas de 350 empresas."
                     </p>
 
-                    <div className="bg-slate-900 text-white p-6 rounded-2xl shadow-xl">
+                    <div className="bg-slate-900 text-white p-6 shadow-xl">
                         <p className="font-serif text-lg italic opacity-90 mb-4">"La mejor manera de predecir el futuro es inventándolo"</p>
                         <p className="text-sm font-bold uppercase tracking-widest text-indigo-400">— Alan Kay</p>
                     </div>
@@ -49,7 +49,7 @@ const BusinessConnect = () => {
 
                 <FadeIn delay={0.2}>
                     {/* STATS GRID */}
-                    <div className="grid grid-cols-2 gap-px bg-slate-200 border border-slate-200 rounded-2xl overflow-hidden mb-8">
+                    <div className="grid grid-cols-2 gap-px bg-slate-200 border border-slate-200 overflow-hidden mb-8">
                         <div className="bg-slate-50 p-8 text-center">
                             <span className="block text-4xl font-bold text-indigo-600 mb-1">12+</span>
                             <span className="text-xs font-bold uppercase text-slate-500">Años de Experiencia</span>

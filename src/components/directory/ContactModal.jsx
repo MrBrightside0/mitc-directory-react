@@ -63,10 +63,10 @@ const ContactModal = ({ isOpen, onClose, companyName }) => {
         <motion.div 
           initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }}
           onClick={(e) => e.stopPropagation()} 
-          className="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden relative"
+          className="bg-white shadow-2xl w-full max-w-lg overflow-hidden relative"
         >
           {/* Botón cerrar */}
-          <button onClick={onClose} className="absolute top-4 right-4 p-1 rounded-full hover:bg-slate-100 transition-colors text-slate-400 hover:text-slate-600">
+          <button onClick={onClose} className="absolute top-4 right-4 p-1 hover:bg-slate-100 transition-colors text-slate-400 hover:text-slate-600">
             <X className="h-5 w-5" />
           </button>
 
@@ -89,7 +89,7 @@ const ContactModal = ({ isOpen, onClose, companyName }) => {
                       value={formData.nombre}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-2 border border-slate-200 rounded-lg text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all"
+                      className="w-full px-4 py-2 border border-slate-200 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all"
                       placeholder="Ej. Ana García"
                     />
                   </div>
@@ -102,7 +102,7 @@ const ContactModal = ({ isOpen, onClose, companyName }) => {
                       value={formData.email}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-2 border border-slate-200 rounded-lg text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all"
+                      className="w-full px-4 py-2 border border-slate-200 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all"
                       placeholder="ana@empresa.com"
                     />
                   </div>
@@ -117,7 +117,7 @@ const ContactModal = ({ isOpen, onClose, companyName }) => {
                         value={formData.telefono}
                         onChange={handleChange}
                         required
-                        className="w-full pl-9 pr-4 py-2 border border-slate-200 rounded-lg text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all"
+                        className="w-full pl-9 pr-4 py-2 border border-slate-200 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all"
                         placeholder="+52 81 1234 5678"
                       />
                     </div>
@@ -131,7 +131,7 @@ const ContactModal = ({ isOpen, onClose, companyName }) => {
                       value={formData.proyecto}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-2 border border-slate-200 rounded-lg text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all resize-none"
+                      className="w-full px-4 py-2 border border-slate-200 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all resize-none"
                       placeholder="Breve descripción de lo que necesitas..."
                     />
                   </div>
@@ -139,7 +139,7 @@ const ContactModal = ({ isOpen, onClose, companyName }) => {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg shadow-indigo-500/30 transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                    className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold shadow-lg shadow-indigo-500/30 transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
                   >
                     {isSubmitting ? (
                       <>Enviando... <Loader2 className="h-4 w-4 animate-spin" /></>
@@ -161,14 +161,14 @@ const ContactModal = ({ isOpen, onClose, companyName }) => {
               </>
             ) : (
               <div className="text-center py-8">
-                <div className="mx-auto h-16 w-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4">
+                <div className="mx-auto h-16 w-16 bg-green-100 text-green-600 flex items-center justify-center mb-4">
                   <CheckCircle className="h-8 w-8" />
                 </div>
                 <h3 className="text-xl font-bold text-slate-900 mb-2">¡Solicitud Recibida!</h3>
                 <p className="text-sm text-slate-500 mb-6">
                   Hemos notificado a <b>{companyName}</b> sobre tu interés. Un gestor del Cluster te contactará contigo pronto para coordinar la reunión.
                 </p>
-                <button onClick={onClose} className="px-6 py-2 border border-slate-200 rounded-lg text-sm font-bold text-slate-600 hover:bg-slate-50 transition-colors">
+                <button onClick={onClose} className="px-6 py-2 border border-slate-200 text-sm font-bold text-slate-600 hover:bg-slate-50 transition-colors">
                   Entendido, gracias
                 </button>
               </div>

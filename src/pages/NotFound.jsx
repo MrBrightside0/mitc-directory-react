@@ -16,10 +16,10 @@ const NotFound = () => {
           La página que buscas no existe o fue movida. Intenta volver al inicio o explorar el directorio.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <Link to="/" className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-blue-500 text-white rounded-xl font-bold text-sm hover:shadow-lg hover:shadow-indigo-200/50 transition-all">
+          <Link to="/" className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-blue-500 text-white font-bold text-sm hover:shadow-lg hover:shadow-indigo-200/50 transition-all">
             <Home className="w-4 h-4" /> Ir al inicio
           </Link>
-          <Link to="/directorio" className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-slate-200 text-slate-700 rounded-xl font-bold text-sm hover:bg-slate-50 transition-all">
+          <Link to="/directorio" className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-slate-200 text-slate-700 font-bold text-sm hover:bg-slate-50 transition-all">
             <Search className="w-4 h-4" /> Ver directorio
           </Link>
         </div>

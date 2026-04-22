@@ -119,9 +119,9 @@ const ChatWidget = () => {
         {showAiBubble && !isChatOpen && (
             <motion.div 
             initial={{ opacity: 0, y: 10, scale: 0.9 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
-            className="relative bg-white border border-gray-200 shadow-xl rounded-xl p-4 w-56 text-left origin-bottom-right"
+            className="relative bg-white border border-gray-200 shadow-xl p-4 w-56 text-left origin-bottom-right"
             >
-            <button onClick={(e) => {e.stopPropagation(); setShowAiBubble(false);}} className="absolute -top-2 -left-2 bg-slate-200 hover:bg-red-500 hover:text-white text-gray-500 rounded-full p-1 transition-colors">
+            <button onClick={(e) => {e.stopPropagation(); setShowAiBubble(false);}} className="absolute -top-2 -left-2 bg-slate-200 hover:bg-red-500 hover:text-white text-gray-500 p-1 transition-colors">
                 <X className="h-3 w-3" />
             </button>
             <p className="text-xs text-gray-500 leading-snug">¿Necesitas ayuda? ¡Puedo buscar por ti!</p>
@@ -133,7 +133,7 @@ const ChatWidget = () => {
         <motion.button 
             whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
             onClick={() => { setIsChatOpen(!isChatOpen); if(showAiBubble) setShowAiBubble(false); }}
-            className={`h-14 w-14 rounded-full shadow-2xl flex items-center justify-center transition-all z-50 ${isChatOpen ? 'bg-slate-800 rotate-90' : 'bg-gradient-to-br from-indigo-600 to-violet-600'}`}
+            className={`h-14 w-14 shadow-2xl flex items-center justify-center transition-all z-50 ${isChatOpen ? 'bg-slate-800 rotate-90' : 'bg-gradient-to-br from-indigo-600 to-violet-600'}`}
         >
             {isChatOpen ? <X className="h-6 w-6 text-white" /> : <Bot className="h-7 w-7 text-white" />}
         </motion.button>
@@ -143,11 +143,11 @@ const ChatWidget = () => {
         {isChatOpen && (
             <motion.div
             initial={{ opacity: 0, y: 20, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="absolute bottom-20 right-0 w-[90vw] md:w-96 h-[500px] max-h-[70vh] bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden origin-bottom-right z-40"
+            className="absolute bottom-20 right-0 w-[90vw] md:w-96 h-[500px] max-h-[70vh] bg-white shadow-2xl border border-gray-200 flex flex-col overflow-hidden origin-bottom-right z-40"
             >
              {/* Header del Chat */}
              <div className="bg-slate-900 p-4 flex items-center gap-3">
-                 <div className="h-8 w-8 rounded-full bg-white/10 flex items-center justify-center"><Bot className="h-5 w-5 text-white" /></div>
+                 <div className="h-8 w-8 bg-white/10 flex items-center justify-center"><Bot className="h-5 w-5 text-white" /></div>
                  <h3 className="text-white font-bold text-sm">Cluster AI</h3>
              </div>
              
@@ -157,7 +157,7 @@ const ChatWidget = () => {
                  {messages.map((msg) => (
                     <div key={msg.id} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
                         {msg.type === 'recommendations' ? (
-                          <div className="max-w-[92%] rounded-2xl px-3 py-3 text-sm bg-white text-gray-800 border border-gray-200 rounded-bl-none">
+                          <div className="max-w-[92%] px-3 py-3 text-sm bg-white text-gray-800 border border-gray-200">
                             <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Socios recomendados</p>
                             <div className="space-y-2">
                               {msg.recommendations.map((recommendation) => (
@@ -165,7 +165,7 @@ const ChatWidget = () => {
                                   key={recommendation.id}
                                   type="button"
                                   onClick={() => handleRecommendationClick(recommendation.partner.id)}
-                                  className="w-full p-3 rounded-xl border border-gray-200 bg-slate-50 hover:bg-white hover:border-indigo-300 transition-colors text-left"
+                                  className="w-full p-3 border border-gray-200 bg-slate-50 hover:bg-white hover:border-indigo-300 transition-colors text-left"
                                 >
                                   <p className="text-sm font-bold text-slate-900">{recommendation.partner.name}</p>
                                   <p className="text-xs text-slate-500 mt-0.5">{recommendation.partner.industry}</p>
@@ -181,7 +181,7 @@ const ChatWidget = () => {
                                   {recommendation.matchedTags.length > 0 && (
                                     <div className="mt-2 flex flex-wrap gap-1">
                                       {recommendation.matchedTags.slice(0, 4).map((tag) => (
-                                        <span key={tag} className="px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 text-[10px] font-semibold uppercase tracking-wide">
+                                        <span key={tag} className="px-2 py-0.5 bg-indigo-50 text-indigo-700 text-[10px] font-semibold uppercase tracking-wide">
                                           {tag}
                                         </span>
                                       ))}
@@ -192,7 +192,7 @@ const ChatWidget = () => {
                             </div>
                           </div>
                         ) : (
-                          <div className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm ${msg.sender === 'user' ? 'bg-indigo-600 text-white rounded-br-none' : 'bg-white text-gray-800 border border-gray-200 rounded-bl-none'}`}>
+                          <div className={`max-w-[80%] px-4 py-3 text-sm ${msg.sender === 'user' ? 'bg-indigo-600 text-white' : 'bg-white text-gray-800 border border-gray-200'}`}>
                             {msg.text}
                           </div>
                         )}
@@ -205,8 +205,8 @@ const ChatWidget = () => {
 
              {/* Input */}
              <form onSubmit={handleSendMessage} className="p-3 bg-white border-t border-gray-200 flex gap-2">
-                 <input type="text" value={inputValue} onChange={(e) => setInputValue(e.target.value)} placeholder="Escribe..." className="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 text-sm outline-none focus:border-indigo-500" />
-                 <button type="submit" disabled={!inputValue.trim()} className="bg-indigo-600 text-white p-2 rounded-xl"><Send className="h-5 w-5" /></button>
+                 <input type="text" value={inputValue} onChange={(e) => setInputValue(e.target.value)} placeholder="Escribe..." className="flex-1 bg-gray-50 border border-gray-200 px-4 py-2 text-sm outline-none focus:border-indigo-500" />
+                 <button type="submit" disabled={!inputValue.trim()} className="bg-indigo-600 text-white p-2"><Send className="h-5 w-5" /></button>
              </form>
             </motion.div>
         )}

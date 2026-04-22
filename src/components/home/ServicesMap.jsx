@@ -27,7 +27,7 @@ const ServicesMap = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             
-            <FadeIn className="bg-white p-8 rounded-2xl border border-slate-200 hover:shadow-lg transition-all">
+            <FadeIn className="bg-white p-8 border border-slate-200 hover:shadow-lg transition-all">
                 <Lightbulb className="h-10 w-10 text-indigo-600 mb-6" />
                 <h3 className="text-xl font-bold text-slate-900 mb-3">Innovación Tecnología e Investigación</h3>
                 <p className="text-slate-600 text-sm leading-relaxed">
@@ -35,7 +35,7 @@ const ServicesMap = () => {
                 </p>
             </FadeIn>
 
-            <FadeIn delay={0.1} className="bg-white p-8 rounded-2xl border border-slate-200 hover:shadow-lg transition-all">
+            <FadeIn delay={0.1} className="bg-white p-8 border border-slate-200 hover:shadow-lg transition-all">
                 <Database className="h-10 w-10 text-emerald-600 mb-6" />
                 <h3 className="text-xl font-bold text-slate-900 mb-3">Almacenamiento</h3>
                 <p className="text-slate-600 text-sm leading-relaxed">
@@ -43,7 +43,7 @@ const ServicesMap = () => {
                 </p>
             </FadeIn>
 
-            <FadeIn delay={0.2} className="bg-white p-8 rounded-2xl border border-slate-200 hover:shadow-lg transition-all">
+            <FadeIn delay={0.2} className="bg-white p-8 border border-slate-200 hover:shadow-lg transition-all">
                 <Code className="h-10 w-10 text-blue-600 mb-6" />
                 <h3 className="text-xl font-bold text-slate-900 mb-3">Desarrollo de Software</h3>
                 <p className="text-slate-600 text-sm leading-relaxed">
@@ -51,7 +51,7 @@ const ServicesMap = () => {
                 </p>
             </FadeIn>
 
-            <FadeIn delay={0.3} className="bg-white p-8 rounded-2xl border border-slate-200 hover:shadow-lg transition-all">
+            <FadeIn delay={0.3} className="bg-white p-8 border border-slate-200 hover:shadow-lg transition-all">
                 <BarChart3 className="h-10 w-10 text-amber-600 mb-6" />
                 <h3 className="text-xl font-bold text-slate-900 mb-3">Inteligencia de Negocios</h3>
                 <p className="text-slate-600 text-sm leading-relaxed">
@@ -59,7 +59,7 @@ const ServicesMap = () => {
                 </p>
             </FadeIn>
 
-            <FadeIn delay={0.4} className="bg-white p-8 rounded-2xl border border-slate-200 hover:shadow-lg transition-all">
+            <FadeIn delay={0.4} className="bg-white p-8 border border-slate-200 hover:shadow-lg transition-all">
                 <Briefcase className="h-10 w-10 text-purple-600 mb-6" />
                 <h3 className="text-xl font-bold text-slate-900 mb-3">Consultoría en TI</h3>
                 <p className="text-slate-600 text-sm leading-relaxed">
@@ -67,7 +67,7 @@ const ServicesMap = () => {
                 </p>
             </FadeIn>
 
-            <FadeIn delay={0.5} className="bg-white p-8 rounded-2xl border border-slate-200 hover:shadow-lg transition-all">
+            <FadeIn delay={0.5} className="bg-white p-8 border border-slate-200 hover:shadow-lg transition-all">
                 <Server className="h-10 w-10 text-slate-600 mb-6" />
                 <h3 className="text-xl font-bold text-slate-900 mb-3">Data Centers</h3>
                 <p className="text-slate-600 text-sm leading-relaxed">

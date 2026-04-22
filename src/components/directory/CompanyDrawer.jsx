@@ -257,13 +257,13 @@ const CompanyDrawer = ({ selectedCompany, onClose }) => {
                   navigator.clipboard.writeText(window.location.href);
                   alert('URL copiada');
                 }}
-                className="p-2 bg-black/30 hover:bg-white/50 text-white rounded-full transition-colors backdrop-blur-md shadow-lg"
+                className="p-2 bg-black/30 hover:bg-white/50 text-white transition-colors backdrop-blur-md shadow-lg"
             >
                 <Share2 className="h-6 w-6 drop-shadow-md" />
             </button>
             <button 
                 onClick={onClose} 
-                className="p-2 bg-black/30 hover:bg-white/50 text-white rounded-full transition-colors backdrop-blur-md shadow-lg"
+                className="p-2 bg-black/30 hover:bg-white/50 text-white transition-colors backdrop-blur-md shadow-lg"
             >
                 <X className="h-6 w-6 drop-shadow-md" />
             </button>
@@ -283,8 +283,8 @@ const CompanyDrawer = ({ selectedCompany, onClose }) => {
               )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent"></div>
               
-              <div className="absolute -bottom-10 left-6 md:left-8 h-24 w-24 rounded-2xl bg-white p-2 shadow-2xl z-20">
-                <div className="h-full w-full rounded-xl bg-white flex items-center justify-center overflow-hidden">
+              <div className="absolute -bottom-10 left-6 md:left-8 h-24 w-24 bg-white p-2 shadow-2xl z-20">
+                <div className="h-full w-full bg-white flex items-center justify-center overflow-hidden">
                   <img src={company.logoUrl} alt="Logo" className="w-full h-full object-contain p-1.5" />
                 </div>
               </div>
@@ -301,7 +301,7 @@ const CompanyDrawer = ({ selectedCompany, onClose }) => {
 
                 <p className="text-sm font-mono text-gray-500 uppercase tracking-wider mt-3 flex items-center gap-2">
                     {company.industry} 
-                    <span className="w-1 h-1 bg-gray-400 rounded-full"></span> 
+                    <span className="w-1 h-1 bg-gray-400"></span> 
                     {company.tier}
                 </p>
               </div>
@@ -315,7 +315,7 @@ const CompanyDrawer = ({ selectedCompany, onClose }) => {
 
             {/* Diferenciador Destacado */}
             {company.differentiator && (
-                <div className="mb-8 p-4 rounded-xl bg-amber-50 border border-amber-100 flex items-start gap-3 shadow-sm">
+                <div className="mb-8 p-4 bg-amber-50 border border-amber-100 flex items-start gap-3 shadow-sm">
                     <Sparkles className="h-5 w-5 text-amber-500 flex-shrink-0 mt-0.5" />
                     <div>
                         <p className="text-xs font-bold text-amber-600 uppercase tracking-wide mb-1">Propuesta de Valor</p>
@@ -330,14 +330,14 @@ const CompanyDrawer = ({ selectedCompany, onClose }) => {
             {hasBusinessSection && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
                   {hasServices && (
-                    <div className="p-5 rounded-2xl bg-gray-50 border border-gray-200 flex flex-col gap-3">
+                    <div className="p-5 bg-gray-50 border border-gray-200 flex flex-col gap-3">
                       <div className="flex items-center gap-2 text-gray-400 text-xs font-bold uppercase tracking-wider mb-1">
                           <Layers className="h-3 w-3" /> Servicios Principales
                       </div>
                       <ul className="space-y-2">
                         {services.map((svc, idx) => (
                           <li key={idx} className="text-sm font-medium text-gray-800 flex items-start gap-2">
-                            <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 mt-1.5 shrink-0"></span>
+                            <span className="w-1.5 h-1.5 bg-indigo-500 mt-1.5 shrink-0"></span>
                             {svc}
                           </li>
                         ))}
@@ -346,7 +346,7 @@ const CompanyDrawer = ({ selectedCompany, onClose }) => {
                   )}
 
                   {(hasProducts || hasTargetAudience) && (
-                    <div className="p-5 rounded-2xl bg-gray-50 border border-gray-200 flex flex-col gap-4">
+                    <div className="p-5 bg-gray-50 border border-gray-200 flex flex-col gap-4">
                       {hasProducts && (
                         <div>
                           <div className="flex items-center gap-2 text-gray-400 text-xs font-bold uppercase tracking-wider mb-2">
@@ -363,7 +363,7 @@ const CompanyDrawer = ({ selectedCompany, onClose }) => {
                           </div>
                           <div className="flex flex-wrap gap-2">
                               {targetAudience.map(target => (
-                                  <span key={target} className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border text-xs font-bold uppercase tracking-wide ${getTargetStyle(target)}`}>
+                                  <span key={target} className={`inline-flex items-center gap-1.5 px-2.5 py-1 border text-xs font-bold uppercase tracking-wide ${getTargetStyle(target)}`}>
                                       {getTargetIcon(target)} {target}
                                   </span>
                               ))}
@@ -391,7 +391,7 @@ const CompanyDrawer = ({ selectedCompany, onClose }) => {
                 <h3 className="text-sm font-bold uppercase tracking-widest text-gray-900 mb-4">Stack Tecnológico</h3>
                 <div className="flex flex-wrap gap-2">
                   {tags.map(tag => (
-                    <span key={tag} className="px-4 py-2 rounded-lg border border-gray-200 bg-white text-xs font-bold text-gray-800 shadow-sm flex items-center gap-1.5">
+                    <span key={tag} className="px-4 py-2 border border-gray-200 bg-white text-xs font-bold text-gray-800 shadow-sm flex items-center gap-1.5">
                       <Activity className="h-3 w-3 text-gray-400" /> {tag}
                     </span>
                   ))}
@@ -407,7 +407,7 @@ const CompanyDrawer = ({ selectedCompany, onClose }) => {
                   {/* Ubicación */}
                   {hasLocation && (
                     <div className="flex items-center gap-4 p-3 -mx-3">
-                      <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center border border-gray-200 shadow-sm">
+                      <div className="h-10 w-10 bg-white flex items-center justify-center border border-gray-200 shadow-sm">
                         <MapPin className="h-5 w-5 text-red-500" />
                       </div>
                       <div>
@@ -420,7 +420,7 @@ const CompanyDrawer = ({ selectedCompany, onClose }) => {
                   {/* Contacto Público (Nombre) */}
                   {hasContactName && (
                     <div className="flex items-center gap-4 p-3 -mx-3">
-                      <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center border border-gray-200 shadow-sm">
+                      <div className="h-10 w-10 bg-white flex items-center justify-center border border-gray-200 shadow-sm">
                         <UserRound className="h-5 w-5 text-indigo-500" />
                       </div>
                       <div>
@@ -436,8 +436,8 @@ const CompanyDrawer = ({ selectedCompany, onClose }) => {
 
                   {/* Correo (Si existe) */}
                   {hasEmail && (
-                    <div className="flex items-center gap-4 p-3 rounded-xl hover:bg-gray-50 transition-colors -mx-3">
-                      <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center transition-colors border border-gray-200 shadow-sm">
+                    <div className="flex items-center gap-4 p-3 hover:bg-gray-50 transition-colors -mx-3">
+                      <div className="h-10 w-10 bg-white flex items-center justify-center transition-colors border border-gray-200 shadow-sm">
                         <Mail className="h-5 w-5 text-gray-600" />
                       </div>
                       <div>
@@ -455,8 +455,8 @@ const CompanyDrawer = ({ selectedCompany, onClose }) => {
 
                   {/* Sitio Web (Si existe) */}
                   {hasWebsite && (
-                    <div className="flex items-center gap-4 p-3 rounded-xl hover:bg-gray-50 transition-colors -mx-3">
-                      <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center transition-colors border border-gray-200 shadow-sm">
+                    <div className="flex items-center gap-4 p-3 hover:bg-gray-50 transition-colors -mx-3">
+                      <div className="h-10 w-10 bg-white flex items-center justify-center transition-colors border border-gray-200 shadow-sm">
                         <Globe className="h-5 w-5 text-gray-600" />
                       </div>
                       <div>
@@ -480,8 +480,8 @@ const CompanyDrawer = ({ selectedCompany, onClose }) => {
 
                   {/* Teléfono (Si existe) */}
                   {hasPhone && (
-                    <div className="flex items-center gap-4 p-3 rounded-xl hover:bg-gray-50 transition-colors -mx-3">
-                      <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center transition-colors border border-gray-200 shadow-sm">
+                    <div className="flex items-center gap-4 p-3 hover:bg-gray-50 transition-colors -mx-3">
+                      <div className="h-10 w-10 bg-white flex items-center justify-center transition-colors border border-gray-200 shadow-sm">
                         <Phone className="h-5 w-5 text-gray-600" />
                       </div>
                       <div>
@@ -507,7 +507,7 @@ const CompanyDrawer = ({ selectedCompany, onClose }) => {
           <div className="border-t border-gray-200 p-6 bg-white/95 backdrop-blur shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
             <button 
                 onClick={() => setIsModalOpen(true)} // <-- AQUÍ ABRE EL MODAL
-                className="w-full py-4 bg-gray-900 text-white rounded-xl font-bold uppercase tracking-widest hover:bg-slate-800 transition-all shadow-lg hover:shadow-xl active:scale-[0.98] flex items-center justify-center gap-3"
+                className="w-full py-4 bg-gray-900 text-white font-bold uppercase tracking-widest hover:bg-slate-800 transition-all shadow-lg hover:shadow-xl active:scale-[0.98] flex items-center justify-center gap-3"
             >
               Conectar con Socio
             </button>

@@ -43,7 +43,7 @@ const CompanyCard = ({ item, onClick }) => {
       tabIndex={0}
       role="button"
       aria-label={`Ver perfil de ${item.name}`}
-      className="group relative cursor-pointer flex flex-col justify-between h-full bg-white rounded-2xl border border-gray-200 overflow-hidden hover:border-indigo-500/30 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/40"
+      className="group relative cursor-pointer flex flex-col justify-between h-full bg-white border border-gray-200 overflow-hidden hover:border-indigo-500/30 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/40"
     >
       {/* BANNER TARJETA */}
       <div className="h-28 w-full relative overflow-hidden bg-gray-50 flex-shrink-0">
@@ -64,7 +64,7 @@ const CompanyCard = ({ item, onClick }) => {
           </div>
         )}
         {item.verified && (
-          <div className="absolute top-2 right-2 z-20 bg-white/90 backdrop-blur text-emerald-700 p-1.5 rounded-full shadow-sm" title="Verificado">
+          <div className="absolute top-2 right-2 z-20 bg-white/90 backdrop-blur text-emerald-700 p-1.5 shadow-sm" title="Verificado">
             <ShieldCheck className="h-3.5 w-3.5" />
           </div>
         )}
@@ -73,10 +73,10 @@ const CompanyCard = ({ item, onClick }) => {
       <div className="px-5 pb-5 flex-1 flex flex-col">
         {/* LOGO OVERLAP & HEADER */}
         <div className="-mt-8 mb-2 relative z-20 flex justify-between items-end">
-          <div className="h-14 w-14 rounded-xl bg-white flex items-center justify-center shadow-lg border-[3px] border-white overflow-hidden p-1">
+          <div className="h-14 w-14 bg-white flex items-center justify-center shadow-lg border-[3px] border-white overflow-hidden p-1">
             <img src={item.logoUrl} alt="Logo" className="w-full h-full object-contain" />
           </div>
-          <span className="text-[9px] font-mono font-bold uppercase tracking-widest text-gray-500 bg-gray-100 px-2 py-0.5 rounded border border-gray-200">
+          <span className="text-[9px] font-mono font-bold uppercase tracking-widest text-gray-500 bg-gray-100 px-2 py-0.5 border border-gray-200">
             {item.tier}
           </span>
         </div>
@@ -96,7 +96,7 @@ const CompanyCard = ({ item, onClick }) => {
         {item.targetAudience && (
             <div className="flex flex-wrap gap-1.5 mb-3">
                 {item.targetAudience.map(target => (
-                    <span key={target} className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[9px] font-bold uppercase tracking-wide ${getTargetStyle(target)}`}>
+                    <span key={target} className={`inline-flex items-center gap-1 px-2 py-0.5 border text-[9px] font-bold uppercase tracking-wide ${getTargetStyle(target)}`}>
                         {getTargetIcon(target)} {target}
                     </span>
                 ))}
@@ -113,7 +113,7 @@ const CompanyCard = ({ item, onClick }) => {
             <p className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-2">Stack Tecnológico</p>
             <div className="flex flex-wrap gap-1.5">
                 {item.tags.slice(0, 3).map(tag => (
-                    <span key={tag} className="px-2 py-1 bg-gray-50 border border-gray-200 rounded text-[10px] font-medium text-gray-500 group-hover:text-gray-900 group-hover:border-gray-300 transition-colors">
+                    <span key={tag} className="px-2 py-1 bg-gray-50 border border-gray-200 text-[10px] font-medium text-gray-500 group-hover:text-gray-900 group-hover:border-gray-300 transition-colors">
                     {tag}
                     </span>
                 ))}

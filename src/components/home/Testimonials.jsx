@@ -38,11 +38,11 @@ const Testimonials = () => {
                         img: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=200&auto=format&fit=crop"
                     }
                 ].map((review, idx) => (
-                    <FadeIn key={idx} delay={idx * 0.1} className="bg-slate-50 p-8 rounded-2xl border border-slate-200 shadow-sm">
+                    <FadeIn key={idx} delay={idx * 0.1} className="bg-slate-50 p-8 border border-slate-200 shadow-sm">
                         <div className="flex gap-1 mb-4 text-amber-500">★★★★★</div>
                         <p className="text-slate-800 italic mb-6 text-sm leading-relaxed font-medium">"{review.text}"</p>
                         <div className="flex items-center gap-4 border-t border-slate-200 pt-4">
-                            <img src={review.img} alt={review.name} className="h-12 w-12 rounded-full object-cover border-2 border-white shadow-sm" />
+                            <img src={review.img} alt={review.name} className="h-12 w-12 object-cover border-2 border-white shadow-sm" />
                             <div>
                                 <h4 className="font-bold text-slate-900 text-sm">{review.name}</h4>
                             </div>

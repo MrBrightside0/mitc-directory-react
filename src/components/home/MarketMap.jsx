@@ -70,7 +70,7 @@ const MarketMap = () => {
       <div className="max-w-7xl mx-auto">
         
         <div className="text-center mb-16 max-w-3xl mx-auto">
-          <span className="inline-block py-1 px-3 rounded-full bg-white border border-indigo-100 text-indigo-600 font-bold uppercase tracking-widest text-xs mb-4 shadow-sm">
+          <span className="inline-block py-1 px-3 bg-white border border-indigo-100 text-indigo-600 font-bold uppercase tracking-widest text-xs mb-4 shadow-sm">
             Ecosistema en Tiempo Real
           </span>
           <h2 className="text-3xl md:text-5xl font-display font-bold text-slate-900 mb-6">
@@ -86,7 +86,7 @@ const MarketMap = () => {
             <div key={sectionIdx}>
               <FadeIn>
                 <div className="flex items-center gap-4 mb-10">
-                  <div className={`w-2 h-8 rounded-full ${sector.accent}`}></div>
+                  <div className={`w-2 h-8 ${sector.accent}`}></div>
                   <h3 className="text-2xl md:text-3xl font-bold text-slate-900">
                     {sector.category}
                   </h3>
@@ -97,14 +97,14 @@ const MarketMap = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {sector.items.map((item, idx) => (
                   <FadeIn key={idx} delay={idx * 0.1}>
-                    <div className="group h-full bg-white border border-slate-200 p-6 rounded-2xl hover:shadow-xl hover:border-indigo-400/50 transition-all duration-300 flex flex-col relative overflow-hidden">
+                    <div className="group h-full bg-white border border-slate-200 p-6 hover:shadow-xl hover:border-indigo-400/50 transition-all duration-300 flex flex-col relative overflow-hidden">
                       
                       {/* Fondo decorativo hover */}
-                      <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-slate-50 to-white rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-150 group-hover:from-indigo-50/50"></div>
+                      <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-slate-50 to-white -mr-4 -mt-4 transition-transform group-hover:scale-150 group-hover:from-indigo-50/50"></div>
 
                       <div className="relative z-10">
                         <div className="flex items-start justify-between mb-4">
-                            <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${sector.color} group-hover:scale-110 transition-transform`}>
+                            <div className={`w-12 h-12 flex items-center justify-center ${sector.color} group-hover:scale-110 transition-transform`}>
                                 <item.icon className="h-6 w-6" />
                             </div>
                             <span className="text-[10px] font-bold text-slate-300 uppercase tracking-wider">{item.companies.length} Socios</span>
@@ -114,12 +114,12 @@ const MarketMap = () => {
                         <p className="text-xs text-slate-500 mb-6">{item.desc}</p>
 
                         {/* GRID DE LOGOS */}
-                        <div className="bg-slate-50 rounded-xl p-3 border border-slate-100 min-h-[80px]">
+                        <div className="bg-slate-50 p-3 border border-slate-100 min-h-[80px]">
                             {item.companies.length > 0 ? (
                                 <div className="grid grid-cols-4 gap-2">
                                     {item.companies.map(company => (
                                         <div key={company.id} className="relative group/logo">
-                                            <div className="aspect-square bg-white rounded-lg border border-slate-200 flex items-center justify-center p-1.5 hover:border-indigo-300 transition-colors cursor-help shadow-sm">
+                                            <div className="aspect-square bg-white border border-slate-200 flex items-center justify-center p-1.5 hover:border-indigo-300 transition-colors cursor-help shadow-sm">
                                                 <img 
                                                     src={company.logoUrl} 
                                                     alt={company.name} 
@@ -132,13 +132,13 @@ const MarketMap = () => {
                                                 </div>
                                             </div>
                                             {/* Tooltip Simple */}
-                                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-slate-900 text-white text-[10px] rounded whitespace-nowrap opacity-0 group-hover/logo:opacity-100 pointer-events-none transition-opacity z-20">
+                                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-slate-900 text-white text-[10px] whitespace-nowrap opacity-0 group-hover/logo:opacity-100 pointer-events-none transition-opacity z-20">
                                                 {company.name}
                                             </div>
                                         </div>
                                     ))}
                                     {/* Botón "+ ver más" si hay espacio */}
-                                    <Link to="/directorio" className="aspect-square rounded-lg border border-dashed border-slate-300 flex items-center justify-center hover:bg-indigo-50 hover:border-indigo-300 hover:text-indigo-600 text-slate-400 transition-all">
+                                    <Link to="/directorio" className="aspect-square border border-dashed border-slate-300 flex items-center justify-center hover:bg-indigo-50 hover:border-indigo-300 hover:text-indigo-600 text-slate-400 transition-all">
                                         <ArrowRight className="h-3 w-3" />
                                     </Link>
                                 </div>

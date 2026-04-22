@@ -150,7 +150,7 @@ const AnimatedLogo = () => {
 
       {/* Glow behind logo */}
       <div className="logo-glow absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="w-48 h-48 bg-indigo-500/10 rounded-full blur-3xl"></div>
+        <div className="w-48 h-48 bg-indigo-500/10 blur-3xl"></div>
       </div>
 
       {/* Logo center */}
@@ -166,17 +166,50 @@ const AnimatedLogo = () => {
   );
 };
 
+const SplitText = ({ text, className = '', shimmer = false }) => {
+  const shimmerStyle = shimmer
+    ? {
+        backgroundImage: 'linear-gradient(90deg, #818cf8 0%, #22d3ee 25%, #a78bfa 50%, #22d3ee 75%, #818cf8 100%)',
+        backgroundSize: '200% auto',
+        WebkitBackgroundClip: 'text',
+        backgroundClip: 'text',
+        color: 'transparent',
+      }
+    : {};
+  return (
+    <>
+      {text.split('').map((ch, i) => (
+        <span
+          key={i}
+          className={`hero-char inline-block ${shimmer ? 'hero-shimmer' : ''} ${className}`}
+          style={{ whiteSpace: ch === ' ' ? 'pre' : 'normal', ...shimmerStyle }}
+        >
+          {ch}
+        </span>
+      ))}
+    </>
+  );
+};
+
 const Hero = () => {
   const sectionRef = useRef(null);
 
   useGSAP(() => {
     const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
 
-    // Heading reveal
-    tl.fromTo('.hero-line',
-      { yPercent: 120 },
-      { yPercent: 0, duration: 1.2, stagger: 0.15 }
+    // Heading reveal — char by char with blur + rise
+    tl.fromTo('.hero-char',
+      { yPercent: 110, opacity: 0, filter: 'blur(12px)' },
+      { yPercent: 0, opacity: 1, filter: 'blur(0px)', duration: 1, stagger: 0.035 }
     );
+
+    // Continuous shimmer sweep on the gradient word
+    gsap.to('.hero-shimmer', {
+      backgroundPosition: '200% center',
+      duration: 6,
+      repeat: -1,
+      ease: 'none',
+    });
 
     // Subtitle
     tl.fromTo('.hero-sub',
@@ -211,11 +244,28 @@ const Hero = () => {
 
   return (
     <section ref={sectionRef} className="relative min-h-screen flex items-center px-6 bg-slate-950 overflow-hidden">
-      {/* Background */}
+      {/* Background video */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
-        <div className="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] bg-indigo-600/[0.07] rounded-full blur-[120px]"></div>
-        <div className="absolute bottom-[-10%] left-[-5%] w-[400px] h-[400px] bg-cyan-500/[0.04] rounded-full blur-[100px]"></div>
+        <video
+          className="absolute inset-0 w-full h-full object-cover motion-reduce:hidden"
+          src="/hero-bg.mp4"
+          poster="/hero-bg-poster.jpg"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          aria-hidden="true"
+        />
+        <img
+          src="/hero-bg-poster.jpg"
+          alt=""
+          aria-hidden="true"
+          className="hidden motion-reduce:block absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-950/85 via-slate-900/80 to-slate-950/90"></div>
+        <div className="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] bg-indigo-600/[0.07] blur-[120px]"></div>
+        <div className="absolute bottom-[-10%] left-[-5%] w-[400px] h-[400px] bg-cyan-500/[0.04] blur-[100px]"></div>
       </div>
 
       {/* Grid pattern */}
@@ -232,14 +282,14 @@ const Hero = () => {
         {/* Left: Content */}
         <div>
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-display font-bold text-white leading-[0.95] tracking-tight mb-8">
-            <span className="block overflow-hidden">
-              <span className="hero-line block">Automatiza.</span>
+            <span className="block overflow-hidden pb-1">
+              <SplitText text="Automatiza." />
             </span>
-            <span className="block overflow-hidden">
-              <span className="hero-line block text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400">Escala.</span>
+            <span className="block overflow-hidden pb-1">
+              <SplitText text="Escala." shimmer />
             </span>
-            <span className="block overflow-hidden">
-              <span className="hero-line block">Crece.</span>
+            <span className="block overflow-hidden pb-1">
+              <SplitText text="Crece." />
             </span>
           </h1>
 
@@ -249,7 +299,7 @@ const Hero = () => {
 
           {/* Search bar */}
           <div className="hero-search relative max-w-md mb-8">
-            <div className="flex items-center bg-white/[0.06] border border-white/[0.1] rounded-2xl px-5 py-4 backdrop-blur-sm hover:border-indigo-500/30 transition-all focus-within:border-indigo-500/50 focus-within:bg-white/[0.08]">
+            <div className="flex items-center bg-white/[0.06] border border-white/[0.1] px-5 py-4 backdrop-blur-sm hover:border-indigo-500/30 transition-all focus-within:border-indigo-500/50 focus-within:bg-white/[0.08]">
               <Search className="w-5 h-5 text-slate-500 mr-3 shrink-0" />
               <input
                 type="text"
@@ -261,10 +311,10 @@ const Hero = () => {
 
           {/* Buttons */}
           <div className="flex flex-wrap gap-4 mb-12">
-            <Link to="/unirse" className="hero-btn px-8 py-4 bg-gradient-to-r from-indigo-600 to-indigo-500 text-white rounded-xl font-bold hover:shadow-lg hover:shadow-indigo-500/20 hover:-translate-y-0.5 transition-all flex items-center gap-2 group">
+            <Link to="/unirse" className="hero-btn px-8 py-4 bg-gradient-to-r from-indigo-600 to-indigo-500 text-white font-bold hover:shadow-lg hover:shadow-indigo-500/20 hover:-translate-y-0.5 transition-all flex items-center gap-2 group">
               Solicitar Asesoría <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
             </Link>
-            <Link to="/directorio" className="hero-btn px-8 py-4 bg-white/[0.05] text-slate-300 border border-white/[0.1] rounded-xl font-bold hover:bg-white/[0.1] hover:text-white transition-all flex items-center">
+            <Link to="/directorio" className="hero-btn px-8 py-4 bg-white/[0.05] text-slate-300 border border-white/[0.1] font-bold hover:bg-white/[0.1] hover:text-white transition-all flex items-center">
               Ver Empresas
             </Link>
           </div>

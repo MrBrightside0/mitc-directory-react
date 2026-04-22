@@ -16,10 +16,10 @@ const Footer = () => {
                         MITC Business Connect es una membresía diseñada para potenciar emprendimientos industriales y tecnológicos.
                     </p>
                     <div className="flex gap-4">
-                        <a href="https://www.facebook.com/MTYITC" target="_blank" rel="noreferrer" className="h-10 w-10 flex items-center justify-center rounded-full bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-300">
+                        <a href="https://www.facebook.com/MTYITC" target="_blank" rel="noreferrer" className="h-10 w-10 flex items-center justify-center bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-300">
                             <Facebook className="h-5 w-5"/>
                         </a>
-                        <a href="https://www.instagram.com/monterreyitcluster" target="_blank" rel="noreferrer" className="h-10 w-10 flex items-center justify-center rounded-full bg-pink-50 text-pink-600 hover:bg-pink-600 hover:text-white transition-all duration-300">
+                        <a href="https://www.instagram.com/monterreyitcluster" target="_blank" rel="noreferrer" className="h-10 w-10 flex items-center justify-center bg-pink-50 text-pink-600 hover:bg-pink-600 hover:text-white transition-all duration-300">
                             <Instagram className="h-5 w-5"/>
                         </a>
                     </div>

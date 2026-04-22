@@ -21,7 +21,7 @@ const FAQ = () => {
                 { q: "¿Qué beneficios trae la automatización?", a: "Reducción de costos operativos y escalabilidad." },
                 { q: "¿MITC ofrece consultoría personalizada?", a: "Sí, a través de nuestros socios estratégicos ofrecemos soluciones a medida." },
             ].map((item, idx) => (
-                <details key={idx} className="group bg-white border border-slate-300 rounded-xl overflow-hidden [&_summary::-webkit-details-marker]:hidden transition-all duration-300 shadow-sm open:shadow-md">
+                <details key={idx} className="group bg-white border border-slate-300 overflow-hidden [&_summary::-webkit-details-marker]:hidden transition-all duration-300 shadow-sm open:shadow-md">
                 <summary className="flex cursor-pointer items-center justify-between gap-1.5 p-6 text-slate-900 font-bold hover:bg-slate-50 transition-colors select-none text-base">
                     {item.q}
                     <div className="shrink-0 transition duration-300 group-open:rotate-45">

@@ -74,7 +74,7 @@ const MembershipRoute = () => {
 
                 {steps.map((item) => (
                     <div key={item.step} className="route-card flex flex-col items-center group relative bg-slate-900 py-2">
-                        <div className="route-number w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center font-bold text-2xl mb-6 shadow-lg shadow-indigo-900/50 group-hover:-translate-y-2 transition-transform ring-4 ring-indigo-950 relative z-10 text-white">
+                        <div className="route-number w-16 h-16 bg-indigo-600 flex items-center justify-center font-bold text-2xl mb-6 shadow-lg shadow-indigo-900/50 group-hover:-translate-y-2 transition-transform ring-4 ring-indigo-950 relative z-10 text-white">
                             {item.step}
                         </div>
                         <h4 className="font-bold text-white text-lg mb-2">{item.title}</h4>

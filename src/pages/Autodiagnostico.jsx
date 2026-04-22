@@ -12,7 +12,7 @@ const Autodiagnostico = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col bg-slate-50 font-sans overflow-hidden h-screen">
+    <div className="flex-1 flex flex-col bg-slate-50 font-sans overflow-hidden h-[calc(100vh-68px)] mt-[68px]">
       <Helmet>
         <title>Autodiagnóstico de Madurez IA | CII.IA</title>
         <meta name="description" content="Evalúa qué tan preparada está tu empresa para implementar inteligencia artificial. Recibe un reporte ejecutivo personalizado con nivel de madurez, fortalezas, brechas y roadmap." />

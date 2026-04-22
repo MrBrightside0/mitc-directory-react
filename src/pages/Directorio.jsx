@@ -157,10 +157,10 @@ const Directorio = () => {
         ></div>
 
         <div className="mx-auto max-w-7xl relative z-10 text-white">
-            <div className="dir-badge inline-flex items-center gap-2 rounded-full border border-white/[0.15] bg-white/[0.06] px-4 py-1.5 mb-8 backdrop-blur-sm">
+            <div className="dir-badge inline-flex items-center gap-2 border border-white/[0.15] bg-white/[0.06] px-4 py-1.5 mb-8 backdrop-blur-sm">
               <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                <span className="animate-ping absolute inline-flex h-full w-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex h-2 w-2 bg-emerald-500"></span>
               </span>
               <span className="text-[10px] font-bold uppercase tracking-widest text-white/80">Ecosistema en tiempo real</span>
             </div>
@@ -220,7 +220,7 @@ const Directorio = () => {
                {hasActiveFilters ? 'Sin resultados' : 'Estamos actualizando el directorio de empresas. Vuelve en unos minutos.'}
              </h3>
              {hasActiveFilters && (
-               <button onClick={() => {setSearchTerm(''); setActiveFilter('Todas'); setOnlyVerified(false)}} className="mt-4 px-6 py-2.5 bg-gray-900 text-white rounded-full text-xs font-bold uppercase tracking-widest">
+               <button onClick={() => {setSearchTerm(''); setActiveFilter('Todas'); setOnlyVerified(false)}} className="mt-4 px-6 py-2.5 bg-gray-900 text-white text-xs font-bold uppercase tracking-widest">
                  Reiniciar filtros
                </button>
              )}
