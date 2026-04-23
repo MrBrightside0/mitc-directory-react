@@ -146,7 +146,7 @@ const Sidebar = ({ step }) => {
 
         {/* Branding */}
         <p className="text-[10px] font-bold text-indigo-400 uppercase tracking-[0.2em] mb-1">CII.IA</p>
-        <p className="text-xs text-slate-500 text-center px-8 leading-relaxed">Centro de Innovación<br/>de Inteligencia Artificial</p>
+        <p className="text-xs text-slate-500 text-center px-8 leading-relaxed">Centro Industrial de Innovación<br/>en Inteligencia Artificial</p>
 
         {/* Back to site button */}
         <a href="/" className="mt-6 mb-2 inline-flex items-center gap-2 px-4 py-2 text-xs font-bold text-slate-400 hover:text-white hover:bg-white/10 transition-all">
@@ -568,7 +568,7 @@ const Results = ({ data, pilarScores, onReset, assessmentId, submitError }) => {
     <div className="space-y-8">
       {/* Header */}
       <div className="text-center pt-4">
-        <p className="text-xs font-bold text-indigo-600 uppercase tracking-widest mb-2">CII.IA &mdash; Centro de Innovación de Inteligencia Artificial</p>
+        <p className="text-xs font-bold text-indigo-600 uppercase tracking-widest mb-2">CII.IA &mdash; Centro Industrial de Innovación en Inteligencia Artificial</p>
         <h2 className="text-3xl md:text-4xl font-display font-bold text-slate-900 mb-1">Reporte Ejecutivo de Madurez</h2>
         <p className="text-slate-500">{data.nombre} {data.apellidos} &mdash; {data.empresa}</p>
       </div>
@@ -857,7 +857,7 @@ const AssessmentWizard = () => {
             <div className="w-20 h-20 bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center mx-auto mb-6 shadow-xl shadow-indigo-200/50">
               <Brain className="w-10 h-10 text-white" />
             </div>
-            <p className="text-xs font-bold text-indigo-600 uppercase tracking-widest mb-3">CII.IA &mdash; Centro de Innovación de Inteligencia Artificial</p>
+            <p className="text-xs font-bold text-indigo-600 uppercase tracking-widest mb-3">CII.IA &mdash; Centro Industrial de Innovación en Inteligencia Artificial</p>
             <h2 className="text-3xl md:text-4xl font-display font-bold text-slate-900 mb-4">Autodiagnóstico de Madurez Tecnológica</h2>
             <p className="text-slate-500 max-w-2xl mx-auto leading-relaxed mb-8">
               Diseñado para directivos y líderes de negocio. Entiende con claridad real el nivel de preparación de tu organización para adoptar IA.

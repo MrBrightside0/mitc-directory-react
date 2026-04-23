@@ -8,7 +8,7 @@ const Autodiagnostico = () => {
     "@type": "Quiz",
     "name": "Autodiagnóstico de Madurez Tecnológica para Implementación de IA",
     "description": "Evalúa el nivel de preparación de tu empresa para implementar inteligencia artificial de forma rentable, responsable y escalable.",
-    "provider": { "@type": "Organization", "name": "CII.IA - Centro de Innovación de Inteligencia Artificial" },
+    "provider": { "@type": "Organization", "name": "CII.IA - Centro Industrial de Innovación en Inteligencia Artificial" },
     "inLanguage": "es-MX",
     "educationalLevel": "Professional"
   };
