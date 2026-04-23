@@ -1,10 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 import { Home, ArrowLeft, Search } from 'lucide-react';
 
 const NotFound = () => {
   return (
     <div className="flex-1 flex items-center justify-center px-6 py-32">
+      <Helmet>
+        <title>Página no encontrada | Monterrey IT Cluster</title>
+        <meta name="robots" content="noindex, follow" />
+      </Helmet>
       <div className="text-center max-w-md">
         <div className="text-8xl md:text-9xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400 leading-none mb-4">
           404

@@ -1,0 +1,13 @@
+{
+  "name": "Monterrey IT Cluster",
+  "short_name": "MITC",
+  "description": "Cluster de tecnología de Nuevo León. Directorio de empresas de IT, IA y software.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#020617",
+  "lang": "es-MX",
+  "icons": [
+    { "src": "/logo.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

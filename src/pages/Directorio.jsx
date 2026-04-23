@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Filter } from 'lucide-react';
 import { gsap } from 'gsap';
@@ -137,8 +138,53 @@ const Directorio = () => {
     });
   };
 
+  const directorySchema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Directorio de Empresas del Monterrey IT Cluster",
+    "description": "Listado oficial de empresas de tecnología afiliadas al Monterrey IT Cluster en Nuevo León.",
+    "numberOfItems": companies.length,
+    "itemListElement": companies.slice(0, 20).map((c, i) => ({
+      "@type": "ListItem",
+      "position": i + 1,
+      "item": {
+        "@type": "Organization",
+        "name": c.name,
+        "description": c.description || c.industry || ''
+      }
+    }))
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://monterreyitcluster.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Directorio", "item": "https://monterreyitcluster.com/directorio" }
+    ]
+  };
+
   return (
     <div className="flex-1 flex flex-col relative">
+      <Helmet>
+        <title>Directorio de Empresas de Tecnología en Monterrey | MITC</title>
+        <meta name="description" content="Directorio oficial de más de 35 empresas de tecnología afiliadas al Monterrey IT Cluster. Software, IA, ciberseguridad y servicios digitales en Nuevo León." />
+        <link rel="canonical" href="https://monterreyitcluster.com/directorio" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Directorio de Empresas de Tecnología en Monterrey" />
+        <meta property="og:description" content="Más de 35 empresas de IT, software e IA afiliadas al Monterrey IT Cluster." />
+        <meta property="og:url" content="https://monterreyitcluster.com/directorio" />
+        <meta property="og:image" content="https://monterreyitcluster.com/og-image.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Directorio de Empresas de Tecnología en Monterrey" />
+        <meta name="twitter:description" content="Más de 35 empresas de IT, software e IA afiliadas al Monterrey IT Cluster." />
+        <meta name="twitter:image" content="https://monterreyitcluster.com/og-image.jpg" />
+        <script type="application/ld+json">{JSON.stringify(breadcrumbSchema)}</script>
+        {companies.length > 0 && (
+          <script type="application/ld+json">{JSON.stringify(directorySchema)}</script>
+        )}
+      </Helmet>
+
       {/* HERO SECTION */}
       <header ref={heroRef} className="relative pt-48 pb-24 px-6 overflow-hidden">
         <div className="absolute inset-0 -z-1">
