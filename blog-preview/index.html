@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog | Monterrey IT Cluster</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            display: ['"DM Serif Display"', 'serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    .shimmer {
+      background-image: linear-gradient(90deg, #818cf8 0%, #22d3ee 25%, #a78bfa 50%, #22d3ee 75%, #818cf8 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: shimmer-sweep 6s linear infinite;
+    }
+    @keyframes shimmer-sweep {
+      0% { background-position: 0% center; }
+      100% { background-position: 200% center; }
+    }
+    .grid-pattern {
+      background-image:
+        linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px);
+      background-size: 80px 80px;
+    }
+    .underline-draw {
+      position: relative;
+    }
+    .underline-draw::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0; bottom: -6px;
+      height: 1px;
+      background: currentColor;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .underline-draw:hover::after { transform: scaleX(1); }
+    .card-hover { transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+    .card-hover:hover { transform: translateY(-4px); }
+    .arrow-tilt { transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+    .group:hover .arrow-tilt { transform: translate(2px, -2px); }
+  </style>
+</head>
+<body class="bg-white text-slate-900 antialiased">
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       NAVBAR — transparent over hero, white on scroll
+       ═══════════════════════════════════════════════════════════════ -->
+  <nav class="fixed top-0 z-40 w-full py-5 bg-transparent">
+    <div class="mx-auto grid max-w-7xl grid-cols-[1fr_auto_1fr] items-center px-6">
+      <div class="flex items-center">
+        <a href="#" class="flex items-center">
+          <span class="font-display text-xl text-white tracking-tight">MITC</span>
+        </a>
+      </div>
+      <div class="hidden lg:flex items-center gap-10">
+        <a href="#" class="text-sm font-medium tracking-tight text-white/70 hover:text-white transition-colors">Inicio</a>
+        <a href="#" class="text-sm font-medium tracking-tight text-white/70 hover:text-white transition-colors">Directorio</a>
+        <a href="#" class="relative text-sm font-medium tracking-tight text-white transition-colors">
+          Blog
+          <span class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-1 h-1 bg-white"></span>
+        </a>
+        <a href="#" class="text-sm font-medium tracking-tight text-white/70 hover:text-white transition-colors">Autodiagnóstico</a>
+      </div>
+      <div class="hidden lg:flex items-center justify-end gap-8">
+        <a href="#" class="text-sm font-medium tracking-tight text-white/70 hover:text-white transition-colors">Acceso Socios</a>
+        <a href="#" class="group inline-flex items-center gap-1.5 text-sm font-medium tracking-tight text-white hover:text-white transition-colors">
+          Unirse
+          <svg class="arrow-tilt h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       HERO — dark editorial, centered
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="relative min-h-[85vh] flex items-center px-6 bg-slate-950 overflow-hidden">
+    <!-- Background layers -->
+    <div class="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
+    <div class="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] bg-indigo-600/[0.07] blur-[120px]"></div>
+    <div class="absolute bottom-[-10%] left-[-5%] w-[400px] h-[400px] bg-cyan-500/[0.04] blur-[100px]"></div>
+    <div class="absolute inset-0 grid-pattern opacity-[0.03]"></div>
+
+    <div class="max-w-7xl mx-auto w-full relative z-10 py-32 lg:py-0">
+      <div class="grid lg:grid-cols-12 gap-10 lg:gap-16 items-end">
+
+        <div class="lg:col-span-7">
+          <span class="inline-block text-[11px] font-mono tracking-[0.25em] text-indigo-300/80 uppercase mb-6">
+            [ Insights & Thinking ]
+          </span>
+          <h1 class="text-5xl md:text-7xl lg:text-[8rem] xl:text-[9rem] font-display font-bold text-white leading-[0.92] tracking-[-0.02em]">
+            <span class="block">Ideas que</span>
+            <span class="block">mueven la</span>
+            <span class="block shimmer">industria.</span>
+          </h1>
+        </div>
+
+        <div class="lg:col-span-5 lg:pb-6">
+          <div class="h-px w-16 bg-white/20 mb-8 hidden lg:block"></div>
+          <p class="text-lg md:text-xl text-slate-300 leading-relaxed mb-10">
+            Análisis, casos de estudio y voces del ecosistema tecnológico de Nuevo León. Escrito por los miembros de <strong class="text-white font-semibold">MITC</strong> y expertos invitados.
+          </p>
+          <div class="flex flex-wrap gap-3 text-sm">
+            <a href="#" class="px-4 py-2 bg-white/[0.06] border border-white/[0.12] text-white hover:bg-white/[0.12] transition-all">Todos</a>
+            <a href="#" class="px-4 py-2 border border-white/[0.08] text-white/60 hover:text-white hover:border-white/[0.2] transition-all">Inteligencia Artificial</a>
+            <a href="#" class="px-4 py-2 border border-white/[0.08] text-white/60 hover:text-white hover:border-white/[0.2] transition-all">Ciberseguridad</a>
+            <a href="#" class="px-4 py-2 border border-white/[0.08] text-white/60 hover:text-white hover:border-white/[0.2] transition-all">Casos de éxito</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats strip -->
+      <div class="mt-16 lg:mt-24 pt-8 border-t border-white/10 grid grid-cols-3 gap-6 lg:gap-12">
+        <div>
+          <span class="block text-3xl lg:text-4xl font-display font-bold text-white tracking-tight">47</span>
+          <span class="text-[11px] text-slate-500 uppercase tracking-[0.18em] font-medium">Artículos publicados</span>
+        </div>
+        <div>
+          <span class="block text-3xl lg:text-4xl font-display font-bold text-white tracking-tight">18</span>
+          <span class="text-[11px] text-slate-500 uppercase tracking-[0.18em] font-medium">Autores invitados</span>
+        </div>
+        <div>
+          <span class="block text-3xl lg:text-4xl font-display font-bold text-white tracking-tight">2.3k</span>
+          <span class="text-[11px] text-slate-500 uppercase tracking-[0.18em] font-medium">Lectores/mes</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       FEATURED ARTICLE
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="py-24 lg:py-32 px-6 bg-white">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex items-end justify-between mb-12 gap-6">
+        <div>
+          <span class="inline-block text-[11px] font-mono tracking-[0.25em] text-indigo-600/80 uppercase mb-4">
+            [ Destacado ]
+          </span>
+          <h2 class="text-3xl md:text-5xl font-display font-bold text-slate-900 tracking-tight">Última publicación</h2>
+        </div>
+        <a href="#" class="group hidden md:inline-flex items-center gap-1.5 text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors underline-draw">
+          Ver archivo completo
+          <svg class="arrow-tilt h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+        </a>
+      </div>
+
+      <a href="#" class="group grid lg:grid-cols-12 gap-8 lg:gap-12 items-center card-hover">
+        <div class="lg:col-span-7 relative overflow-hidden aspect-[16/10] bg-slate-950">
+          <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?w=1400&q=80" alt="" class="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-[1.02] transition-all duration-[800ms]" />
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/50 via-transparent to-transparent"></div>
+          <div class="absolute top-6 left-6 inline-flex items-center gap-2 px-3 py-1 bg-white/90 backdrop-blur-sm">
+            <span class="w-1.5 h-1.5 bg-indigo-600"></span>
+            <span class="text-[10px] font-mono uppercase tracking-[0.2em] text-slate-900 font-medium">Inteligencia Artificial</span>
+          </div>
+        </div>
+        <div class="lg:col-span-5">
+          <div class="flex items-center gap-3 text-[11px] font-mono uppercase tracking-[0.2em] text-slate-400 mb-5">
+            <time datetime="2026-04-18">18 · Abr · 2026</time>
+            <span class="w-1 h-1 bg-slate-300"></span>
+            <span>9 min lectura</span>
+          </div>
+          <h3 class="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-slate-900 leading-[1.05] tracking-tight mb-6">
+            Cómo 12 empresas de Monterrey automatizaron operaciones críticas en 8 semanas con IA
+          </h3>
+          <p class="text-lg text-slate-600 leading-relaxed mb-8">
+            Un análisis de los pilotos realizados en el programa Business Connect 2026: de la detección del caso de uso hasta el go-live. Métricas reales, no slideware.
+          </p>
+          <div class="flex items-center gap-4 pt-6 border-t border-slate-200">
+            <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-cyan-500 flex items-center justify-center text-white font-display text-sm font-bold">JR</div>
+            <div>
+              <span class="block text-sm font-semibold text-slate-900">Julia Ramírez</span>
+              <span class="block text-xs text-slate-500">Directora, MITC Labs</span>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       ARTICLES GRID
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="pb-24 lg:pb-32 px-6 bg-white">
+    <div class="max-w-7xl mx-auto">
+      <div class="mb-12 pb-6 border-b border-slate-200 flex items-end justify-between">
+        <span class="inline-block text-[11px] font-mono tracking-[0.25em] text-slate-500 uppercase">
+          [ Recientes ]
+        </span>
+        <span class="text-xs font-mono text-slate-400">N° 03 – 14</span>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-16">
+
+        <!-- Article card template -->
+        <a href="#" class="group block card-hover">
+          <div class="relative overflow-hidden aspect-[4/5] bg-slate-100 mb-6">
+            <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80" alt="" class="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-[800ms]" />
+          </div>
+          <div class="flex items-center gap-3 text-[10px] font-mono uppercase tracking-[0.2em] text-slate-400 mb-3">
+            <span class="text-indigo-600 font-medium">Ciberseguridad</span>
+            <span class="w-1 h-1 bg-slate-300"></span>
+            <time>14 · Abr</time>
+          </div>
+          <h3 class="text-xl lg:text-2xl font-display font-bold text-slate-900 leading-tight tracking-tight mb-3 group-hover:text-indigo-600 transition-colors">
+            Zero-trust en PYMES: el manual práctico que nadie te dio
+          </h3>
+          <p class="text-sm text-slate-500 leading-relaxed mb-4">
+            Cinco decisiones arquitecturales que mueven el aguja sin romper el presupuesto del primer trimestre.
+          </p>
+          <span class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-900">
+            Leer artículo
+            <svg class="arrow-tilt h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </span>
+        </a>
+
+        <a href="#" class="group block card-hover">
+          <div class="relative overflow-hidden aspect-[4/5] bg-slate-100 mb-6">
+            <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&q=80" alt="" class="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-[800ms]" />
+          </div>
+          <div class="flex items-center gap-3 text-[10px] font-mono uppercase tracking-[0.2em] text-slate-400 mb-3">
+            <span class="text-indigo-600 font-medium">Casos de éxito</span>
+            <span class="w-1 h-1 bg-slate-300"></span>
+            <time>09 · Abr</time>
+          </div>
+          <h3 class="text-xl lg:text-2xl font-display font-bold text-slate-900 leading-tight tracking-tight mb-3 group-hover:text-indigo-600 transition-colors">
+            Cómo Verde Logistics cortó su churn un 34% con analytics en tiempo real
+          </h3>
+          <p class="text-sm text-slate-500 leading-relaxed mb-4">
+            Una conversación franca con el CTO sobre lo que sí funcionó y lo que definitivamente no.
+          </p>
+          <span class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-900">
+            Leer artículo
+            <svg class="arrow-tilt h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </span>
+        </a>
+
+        <a href="#" class="group block card-hover">
+          <div class="relative overflow-hidden aspect-[4/5] bg-slate-100 mb-6">
+            <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80" alt="" class="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-[800ms]" />
+          </div>
+          <div class="flex items-center gap-3 text-[10px] font-mono uppercase tracking-[0.2em] text-slate-400 mb-3">
+            <span class="text-indigo-600 font-medium">Inteligencia Artificial</span>
+            <span class="w-1 h-1 bg-slate-300"></span>
+            <time>02 · Abr</time>
+          </div>
+          <h3 class="text-xl lg:text-2xl font-display font-bold text-slate-900 leading-tight tracking-tight mb-3 group-hover:text-indigo-600 transition-colors">
+            LLMs en producción: lo que aprendimos después de 200 incidentes
+          </h3>
+          <p class="text-sm text-slate-500 leading-relaxed mb-4">
+            Patrones de diseño, fallas comunes y el costo real de las alucinaciones fuera del demo.
+          </p>
+          <span class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-900">
+            Leer artículo
+            <svg class="arrow-tilt h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </span>
+        </a>
+
+        <a href="#" class="group block card-hover">
+          <div class="relative overflow-hidden aspect-[4/5] bg-slate-100 mb-6">
+            <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80" alt="" class="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-[800ms]" />
+          </div>
+          <div class="flex items-center gap-3 text-[10px] font-mono uppercase tracking-[0.2em] text-slate-400 mb-3">
+            <span class="text-indigo-600 font-medium">Ecosistema</span>
+            <span class="w-1 h-1 bg-slate-300"></span>
+            <time>28 · Mar</time>
+          </div>
+          <h3 class="text-xl lg:text-2xl font-display font-bold text-slate-900 leading-tight tracking-tight mb-3 group-hover:text-indigo-600 transition-colors">
+            El mapa de talento IT en Nuevo León: a dónde va y por qué
+          </h3>
+          <p class="text-sm text-slate-500 leading-relaxed mb-4">
+            Datos de compensación, rotación y las tres tendencias que redefinen al mercado local en 2026.
+          </p>
+          <span class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-900">
+            Leer artículo
+            <svg class="arrow-tilt h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </span>
+        </a>
+
+        <a href="#" class="group block card-hover">
+          <div class="relative overflow-hidden aspect-[4/5] bg-slate-100 mb-6">
+            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80" alt="" class="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-[800ms]" />
+          </div>
+          <div class="flex items-center gap-3 text-[10px] font-mono uppercase tracking-[0.2em] text-slate-400 mb-3">
+            <span class="text-indigo-600 font-medium">Data</span>
+            <span class="w-1 h-1 bg-slate-300"></span>
+            <time>21 · Mar</time>
+          </div>
+          <h3 class="text-xl lg:text-2xl font-display font-bold text-slate-900 leading-tight tracking-tight mb-3 group-hover:text-indigo-600 transition-colors">
+            Data warehouse sin equipo dedicado: lo que sí tiene sentido en 2026
+          </h3>
+          <p class="text-sm text-slate-500 leading-relaxed mb-4">
+            Tres arquitecturas pragmáticas con presupuestos reales. Spoiler: no todas incluyen Snowflake.
+          </p>
+          <span class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-900">
+            Leer artículo
+            <svg class="arrow-tilt h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </span>
+        </a>
+
+        <a href="#" class="group block card-hover">
+          <div class="relative overflow-hidden aspect-[4/5] bg-slate-100 mb-6">
+            <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80" alt="" class="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-[800ms]" />
+          </div>
+          <div class="flex items-center gap-3 text-[10px] font-mono uppercase tracking-[0.2em] text-slate-400 mb-3">
+            <span class="text-indigo-600 font-medium">Opinión</span>
+            <span class="w-1 h-1 bg-slate-300"></span>
+            <time>15 · Mar</time>
+          </div>
+          <h3 class="text-xl lg:text-2xl font-display font-bold text-slate-900 leading-tight tracking-tight mb-3 group-hover:text-indigo-600 transition-colors">
+            El nearshoring no es gratis: tres costos ocultos que nadie quiere contar
+          </h3>
+          <p class="text-sm text-slate-500 leading-relaxed mb-4">
+            Ventaja cambiaria, talento senior y la factura silenciosa de operar entre dos zonas regulatorias.
+          </p>
+          <span class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-900">
+            Leer artículo
+            <svg class="arrow-tilt h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </span>
+        </a>
+
+      </div>
+
+      <div class="flex justify-center mt-20">
+        <a href="#" class="group inline-flex items-center gap-2 px-6 py-3 border border-slate-300 text-sm font-medium text-slate-900 hover:bg-slate-50 transition-all">
+          Cargar más artículos
+          <svg class="h-4 w-4 group-hover:translate-y-0.5 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       NEWSLETTER CTA — dark editorial split
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="relative px-6 py-24 lg:py-32 bg-slate-950 overflow-hidden">
+    <div class="absolute inset-0 grid-pattern opacity-[0.04]"></div>
+    <div class="absolute top-[-20%] right-[-10%] w-[500px] h-[500px] bg-indigo-600/[0.08] blur-[120px]"></div>
+
+    <div class="max-w-7xl mx-auto relative z-10 grid lg:grid-cols-12 gap-10 items-end">
+      <div class="lg:col-span-7">
+        <span class="inline-block text-[11px] font-mono tracking-[0.25em] text-indigo-300/80 uppercase mb-6">
+          [ Newsletter ]
+        </span>
+        <h2 class="text-4xl md:text-6xl lg:text-7xl font-display font-bold text-white leading-[0.95] tracking-tight mb-6">
+          Un correo al mes.<br/>
+          <span class="shimmer">Sin relleno.</span>
+        </h2>
+        <p class="text-lg text-slate-400 max-w-lg leading-relaxed">
+          Lo mejor del blog, casos recientes y lo que se está cocinando en el cluster. Llega el primer martes de cada mes.
+        </p>
+      </div>
+
+      <div class="lg:col-span-5 lg:pb-4">
+        <div class="h-px w-16 bg-white/20 mb-8 hidden lg:block"></div>
+        <form class="flex flex-col gap-3">
+          <div class="flex">
+            <input type="email" placeholder="tu@empresa.com" class="flex-1 bg-white/[0.04] border border-white/[0.1] border-r-0 text-white placeholder-slate-500 px-5 py-4 text-sm outline-none focus:border-indigo-400/40 focus:bg-white/[0.08] transition-colors" />
+            <button type="submit" class="group px-6 py-4 bg-gradient-to-r from-indigo-600 to-indigo-500 text-white font-semibold text-sm inline-flex items-center gap-2 hover:shadow-lg hover:shadow-indigo-500/20 transition-all">
+              Suscribirme
+              <svg class="arrow-tilt h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+            </button>
+          </div>
+          <p class="text-[11px] font-mono tracking-[0.15em] text-slate-500 uppercase">Sin spam. Cancela cuando quieras.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       FOOTER (compact)
+       ═══════════════════════════════════════════════════════════════ -->
+  <footer class="bg-slate-950 border-t border-white/10 px-6 py-10">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+      <span class="text-xs font-mono tracking-[0.2em] text-slate-500 uppercase">© 2026 · Monterrey IT Cluster</span>
+      <div class="flex gap-8">
+        <a href="#" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">Aviso de privacidad</a>
+        <a href="#" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">Términos</a>
+        <a href="#" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">Contacto</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
