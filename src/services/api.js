@@ -473,6 +473,60 @@ export const submitLead = async (formData) => submitLeadRequest('/api/leads', fo
 
 export const submitClusterLead = async (formData) => submitLeadRequest('/api/leads-cluster', formData);
 
+// ─── Eventos (registro público a capacitaciones) ─────────────
+
+const parseJsonSafe = async (response) => {
+  try {
+    return await response.json();
+  } catch {
+    return null;
+  }
+};
+
+const throwApiError = (body, response, fallbackCode) => {
+  const code = body?.error || fallbackCode;
+  const error = new Error(code);
+  error.status = response.status;
+  error.code = code;
+  error.detail = body?.detail || '';
+  throw error;
+};
+
+export const fetchPublicEvent = async (eventId) => {
+  const response = await fetch(getApiUrl(`/api/public/events/${encodeURIComponent(eventId)}`), {
+    headers: { Accept: 'application/json' }
+  });
+  const body = await parseJsonSafe(response);
+
+  if (!response.ok) {
+    throwApiError(body, response, `event_fetch_failed_${response.status}`);
+  }
+
+  const event = body?.event;
+  if (!event || typeof event !== 'object') {
+    throw new Error('event_invalid_payload');
+  }
+  return event;
+};
+
+export const submitEventRegistration = async (eventId, payload) => {
+  const response = await fetch(getApiUrl(`/api/public/events/${encodeURIComponent(eventId)}/registrations`), {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json'
+    },
+    body: JSON.stringify(payload)
+  });
+  const body = await parseJsonSafe(response);
+
+  if (!response.ok) {
+    throwApiError(body, response, `event_registration_failed_${response.status}`);
+  }
+
+  return body?.registration || null;
+};
+
 // ─── Assessment (Autodiagnóstico) ───────────────────────────
 
 export const submitAssessment = async (formData, pilarScores) => {

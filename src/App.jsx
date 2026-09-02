@@ -15,6 +15,7 @@ const Directorio = lazy(() => import('./pages/Directorio'));
 const Unirse = lazy(() => import('./pages/Unirse'));
 const Autodiagnostico = lazy(() => import('./pages/Autodiagnostico'));
 const Privacidad = lazy(() => import('./pages/Privacidad'));
+const Evento = lazy(() => import('./pages/Evento'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 const RouteFallback = () => (
@@ -49,6 +50,7 @@ const AppLayout = () => {
             <Route path="/unirse" element={<Page><Unirse /></Page>} />
             <Route path="/autodiagnostico" element={<Page><Autodiagnostico /></Page>} />
             <Route path="/privacidad" element={<Page><Privacidad /></Page>} />
+            <Route path="/evento/:eventId" element={<Page><Evento /></Page>} />
             <Route path="*" element={<Page><NotFound /></Page>} />
           </Routes>
         </Suspense>
